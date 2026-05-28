@@ -139,7 +139,6 @@ function renderRoutine() {
     });
 }
 
-// Fixed formatting utility bug preventing routine mutations
 function deleteRoutine(id) {
     if (confirm("Are you sure you want to remove this class entry?")) {
         currentRoutine = currentRoutine.filter(item => item.id !== id);
@@ -157,17 +156,21 @@ function convertTo12Hour(timeString) {
 }
 
 // ==========================================
-// 4. Remote Dependency AI OCR & PDF Conversion Processing Engine Matrix
+// 4. Remote Dependency AI OCR & PDF Production-Safe Processing Engine
 // ==========================================
 
-// Core Helper: Converts raw binary PDF streams into high-resolution canvas layers
+// Sandbox safe PDF processor that bypasses worker thread strict CORS blocks
 async function convertPdfToImageCanvas(file) {
+    // Configure production library fallback directly to standard parameters
+    const pdfjs = window['pdfjs-dist/build/pdf'];
+    pdfjs.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
+
     const arrayBuffer = await file.arrayBuffer();
-    const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+    const typedarray = new Uint8Array(arrayBuffer);
     
-    // Renders Page 1 of the schedule document (where the core timetable block sits)
+    const pdf = await pdfjs.getDocument({ data: typedarray }).promise;
     const page = await pdf.getPage(1); 
-    const viewport = page.getViewport({ scale: 2.0 }); // Upscaled to 2.0x for pixel precision during processing
+    const viewport = page.getViewport({ scale: 2.5 }); // High resolution upscale for clear OCR processing
     
     const canvas = document.createElement('canvas');
     const context = canvas.getContext('2d');
@@ -199,15 +202,14 @@ async function processRoutineFile() {
     let sourceToScan;
 
     try {
-        // Intercept raw PDF types and convert them cleanly into a viewable graphic canvas element 
         if (file.type === "application/pdf" || file.name.toLowerCase().endsWith('.pdf')) {
-            statusText.innerText = "⏳ Rasterizing native PDF contents into processing canvas blocks...";
+            statusText.innerText = "⏳ Parsing document contents safely...";
             sourceToScan = await convertPdfToImageCanvas(file);
         } else {
-            sourceToScan = file; // Direct raster images bypass conversion pipes
+            sourceToScan = file;
         }
 
-        statusText.innerText = "⏳ Running optical text recognition (OCR)...";
+        statusText.innerText = "⏳ Running text recognition (OCR)...";
         const result = await Tesseract.recognize(sourceToScan, 'eng', {
             logger: m => {
                 if(m.status === 'recognizing text') {
@@ -312,6 +314,6 @@ function triggerAlarm(subject, room) {
                 alarmSound.pause();
                 alarmSound.currentTime = 0; 
             }, 15000);
-        }).catch(err => console.warn("Media hardware initialization channel blocked by client sandbox rules:", err));
+        }).catch(err => console.warn("Media playback prevented by standard rules:", err));
     }
 }
