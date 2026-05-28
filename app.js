@@ -5,9 +5,8 @@ document.addEventListener("DOMContentLoaded", () => {
     requestNotificationPermission();
     setInterval(checkUpcomingClasses, 60000);
 
-    // ফর্ম সাবমিট হ্যান্ডলার ফিক্স
     const form = document.getElementById("manual-form");
-    if(form) {
+    if (form) {
         form.addEventListener("submit", saveManualRoutine);
     }
 });
@@ -26,7 +25,7 @@ function initializeApp() {
     const instName = document.getElementById("inst-name").value.trim();
     const programName = document.getElementById("dept-program").value;
     if (!instName) {
-        alert("Please enter your University or College Name!");
+        alert("দয়া করে আপনার বিশ্ববিদ্যালয় অথবা কলেজের নাম লিখুন!");
         return;
     }
     localStorage.setItem("instName", instName);
@@ -38,26 +37,25 @@ function showDashboard(inst, program) {
     document.getElementById("onboarding-screen").classList.add("hidden");
     document.getElementById("dashboard-screen").classList.remove("hidden");
     document.getElementById("display-inst-name").innerText = inst.toUpperCase();
-    document.getElementById("display-program-name").innerText = `Program: ${program.toUpperCase()}`;
+    document.getElementById("display-program-name").innerText = `Course / Program: ${program.toUpperCase()}`;
     
-    // ব্যাকগ্রাউন্ড থিম পরিবর্তন লজিক (কোর্সের ব্যাকগ্রাউন্ড নির্ধারণ)
-    document.body.className = ""; // আগের সব থিম ক্লিয়ার করা
+    // বডি ক্লাসের আগের সব থিম মুছে ফেলা
+    document.body.className = ""; 
     
-    // ১. Science Background এর জন্য থিম ম্যাপিং
-    const scienceCourses = ["CSE", "EEE", "CIVIL", "MECHANICAL", "TEXTILE", "PHARMACY"];
-    // ২. Commerce Background এর জন্য থিম ম্যাপিং
-    const commerceCourses = ["BBA", "ACCOUNTING", "FINANCE", "MANAGEMENT", "MARKETING"];
-    // ৩. Arts Background এর জন্য থিম ম্যাপিং
-    const artsCourses = ["ENGLISH", "LLB", "ECONOMICS", "SOCIOLOGY", "BANGLA", "JOURNALISM"];
+    // থিম ক্যাটাগরি কনফিগারেশন ম্যাপিং
+    const scienceList = ["CSE", "SWE", "EEE", "CIVIL", "MECHANICAL", "TEXTILE", "PHARMACY", "BSC-PHYSICS", "BSC-MATH"];
+    const commerceList = ["BBA", "ACCOUNTING", "FINANCE", "MANAGEMENT", "MARKETING", "HRM"];
+    const artsList = ["ENGLISH", "LLB", "ECONOMICS", "SOCIOLOGY", "BANGLA", "JOURNALISM", "HISTORY"];
 
-    const progUpper = program.toUpperCase();
+    const selectedProg = program.toUpperCase();
 
-    if (scienceCourses.includes(progUpper)) {
-        document.body.classList.add("theme-science"); // সায়েন্স হলে ডার্ক বা সায়ান-ব্লু থিম
-    } else if (commerceCourses.includes(progUpper)) {
-        document.body.classList.add("theme-commerce"); // কমার্স হলে প্রফেশনাল গোল্ডেন/নেভি ব্লু থিম
-    } else if (artsCourses.includes(progUpper)) {
-        document.body.classList.add("theme-arts"); // আর্টস হলে রিল্যাক্সিং মেরুন/পার্পল থিম
+    // ডিপার্টমেন্ট ক্যাটাগরি অনুসারে ডাইনামিক বডি ক্লাস পুশ
+    if (scienceList.includes(selectedProg)) {
+        document.body.classList.add("theme-science");
+    } else if (commerceList.includes(selectedProg)) {
+        document.body.classList.add("theme-commerce");
+    } else if (artsList.includes(selectedProg)) {
+        document.body.classList.add("theme-arts");
     } else {
         document.body.classList.add("theme-default");
     }
@@ -66,18 +64,18 @@ function showDashboard(inst, program) {
 }
 
 function resetApp() {
-    if (confirm("Are you sure you want to change your profile?")) {
+    if (confirm("আপনি কি নিশ্চিত যে প্রোফাইল রিসেট করে নতুন কোর্স সিলেক্ট করতে চান?")) {
         localStorage.removeItem("instName");
         localStorage.removeItem("programName");
         document.getElementById("onboarding-screen").classList.remove("hidden");
         document.getElementById("dashboard-screen").classList.add("hidden");
+        document.body.className = "";
     }
 }
 
 function openModal(id) { document.getElementById(id).classList.remove("hidden"); }
 function closeModal(id) { document.getElementById(id).classList.add("hidden"); }
 
-// ম্যানুয়াল ডাটাবেজ হ্যান্ডলিং
 function saveManualRoutine(e) {
     e.preventDefault(); 
     const subject = document.getElementById("m-subject").value.trim();
@@ -115,7 +113,7 @@ function renderRoutine() {
     routineList.innerHTML = "";
 
     if (currentRoutine.length === 0) {
-        routineList.innerHTML = `<p class="no-routine">No classes added yet. Click the button above to add your schedule!</p>`;
+        routineList.innerHTML = `<p class="no-routine">কোনো ক্লাস রুটিন যুক্ত করা নেই। ওপরের বোতামটি চেপে ক্লাস অ্যাসাইন করুন।</p>`;
         return;
     }
 
@@ -128,14 +126,14 @@ function renderRoutine() {
             <h3>${item.subject} (${item.code})</h3>
             <p>👨‍🏫 Teacher: ${item.teacher} | 🚪 Room: ${item.room}</p>
             <p>📅 Day: ${item.day}</p>
-            <button onclick="deleteRoutine(${item.id})" class="btn-delete">🗑️ Remove</button>
+            <button onclick="deleteRoutine(${item.id})" class="btn-delete">🗑️ Remove Class</button>
         `;
         routineList.appendChild(card);
     });
 }
 
 function deleteRoutine(id) {
-    if (confirm("Delete this class?")) {
+    if (confirm("আপনি কি নিশ্চিত ক্লাসটি ডিলিট করতে চান?")) {
         currentRoutine = currentRoutine.filter(item => item.id !== id);
         localStorage.setItem("routineData", JSON.stringify(currentRoutine));
         renderRoutine();
@@ -149,7 +147,6 @@ function convertTo12Hour(timeString) {
     return `${hours}:${minutes} ${ampm}`;
 }
 
-// নোটিফিকেশন অ্যালার্ট লুপ লজিক
 function checkUpcomingClasses() {
     if (currentRoutine.length === 0) return;
     const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
@@ -169,7 +166,7 @@ function checkUpcomingClasses() {
 function triggerAlarm(subject, room) {
     if (Notification.permission === "granted") {
         new Notification("Class Reminder! ⏰", {
-            body: `${subject} starts in 45 mins at Room: ${room}`
+            body: `${subject} ক্লাসটি ৪৫ মিনিটের মধ্যে শুরু হচ্ছে। রুম নম্বর: ${room}`
         });
     }
     const alarmSound = document.getElementById("alarm-sound");
