@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Amar Routine - Smart University Schedule</title>
+    <title>Amar Routine - Dynamic University Planner</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -11,11 +11,11 @@
     <div id="onboarding-screen" class="container">
         <div class="welcome-box">
             <h2>🎯 Welcome to Amar Routine</h2>
-            <p>আপনার ইউনিভার্সিটি/কলেজ এবং কোর্স সিলেক্ট করে প্রোফাইল তৈরি করুন।</p>
+            <p>আপনার প্রতিষ্ঠান এবং কোর্সের নাম সিলেক্ট করে ড্যাশবোর্ড তৈরি করুন।</p>
             
             <div class="input-group">
-                <label for="inst-name">University / College Name:</label>
-                <input type="text" id="inst-name" placeholder="e.g. NUBT KHULNA">
+                <label for="inst-name">University / School / College Name:</label>
+                <input type="text" id="inst-name" placeholder="e.g. Northern University of Business and Technology Khulna">
             </div>
 
             <div class="input-group">
@@ -23,11 +23,14 @@
                 <select id="dept-program">
                     <optgroup label="🔬 Science Background">
                         <option value="CSE">CSE (Computer Science & Engineering)</option>
+                        <option value="SWE">SWE (Software Engineering)</option>
                         <option value="EEE">EEE (Electrical & Electronic Engineering)</option>
                         <option value="Civil">Civil Engineering</option>
                         <option value="Mechanical">Mechanical Engineering</option>
                         <option value="Textile">Textile Engineering</option>
                         <option value="Pharmacy">Bachelor of Pharmacy</option>
+                        <option value="BSc-Physics">B.Sc. in Physics</option>
+                        <option value="BSc-Math">B.Sc. in Mathematics</option>
                     </optgroup>
                     
                     <optgroup label="💼 Commerce Background">
@@ -36,6 +39,7 @@
                         <option value="Finance">Finance & Banking</option>
                         <option value="Management">Management Studies</option>
                         <option value="Marketing">Marketing</option>
+                        <option value="HRM">Human Resource Management</option>
                     </optgroup>
                     
                     <optgroup label="🎨 Arts / Humanities Background">
@@ -45,6 +49,7 @@
                         <option value="Sociology">Sociology</option>
                         <option value="Bangla">BA in Bangla</option>
                         <option value="Journalism">Journalism & Media Studies</option>
+                        <option value="History">BA in History</option>
                     </optgroup>
                 </select>
             </div>
@@ -67,7 +72,7 @@
         </div>
 
         <main class="routine-section">
-            <h2>📅 Today's Schedule</h2>
+            <h2>📅 Your Class Schedule</h2>
             <div id="routine-list">
                 </div>
         </main>
@@ -77,7 +82,7 @@
         <div class="modal-content">
             <span class="close-btn" onclick="closeModal('manual-modal')">&times;</span>
             <h2>➕ Add New Class</h2>
-            <form id="manual-form" onsubmit="saveManualRoutine(e)">
+            <form id="manual-form">
                 <input type="text" id="m-subject" placeholder="Subject Name" required>
                 <input type="text" id="m-code" placeholder="Course Code (e.g. CSE 2101)" required>
                 <input type="text" id="m-teacher" placeholder="Teacher Code (e.g. TAJ)">
@@ -90,6 +95,7 @@
                     <option value="Tuesday">Tuesday</option>
                     <option value="Wednesday">Wednesday</option>
                     <option value="Thursday">Thursday</option>
+                    <option value="Friday">Friday</option>
                 </select>
                 <button type="submit" class="btn-primary" style="margin-top: 15px;">Save Class</button>
             </form>
