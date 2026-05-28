@@ -5,10 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AmarRoutine - Your Digital Classroom Assistant</title>
     <link rel="stylesheet" href="style.css">
+    
+    <!-- Tesseract.js OCR Engine CDN Dependency -->
     <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+    
+    <!-- Native PDF Processing Library (PDF.js CDN) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
+    <script>
+        // Set up the rendering worker path configuration globally
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js';
+    </script>
 </head>
 <body class="default-theme">
 
+    <!-- 1. Configuration Onboarding Wizard Framework Screen Container Layout -->
     <div id="onboarding-screen" class="screen">
         <div class="welcome-box">
             <h1>AmarRoutine <span class="app-logo">⏰</span></h1>
@@ -16,7 +26,7 @@
             
             <div class="input-group">
                 <label>University / School Name:</label>
-                <input type="text" id="inst-name" placeholder="e.g., BUET, DU, or Model School" required>
+                <input type="text" id="inst-name" placeholder="e.g., NUBTK, BUET, DU" required>
             </div>
             
             <div class="input-group">
@@ -35,22 +45,26 @@
         </div>
     </div>
 
+    <!-- 2. System Main App Layout Interface Dashboard Screen View -->
     <div id="dashboard-screen" class="screen hidden">
         
+        <!-- Dashboard Top Cover Image Presentation Banner Canvas Header -->
         <header id="top-banner" class="cover-banner">
             <div class="banner-overlay">
-                <h1 id="display-inst-name">Institution Name</h1>
+                <h1 id="display-inst-name">NORTHERN UNIVERSITY OF BUSINESS AND TECHNOLOGY KHULNA</h1>
                 <p id="display-program-name">Program: General</p>
                 <button onclick="resetApp()" class="reset-btn">🔄 Change Info</button>
             </div>
         </header>
 
         <main class="dashboard-content">
+            <!-- Dynamic Execution Action Switch Controls Trigger Panel Layout -->
             <div class="control-panel">
                 <button onclick="openModal('manual-modal')" class="btn-primary">➕ Add Routine Manually</button>
-                <button onclick="openModal('upload-modal')" class="btn-secondary">📸 Auto-Routine from Image</button>
+                <button onclick="openModal('upload-modal')" class="btn-secondary">📸 Auto-Routine from Image/PDF</button>
             </div>
 
+            <!-- Parsed Object Data List Layout Grid Container Section Block -->
             <section class="routine-section">
                 <h2>📅 Today's Schedule (Chronological Order)</h2>
                 <div id="routine-list" class="routine-grid">
@@ -60,6 +74,7 @@
         </main>
     </div>
 
+    <!-- 3. Form Component Input Structure Container Manual Entry Modal Box -->
     <div id="manual-modal" class="modal hidden">
         <div class="modal-content">
             <h3>Add New Class</h3>
@@ -100,16 +115,17 @@
         </div>
     </div>
 
+    <!-- 4. Target Extraction Input Stream File Upload Interactive Scanner Modal Box -->
     <div id="upload-modal" class="modal hidden">
         <div class="modal-content">
             <h3>Smart Routine Scanner (AI)</h3>
             <div class="input-group">
-                <label>Your Specific Section Name (e.g., A, B, Sec-2):</label>
+                <label>Your Specific Section Name (e.g., A, B, Sec-2, 3D):</label>
                 <input type="text" id="filter-section" placeholder="Enter exact section code">
             </div>
             <div class="input-group">
-                <label>Upload Routine Image:</label>
-                <input type="file" id="routine-file" accept="image/*">
+                <label>Upload Routine Image or PDF Document:</label>
+                <input type="file" id="routine-file" accept="image/*, application/pdf">
             </div>
             <div id="scan-status" class="status-text"></div>
             <div class="modal-buttons">
@@ -119,6 +135,7 @@
         </div>
     </div>
 
+    <!-- Alarm Ring Audio Output Loop Interface Asset Dependency Link Object -->
     <audio id="alarm-sound" src="https://assets.mixkit.co/active_storage/sfx/2869/2869-default.wav" loop></audio>
 
     <script src="app.js"></script>
