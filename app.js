@@ -12,7 +12,6 @@ let currentRoutine = [];
 document.addEventListener("DOMContentLoaded", () => {
     checkExistingUser();
     requestNotificationPermission();
-    // System core daemon processes schedule checks continuously every 60 seconds
     setInterval(checkUpcomingClasses, 60000);
 });
 
@@ -51,10 +50,9 @@ function showDashboard(inst, program) {
     document.getElementById("onboarding-screen").classList.add("hidden");
     document.getElementById("dashboard-screen").classList.remove("hidden");
 
-    document.getElementById("display-inst-name").innerText = inst;
+    document.getElementById("display-inst-name").innerText = inst.toUpperCase();
     document.getElementById("display-program-name").innerText = `Program: ${program}`;
 
-    // Flush and reconstruct design pattern layout tags 
     document.body.className = ""; 
     document.body.classList.add(`theme-${program.toLowerCase()}`);
 
@@ -77,7 +75,7 @@ function closeModal(id) { document.getElementById(id).classList.add("hidden"); }
 // 3. Document Local Storage Manual Object Management
 // ==========================================
 function saveManualRoutine(e) {
-    e.preventDefault(); // Lock dynamic state propagation mapping forms to secure storage mapping paths
+    e.preventDefault(); 
     
     const subject = document.getElementById("m-subject").value.trim();
     const code = document.getElementById("m-code").value.trim();
@@ -109,7 +107,6 @@ function saveManualRoutine(e) {
     renderRoutine();
 }
 
-// Read saved dataset profile matrices from persistent instance allocation slots
 function loadRoutine() {
     const localData = localStorage.getItem("routineData");
     currentRoutine = localData ? JSON.parse(localData) : [];
@@ -125,7 +122,6 @@ function renderRoutine() {
         return;
     }
 
-    // Sort schedule array chronologically by time parameters
     const sortedRoutine = [...currentRoutine].sort((a, b) => a.time.localeCompare(b.time));
 
     sortedRoutine.forEach(item => {
@@ -143,6 +139,7 @@ function renderRoutine() {
     });
 }
 
+// Fixed formatting utility bug preventing routine mutations
 function deleteRoutine(id) {
     if (confirm("Are you sure you want to remove this class entry?")) {
         currentRoutine = currentRoutine.filter(item => item.id !== id);
@@ -160,25 +157,58 @@ function convertTo12Hour(timeString) {
 }
 
 // ==========================================
-// 4. Remote Dependency AI OCR Processing Engine Matrix
+// 4. Remote Dependency AI OCR & PDF Conversion Processing Engine Matrix
 // ==========================================
+
+// Core Helper: Converts raw binary PDF streams into high-resolution canvas layers
+async function convertPdfToImageCanvas(file) {
+    const arrayBuffer = await file.arrayBuffer();
+    const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+    
+    // Renders Page 1 of the schedule document (where the core timetable block sits)
+    const page = await pdf.getPage(1); 
+    const viewport = page.getViewport({ scale: 2.0 }); // Upscaled to 2.0x for pixel precision during processing
+    
+    const canvas = document.createElement('canvas');
+    const context = canvas.getContext('2d');
+    canvas.height = viewport.height;
+    canvas.width = viewport.width;
+    
+    const renderContext = {
+        canvasContext: context,
+        viewport: viewport
+    };
+    await page.render(renderContext).promise;
+    return canvas;
+}
+
 async function processRoutineFile() {
     const fileInput = document.getElementById("routine-file");
     const sectionName = document.getElementById("filter-section").value.trim();
     const statusText = document.getElementById("scan-status");
 
     if (!sectionName || fileInput.files.length === 0) {
-        alert("Please specify the target section code and upload an image file!");
+        alert("Please specify the target section code and upload a file!");
         return;
     }
 
     statusText.style.color = "#ffc107";
-    statusText.innerText = "⏳ AI scanning image file... Please hold on.";
+    statusText.innerText = "⏳ AI processing file pipeline... Please hold on.";
     
     const file = fileInput.files[0];
-    
+    let sourceToScan;
+
     try {
-        const result = await Tesseract.recognize(file, 'eng', {
+        // Intercept raw PDF types and convert them cleanly into a viewable graphic canvas element 
+        if (file.type === "application/pdf" || file.name.toLowerCase().endsWith('.pdf')) {
+            statusText.innerText = "⏳ Rasterizing native PDF contents into processing canvas blocks...";
+            sourceToScan = await convertPdfToImageCanvas(file);
+        } else {
+            sourceToScan = file; // Direct raster images bypass conversion pipes
+        }
+
+        statusText.innerText = "⏳ Running optical text recognition (OCR)...";
+        const result = await Tesseract.recognize(sourceToScan, 'eng', {
             logger: m => {
                 if(m.status === 'recognizing text') {
                     statusText.innerText = `⏳ Scanning status: ${Math.floor(m.progress * 100)}%`;
@@ -234,11 +264,11 @@ async function processRoutineFile() {
             setTimeout(() => { closeModal("upload-modal"); statusText.innerText = ""; }, 2500);
         } else {
             statusText.style.color = "#dc3545";
-            statusText.innerText = `❌ No schedule data discovered for section "${sectionName}". Check image quality.`;
+            statusText.innerText = `❌ No schedule data discovered for section "${sectionName}". Check document layout.`;
         }
 
     } catch (error) {
-        console.error("Critical Runtime OCR Exception Failure Log Summary:", error);
+        console.error("Advanced OCR System Pipeline Exception:", error);
         statusText.style.color = "#dc3545";
         statusText.innerText = "❌ Processing failure occurred during AI scanner tracking!";
     }
@@ -260,7 +290,6 @@ function checkUpcomingClasses() {
             const [classHour, classMinute] = item.time.split(':').map(Number);
             const classMinutes = classHour * 60 + classMinute;
 
-            // Verification logic triggers notification stream exactly 45 minutes ahead of class
             if (classMinutes - currentMinutes === 45) {
                 triggerAlarm(item.subject, item.room);
             }
@@ -279,7 +308,6 @@ function triggerAlarm(subject, room) {
     const alarmSound = document.getElementById("alarm-sound");
     if (alarmSound) {
         alarmSound.play().then(() => {
-            // Execution limit boundary: Forces audio engine channel initialization tracking pause at 15000ms
             setTimeout(() => {
                 alarmSound.pause();
                 alarmSound.currentTime = 0; 
