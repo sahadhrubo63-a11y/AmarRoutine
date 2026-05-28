@@ -1,10 +1,10 @@
 // ==========================================
-// 1. Service Worker Registration
+// 1. Service Worker Initialization Lifecycle Management
 // ==========================================
 if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('./sw.js')
-        .then(() => console.log("Service Worker Registered!"))
-        .catch(err => console.log("SW Registration Failed:", err));
+        .then(() => console.log("Service Worker Registered Successfully!"))
+        .catch(err => console.error("Service Worker Registration Critical Failure Error:", err));
 }
 
 let currentRoutine = [];
@@ -12,7 +12,7 @@ let currentRoutine = [];
 document.addEventListener("DOMContentLoaded", () => {
     checkExistingUser();
     requestNotificationPermission();
-    // Background system checks schedule matching states every 60 seconds
+    // System core daemon processes schedule checks continuously every 60 seconds
     setInterval(checkUpcomingClasses, 60000);
 });
 
@@ -31,7 +31,7 @@ function checkExistingUser() {
 }
 
 // ==========================================
-// 2. Onboarding & Dynamic Theme Controls
+// 2. Onboarding Workflow Action Handlers & Switch Theme Configurations
 // ==========================================
 function initializeApp() {
     const instName = document.getElementById("inst-name").value.trim();
@@ -54,7 +54,7 @@ function showDashboard(inst, program) {
     document.getElementById("display-inst-name").innerText = inst;
     document.getElementById("display-program-name").innerText = `Program: ${program}`;
 
-    // Apply exact styling context rules based on choice
+    // Flush and reconstruct design pattern layout tags 
     document.body.className = ""; 
     document.body.classList.add(`theme-${program.toLowerCase()}`);
 
@@ -74,10 +74,10 @@ function openModal(id) { document.getElementById(id).classList.remove("hidden");
 function closeModal(id) { document.getElementById(id).classList.add("hidden"); }
 
 // ==========================================
-// 3. Manual Routine Management
+// 3. Document Local Storage Manual Object Management
 // ==========================================
 function saveManualRoutine(e) {
-    e.preventDefault(); // Stop forms from reloading the tab environment
+    e.preventDefault(); // Lock dynamic state propagation mapping forms to secure storage mapping paths
     
     const subject = document.getElementById("m-subject").value.trim();
     const code = document.getElementById("m-code").value.trim();
@@ -109,6 +109,7 @@ function saveManualRoutine(e) {
     renderRoutine();
 }
 
+// Read saved dataset profile matrices from persistent instance allocation slots
 function loadRoutine() {
     const localData = localStorage.getItem("routineData");
     currentRoutine = localData ? JSON.parse(localData) : [];
@@ -124,7 +125,7 @@ function renderRoutine() {
         return;
     }
 
-    // Chronological order layout sorting rules (Ascending time serialization)
+    // Sort schedule array chronologically by time parameters
     const sortedRoutine = [...currentRoutine].sort((a, b) => a.time.localeCompare(b.time));
 
     sortedRoutine.forEach(item => {
@@ -159,7 +160,7 @@ function convertTo12Hour(timeString) {
 }
 
 // ==========================================
-// 4. AI OCR Automated Filtering Engine
+// 4. Remote Dependency AI OCR Processing Engine Matrix
 // ==========================================
 async function processRoutineFile() {
     const fileInput = document.getElementById("routine-file");
@@ -177,7 +178,6 @@ async function processRoutineFile() {
     const file = fileInput.files[0];
     
     try {
-        // Tesseract tracking log capture execution
         const result = await Tesseract.recognize(file, 'eng', {
             logger: m => {
                 if(m.status === 'recognizing text') {
@@ -191,12 +191,10 @@ async function processRoutineFile() {
         let matchedClasses = 0;
 
         lines.forEach(line => {
-            // Process target strings if matching parameters exist
             if (line.toLowerCase().includes(sectionName.toLowerCase())) {
                 const words = line.split(/\s+/).filter(w => w.trim() !== "");
                 
                 if (words.length >= 2) {
-                    // Extract execution time limits
                     let extractedTime = "09:00"; 
                     const timeRegex = /(\d{1,2}:\d{2})/;
                     const foundTime = line.match(timeRegex);
@@ -204,7 +202,6 @@ async function processRoutineFile() {
                         extractedTime = foundTime[1].padStart(5, '0'); 
                     }
 
-                    // Scan and detect appropriate context day limits
                     let extractedDay = "Sunday"; 
                     const daysArray = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
                     for (let d of daysArray) {
@@ -241,14 +238,14 @@ async function processRoutineFile() {
         }
 
     } catch (error) {
-        console.error(error);
+        console.error("Critical Runtime OCR Exception Failure Log Summary:", error);
         statusText.style.color = "#dc3545";
         statusText.innerText = "❌ Processing failure occurred during AI scanner tracking!";
     }
 }
 
 // ==========================================
-// 5. Automated 45-Minute Notification & Alarm Ring Engine
+// 5. Native Device Schedule Matching Push Alert Loop Engine
 // ==========================================
 function checkUpcomingClasses() {
     if (currentRoutine.length === 0) return;
@@ -263,7 +260,7 @@ function checkUpcomingClasses() {
             const [classHour, classMinute] = item.time.split(':').map(Number);
             const classMinutes = classHour * 60 + classMinute;
 
-            // Trigger notification exactly 45 minutes ahead of schedule 
+            // Verification logic triggers notification stream exactly 45 minutes ahead of class
             if (classMinutes - currentMinutes === 45) {
                 triggerAlarm(item.subject, item.room);
             }
@@ -282,11 +279,11 @@ function triggerAlarm(subject, room) {
     const alarmSound = document.getElementById("alarm-sound");
     if (alarmSound) {
         alarmSound.play().then(() => {
-            // Execution limit timer: Forces sound tracking pause precisely at 15 seconds
+            // Execution limit boundary: Forces audio engine channel initialization tracking pause at 15000ms
             setTimeout(() => {
                 alarmSound.pause();
                 alarmSound.currentTime = 0; 
             }, 15000);
-        }).catch(e => console.log("Audio playback blocked. Interact with the dashboard window first."));
+        }).catch(err => console.warn("Media hardware initialization channel blocked by client sandbox rules:", err));
     }
 }
