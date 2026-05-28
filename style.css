@@ -1,46 +1,202 @@
-.generated-routine-box {
-    background-color: #1e1e1e;
-    color: #e3e3e3;
-    padding: 20px;
-    border-radius: 8px;
+/* ==========================================
+   General Setup & Reset
+   ========================================== */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    margin-top: 20px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    transition: background 0.5s ease, color 0.5s ease;
+    background-color: #f4f6f9;
+    color: #333;
 }
 
-.generated-routine-box h2 {
+.container {
+    max-width: 600px;
+    margin: 50px auto;
+    padding: 25px;
+    border-radius: 12px;
+    background: #ffffff;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+}
+
+.hidden { display: none !important; }
+
+/* ==========================================
+   DYNAMIC BACKGROUND THEMES (ডিপার্টমেন্ট ভিত্তিক থিম)
+   ========================================== */
+
+/* ১. Science Background Theme (Cyber Dark Blue) */
+body.theme-science {
+    background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+}
+body.theme-science .container {
+    background: #1e293b;
+    color: #f8fafc;
+    border: 1px solid #38bdf8;
+}
+body.theme-science .routine-card {
+    background: #0f172a;
+    border-left: 5px solid #38bdf8;
+}
+
+/* ২. Commerce Background Theme (Professional Navy Gold) */
+body.theme-commerce {
+    background: linear-gradient(135deg, #1f4068, #162447, #1b1a17);
+}
+body.theme-commerce .container {
+    background: #1f2235;
     color: #fff;
-    font-size: 22px;
-    border-bottom: 1px solid #333;
-    padding-bottom: 10px;
-    margin-bottom: 15px;
+    border: 1px solid #f4d160;
+}
+body.theme-commerce .routine-card {
+    background: #282c44;
+    border-left: 5px solid #f4d160;
 }
 
-.generated-routine-box h3 {
+/* ৩. Arts Background Theme (Warm Deep Maroon/Wine) */
+body.theme-arts {
+    background: linear-gradient(135deg, #31112c, #7d0633, #11052c);
+}
+body.theme-arts .container {
+    background: #2d132c;
+    color: #fceef5;
+    border: 1px solid #ff4b5c;
+}
+body.theme-arts .routine-card {
+    background: #3f1a3a;
+    border-left: 5px solid #ff4b5c;
+}
+
+/* ==========================================
+   UI Components Styles
+   ========================================== */
+.welcome-box h2 {
+    margin-bottom: 10px;
     color: #1a73e8;
-    font-size: 16px;
-    margin-top: 15px;
-    margin-bottom: 5px;
 }
 
-.generated-routine-box ul {
-    list-style: none;
-    padding-left: 10px;
+body.theme-science .welcome-box h2 { color: #38bdf8; }
+body.theme-commerce .welcome-box h2 { color: #f4d160; }
+body.theme-arts .welcome-box h2 { color: #ff4b5c; }
+
+.input-group {
+    margin-top: 18px;
+    text-align: left;
 }
 
-.generated-routine-box li {
+.input-group label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 6px;
     font-size: 14px;
-    margin-bottom: 8px;
-    color: #ccc;
 }
 
-.generated-routine-box strong {
+.input-group input, .input-group select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background-color: transparent;
+    color: inherit;
+}
+
+.btn-primary {
+    width: 100%;
+    padding: 12px;
+    background-color: #1a73e8;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 20px;
+    font-size: 15px;
+}
+
+.dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid #ddd;
+    padding-bottom: 15px;
+    margin-bottom: 20px;
+}
+
+.action-bar {
+    margin-bottom: 20px;
+}
+
+.btn-action {
+    padding: 10px 15px;
+    background: #28a745;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.routine-card {
+    padding: 15px;
+    margin-bottom: 12px;
+    border-radius: 8px;
+    background: #f8fafc;
+    border-left: 5px solid #1a73e8;
+    text-align: left;
+    position: relative;
+}
+
+.time-tag {
+    font-size: 12px;
+    font-weight: bold;
+    color: #ef4444;
+}
+
+.btn-delete {
+    background: none;
+    border: none;
+    color: #ef4444;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 12px;
+    margin-top: 8px;
+    display: block;
+}
+
+/* Modal setup */
+.modal {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+}
+
+.modal-content {
+    background: #fff;
+    color: #333;
+    padding: 25px;
+    border-radius: 10px;
+    width: 90%;
+    max-width: 400px;
+    position: relative;
+}
+
+body.theme-science .modal-content, 
+body.theme-commerce .modal-content, 
+body.theme-arts .modal-content {
+    background: #1e293b;
     color: #fff;
 }
 
-.no-class {
-    font-size: 14px;
-    color: #757575;
-    font-style: italic;
-    padding-left: 10px;
+.close-btn {
+    position: absolute;
+    top: 10px; right: 15px;
+    font-size: 24px; cursor: pointer;
 }
