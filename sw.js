@@ -1,58 +1,195 @@
-const CACHE_NAME = 'amar-routine-v1';
-const ASSETS = [
-    './',
-    './index.html',
-    './style.css',
-    './app.js',
-    'https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js'
-];
+:root {
+    --primary-color: #4a90e2;
+    --bg-color: #f5f7fa;
+    --text-color: #333;
+    --card-bg: #ffffff;
+    --shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    --banner-bg: linear-gradient(135deg, #4a90e2, #50e3c2);
+}
 
-// ১. সার্ভিস ওয়ার্কার ইনস্টল করা এবং ফাইলগুলো ক্যাশ (Cache) করা
-self.addEventListener('install', (e) => {
-    e.waitUntil(
-        caches.open(CACHE_NAME).then((cache) => {
-            return cache.addAll(ASSETS);
-        }).then(() => self.skipWaiting())
-    );
-});
+* {
+    margin: 0; padding: 0; box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
 
-// ২. পুরানো ক্যাশ ডিলিট করা (Activation)
-self.addEventListener('activate', (e) => {
-    e.waitUntil(
-        caches.keys().then((keys) => {
-            return Promise.all(
-                keys.map((key) => {
-                    if (key !== CACHE_NAME) {
-                        return caches.delete(key);
-                    }
-                })
-            );
-        }).then(() => self.clients.claim())
-    );
-});
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    transition: all 0.4s ease;
+}
 
-// ৩. অফলাইন সাপোর্ট (Fetch Request Handler)
-self.addEventListener('fetch', (e) => {
-    e.respondWith(
-        caches.match(e.request).then((cachedResponse) => {
-            return cachedResponse || fetch(e.request);
-        })
-    );
-});
+.screen { min-height: 100vh; display: flex; flex-direction: column; }
+.hidden { display: none !important; }
 
-// ৪. ব্যাকগ্রাউন্ড নোটিফিকেশন ইভেন্ট হ্যান্ডলার
-self.addEventListener('notificationclick', (e) => {
-    e.notification.close();
-    e.waitUntil(
-        clients.matchAll({ type: 'window' }).then((clientList) => {
-            for (const client of clientList) {
-                if (client.url === '/' && 'focus' in client) {
-                    return client.focus();
-                }
-            }
-            if (clients.openWindow) {
-                return clients.openWindow('./');
-            }
-        })
-    );
-});
+/* ==========================================
+   ১. অনবোর্ডিং স্ক্রিন (Onboarding UI)
+   ========================================== */
+#onboarding-screen {
+    justify-content: center; align-items: center;
+    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+    padding: 20px;
+}
+
+.welcome-box {
+    background: rgba(255, 255, 255, 0.95); padding: 40px;
+    border-radius: 16px; max-width: 450px; width: 100%;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3); text-align: center;
+}
+
+.welcome-box h1 { color: #1e3c72; margin-bottom: 10px; }
+.welcome-box p { color: #666; margin-bottom: 25px; }
+
+.input-group { text-align: left; margin-bottom: 15px; }
+.input-group label { display: block; font-weight: 600; margin-bottom: 5px; color: #444; }
+.input-group input, .input-group select {
+    width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-size: 16px; outline: none;
+}
+.input-group input:focus, .input-group select:focus { border-color: #1e3c72; }
+
+#start-btn {
+    width: 100%; padding: 14px; background: #1e3c72; color: white;
+    border: none; border-radius: 8px; font-size: 18px; font-weight: bold; cursor: pointer;
+}
+
+/* ==========================================
+   ২. ড্যাশবোর্ড কভার ব্যানার (Cover Banner UI)
+   ========================================== */
+.cover-banner {
+    background: var(--banner-bg); background-size: cover; background-position: center;
+    height: 250px; position: relative; display: flex; align-items: center; justify-content: center; color: white;
+}
+
+.banner-overlay {
+    background: rgba(0, 0, 0, 0.65); position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+    display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px;
+    text-align: center;
+}
+
+.cover-banner h1 { 
+    font-size: 2.2rem; 
+    font-weight: 800; 
+    text-shadow: 2px 2px 8px rgba(0,0,0,0.6);
+    margin-bottom: 8px;
+    width: 90%;
+    max-width: 800px;
+}
+
+.cover-banner p {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 12px;
+    opacity: 0.9;
+}
+
+/* তথ্য পরিবর্তন বাটন ফিক্স (image_cc4882.jpg এর সমস্যা সমাধান) */
+.reset-btn { 
+    padding: 8px 18px; 
+    background: rgba(255,255,255,0.25); 
+    border: 1px solid rgba(255,255,255,0.8); 
+    color: white; 
+    border-radius: 20px; 
+    cursor: pointer; 
+    font-size: 14px;
+    font-weight: bold;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+}
+
+.reset-btn:hover { 
+    background: rgba(255, 255, 255, 0.4); 
+    transform: translateY(-2px);
+}
+
+/* ==========================================
+   ৩. ডাইনামিক ডিপার্টমেন্ট থিম (Dynamic Themes)
+   ========================================== */
+body.theme-cse {
+    --bg-color: #0d1117; --text-color: #c9d1d9; --card-bg: #161b22;
+    --shadow: 0 4px 20px rgba(0, 255, 102, 0.1);
+    --banner-bg: url('https://images.unsplash.com/photo-1515879218367-8466d910aaa4?w=1200');
+}
+body.theme-cse .cover-banner h1 { color: #00ff66; }
+
+body.theme-eee {
+    --bg-color: #1a1e29; --text-color: #e2e8f0; --card-bg: #242b3d;
+    --shadow: 0 4px 20px rgba(0, 191, 255, 0.15);
+    --banner-bg: url('https://images.unsplash.com/photo-1517420728787-8605305934bc?w=1200');
+}
+body.theme-eee .cover-banner h1 { color: #00bfff; }
+
+body.theme-science {
+    --bg-color: #f0f4f8; --text-color: #102a43; --card-bg: #ffffff;
+    --banner-bg: url('https://images.unsplash.com/photo-1532094349884-543bc11b234d?w=1200');
+}
+body.theme-commerce {
+    --bg-color: #f7f9fa; --text-color: #243b53; --card-bg: #ffffff;
+    --banner-bg: url('https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=1200');
+}
+body.theme-arts {
+    --bg-color: #fcf8f2; --text-color: #4a3728; --card-bg: #ffffff;
+    --banner-bg: url('https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=1200');
+}
+
+/* ==========================================
+   ৪. ড্যাশবোর্ড কোর লেআউট (Core Layout)
+   ========================================== */
+.dashboard-content { max-width: 1000px; width: 100%; margin: 0 auto; padding: 30px 20px; }
+
+.control-panel { display: flex; gap: 15px; margin-bottom: 30px; }
+.control-panel button { 
+    flex: 1; padding: 15px; font-size: 16px; font-weight: bold; 
+    border: none; border-radius: 10px; cursor: pointer; 
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    transition: all 0.2s ease;
+}
+.control-panel button:hover { transform: translateY(-2px); filter: brightness(1.1); }
+.btn-primary { background: #28a745; color: white; }
+.btn-secondary { background: #17a2b8; color: white; }
+
+/* ==========================================
+   ৫. কার্ড গ্রিড ও রুটিন ডিজাইন (Routine Grid UI)
+   ========================================== */
+.routine-section h2 { margin-bottom: 15px; font-size: 1.3rem; }
+.routine-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
+.no-routine { grid-column: 1 / -1; text-align: center; padding: 40px; background: var(--card-bg); border-radius: 12px; font-style: italic; opacity: 0.7; }
+
+.routine-card { 
+    background: var(--card-bg); border-left: 6px solid #28a745; padding: 20px; 
+    border-radius: 8px; box-shadow: var(--shadow); display: flex; 
+    flex-direction: column; gap: 8px; position: relative; animation: fadeIn 0.4s ease; 
+}
+.time-tag { position: absolute; top: 15px; right: 15px; background: rgba(40, 167, 69, 0.15); color: #28a745; padding: 4px 8px; border-radius: 20px; font-size: 12px; font-weight: bold; }
+
+body.theme-cse .routine-card { border-left-color: #00ff66; }
+body.theme-cse .time-tag { color: #00ff66; background: rgba(0, 255, 102, 0.1); }
+body.theme-eee .routine-card { border-left-color: #00bfff; }
+body.theme-eee .time-tag { color: #00bfff; background: rgba(0, 191, 255, 0.1); }
+
+/* ==========================================
+   ৬. মোডাল পপ-আপ ডিজাইন (Modal Dialogs)
+   ========================================== */
+.modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); display: flex; justify-content: center; align-items: center; z-index: 1000; }
+.modal-content { background: var(--card-bg); color: var(--text-color); padding: 30px; border-radius: 12px; max-width: 500px; width: 90%; box-shadow: 0 10px 25px rgba(0,0,0,0.3); }
+.modal-content h3 { margin-bottom: 20px; font-size: 1.4rem; border-bottom: 2px solid var(--primary-color); padding-bottom: 8px; }
+
+.modal-buttons { display: flex; gap: 10px; margin-top: 20px; }
+.modal-buttons button { flex: 1; padding: 12px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 15px; }
+.btn-save { background: #28a745; color: white; }
+.btn-cancel { background: #dc3545; color: white; }
+.status-text { margin-top: 10px; font-size: 14px; font-weight: bold; text-align: center; }
+
+/* ==========================================
+   ৭. অ্যানিমেশন ও রেসপনসিভনেস (Responsive Rules)
+   ========================================== */
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+@media (max-width: 600px) { 
+    .control-panel { flex-direction: column; gap: 10px; } 
+    .cover-banner h1 { font-size: 1.6rem; } 
+    .welcome-box { padding: 25px 15px; }
+    .routine-grid { grid-template-columns: 1fr; }
+}
