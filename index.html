@@ -9,12 +9,8 @@
     <!-- Tesseract.js OCR Engine CDN Dependency -->
     <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
     
-    <!-- Native PDF Processing Library (PDF.js CDN) -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
-    <script>
-        // Set up the rendering worker path configuration globally
-        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js';
-    </script>
+    <!-- Unified Native PDF Processing Library (PDF.js Legacy Production Bundle) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
 </head>
 <body class="default-theme">
 
@@ -135,7 +131,6 @@
         </div>
     </div>
 
-    <!-- Alarm Ring Audio Output Loop Interface Asset Dependency Link Object -->
     <audio id="alarm-sound" src="https://assets.mixkit.co/active_storage/sfx/2869/2869-default.wav" loop></audio>
 
     <script src="app.js"></script>
