@@ -3,135 +3,100 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AmarRoutine - Your Digital Classroom Assistant</title>
+    <title>Amar Routine - Smart University Schedule</title>
     <link rel="stylesheet" href="style.css">
-    
-    <!-- Tesseract.js OCR Engine CDN Dependency -->
-    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
-    
-    <!-- Unified Native PDF Processing Library (PDF.js Legacy Production Bundle) -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
 </head>
-<body class="default-theme">
+<body>
 
-    <!-- 1. Configuration Onboarding Wizard Framework Screen Container Layout -->
-    <div id="onboarding-screen" class="screen">
+    <div id="onboarding-screen" class="container">
         <div class="welcome-box">
-            <h1>AmarRoutine <span class="app-logo">⏰</span></h1>
-            <p>Please enter your institution and program details to start</p>
+            <h2>🎯 Welcome to Amar Routine</h2>
+            <p>আপনার ইউনিভার্সিটি/কলেজ এবং কোর্স সিলেক্ট করে প্রোফাইল তৈরি করুন।</p>
             
             <div class="input-group">
-                <label>University / School Name:</label>
-                <input type="text" id="inst-name" placeholder="e.g., NUBTK, BUET, DU" required>
+                <label for="inst-name">University / College Name:</label>
+                <input type="text" id="inst-name" placeholder="e.g. NUBT KHULNA">
             </div>
-            
+
             <div class="input-group">
-                <label>Program / Department / Group:</label>
-                <select id="dept-program" required>
-                    <option value="">-- Select Option --</option>
-                    <option value="CSE">CSE (Computer Science)</option>
-                    <option value="EEE">EEE (Electrical Engineering)</option>
-                    <option value="Science">Science Group</option>
-                    <option value="Commerce">Commerce Group</option>
-                    <option value="Arts">Arts / Humanities</option>
+                <label for="dept-program">Select Your Course / Department:</label>
+                <select id="dept-program">
+                    <optgroup label="🔬 Science Background">
+                        <option value="CSE">CSE (Computer Science & Engineering)</option>
+                        <option value="EEE">EEE (Electrical & Electronic Engineering)</option>
+                        <option value="Civil">Civil Engineering</option>
+                        <option value="Mechanical">Mechanical Engineering</option>
+                        <option value="Textile">Textile Engineering</option>
+                        <option value="Pharmacy">Bachelor of Pharmacy</option>
+                    </optgroup>
+                    
+                    <optgroup label="💼 Commerce Background">
+                        <option value="BBA">BBA (Bachelor of Business Administration)</option>
+                        <option value="Accounting">Accounting & Information Systems</option>
+                        <option value="Finance">Finance & Banking</option>
+                        <option value="Management">Management Studies</option>
+                        <option value="Marketing">Marketing</option>
+                    </optgroup>
+                    
+                    <optgroup label="🎨 Arts / Humanities Background">
+                        <option value="English">BA in English</option>
+                        <option value="LLB">LLB (Bachelor of Laws)</option>
+                        <option value="Economics">BSS in Economics</option>
+                        <option value="Sociology">Sociology</option>
+                        <option value="Bangla">BA in Bangla</option>
+                        <option value="Journalism">Journalism & Media Studies</option>
+                    </optgroup>
                 </select>
             </div>
-            
-            <button id="start-btn" onclick="initializeApp()">Enter Dashboard</button>
+
+            <button class="btn-primary" onclick="initializeApp()">Create Dashboard 🚀</button>
         </div>
     </div>
 
-    <!-- 2. System Main App Layout Interface Dashboard Screen View -->
-    <div id="dashboard-screen" class="screen hidden">
-        
-        <!-- Dashboard Top Cover Image Presentation Banner Canvas Header -->
-        <header id="top-banner" class="cover-banner">
-            <div class="banner-overlay">
-                <h1 id="display-inst-name">NORTHERN UNIVERSITY OF BUSINESS AND TECHNOLOGY KHULNA</h1>
-                <p id="display-program-name">Program: General</p>
-                <button onclick="resetApp()" class="reset-btn">🔄 Change Info</button>
+    <div id="dashboard-screen" class="container hidden">
+        <header class="dashboard-header">
+            <div>
+                <h1 id="display-inst-name">UNIVERSITY NAME</h1>
+                <p id="display-program-name">Program: CSE</p>
             </div>
+            <button class="btn-reset" onclick="resetApp()">🔄 Change Info</button>
         </header>
 
-        <main class="dashboard-content">
-            <!-- Dynamic Execution Action Switch Controls Trigger Panel Layout -->
-            <div class="control-panel">
-                <button onclick="openModal('manual-modal')" class="btn-primary">➕ Add Routine Manually</button>
-                <button onclick="openModal('upload-modal')" class="btn-secondary">📸 Auto-Routine from Image/PDF</button>
-            </div>
+        <div class="action-bar">
+            <button class="btn-action" onclick="openModal('manual-modal')">➕ Add Class Manually</button>
+        </div>
 
-            <!-- Parsed Object Data List Layout Grid Container Section Block -->
-            <section class="routine-section">
-                <h2>📅 Today's Schedule (Chronological Order)</h2>
-                <div id="routine-list" class="routine-grid">
-                    <p class="no-routine">No schedule set. Use the buttons above to add classes.</p>
+        <main class="routine-section">
+            <h2>📅 Today's Schedule</h2>
+            <div id="routine-list">
                 </div>
-            </section>
         </main>
     </div>
 
-    <!-- 3. Form Component Input Structure Container Manual Entry Modal Box -->
     <div id="manual-modal" class="modal hidden">
         <div class="modal-content">
-            <h3>Add New Class</h3>
-            <form id="manual-form" onsubmit="saveManualRoutine(event)">
-                <div class="input-group">
-                    <input type="text" id="m-subject" placeholder="Subject Name" required>
-                </div>
-                <div class="input-group">
-                    <input type="text" id="m-code" placeholder="Course Code" required>
-                </div>
-                <div class="input-group">
-                    <input type="text" id="m-teacher" placeholder="Teacher Name">
-                </div>
-                <div class="input-group">
-                    <input type="text" id="m-room" placeholder="Room No">
-                </div>
-                <div class="input-group">
-                    <label>Class Time:</label>
-                    <input type="time" id="m-time" required>
-                </div>
-                <div class="input-group">
-                    <label>Day of the Week:</label>
-                    <select id="m-day" required>
-                        <option value="Saturday">Saturday</option>
-                        <option value="Sunday">Sunday</option>
-                        <option value="Monday">Monday</option>
-                        <option value="Tuesday">Tuesday</option>
-                        <option value="Wednesday">Wednesday</option>
-                        <option value="Thursday">Thursday</option>
-                        <option value="Friday">Friday</option>
-                    </select>
-                </div>
-                <div class="modal-buttons">
-                    <button type="submit" class="btn-save">Save Class</button>
-                    <button type="button" onclick="closeModal('manual-modal')" class="btn-cancel">Cancel</button>
-                </div>
+            <span class="close-btn" onclick="closeModal('manual-modal')">&times;</span>
+            <h2>➕ Add New Class</h2>
+            <form id="manual-form" onsubmit="saveManualRoutine(e)">
+                <input type="text" id="m-subject" placeholder="Subject Name" required>
+                <input type="text" id="m-code" placeholder="Course Code (e.g. CSE 2101)" required>
+                <input type="text" id="m-teacher" placeholder="Teacher Code (e.g. TAJ)">
+                <input type="text" id="m-room" placeholder="Room/Lab No (e.g. 201)">
+                <input type="time" id="m-time" required>
+                <select id="m-day">
+                    <option value="Saturday">Saturday</option>
+                    <option value="Sunday">Sunday</option>
+                    <option value="Monday">Monday</option>
+                    <option value="Tuesday">Tuesday</option>
+                    <option value="Wednesday">Wednesday</option>
+                    <option value="Thursday">Thursday</option>
+                </select>
+                <button type="submit" class="btn-primary" style="margin-top: 15px;">Save Class</button>
             </form>
         </div>
     </div>
 
-    <!-- 4. Target Extraction Input Stream File Upload Interactive Scanner Modal Box -->
-    <div id="upload-modal" class="modal hidden">
-        <div class="modal-content">
-            <h3>Smart Routine Scanner (AI)</h3>
-            <div class="input-group">
-                <label>Your Specific Section Name (e.g., A, B, Sec-2, 3D):</label>
-                <input type="text" id="filter-section" placeholder="Enter exact section code">
-            </div>
-            <div class="input-group">
-                <label>Upload Routine Image or PDF Document:</label>
-                <input type="file" id="routine-file" accept="image/*, application/pdf">
-            </div>
-            <div id="scan-status" class="status-text"></div>
-            <div class="modal-buttons">
-                <button onclick="processRoutineFile()" class="btn-save">Process & Extract</button>
-                <button type="button" onclick="closeModal('upload-modal')" class="btn-cancel">Cancel</button>
-            </div>
-        </div>
-    </div>
-
-    <audio id="alarm-sound" src="https://assets.mixkit.co/active_storage/sfx/2869/2869-default.wav" loop></audio>
+    <audio id="alarm-sound" src="https://assets.mixkit.co/active_storage/sfx/2869/2869-120.wav" preload="auto"></audio>
 
     <script src="app.js"></script>
 </body>
