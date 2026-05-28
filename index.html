@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AmarRoutine - আপনার ডিজিটাল ক্লাসরুম অ্যাসিস্ট্যান্ট</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- OCR এর জন্য Tesseract.js লাইব্রেরি সিডিএন -->
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+</head>
+<body class="default-theme">
+
+    <!-- ১. অনবোর্ডিং স্ক্রিন (ইউজার প্রথমবার ঢুকলে দেখবে) -->
+    <div id="onboarding-screen" class="screen">
+        <div class="welcome-box">
+            <h1>আমার রুটিন <span class="app-logo">⏰</span></h1>
+            <p>আপনার প্রতিষ্ঠান ও ডিপার্টমেন্ট সিলেক্ট করে শুরু করুন</p>
+            
+            <div class="input-group">
+                <label>বিশ্ববিদ্যালয় / স্কুলের নাম:</label>
+                <input type="text" id="inst-name" placeholder="যেমন: BUET, DU, বা Model School" required>
+            </div>
+            
+            <div class="input-group">
+                <label>প্রোগ্রাম / ডিপার্টমেন্ট / গ্রুপ:</label>
+                <select id="dept-program" required>
+                    <option value="">-- নির্বাচন করুন --</option>
+                    <option value="CSE">CSE (Computer Science)</option>
+                    <option value="EEE">EEE (Electrical Engineering)</option>
+                    <option value="Science">Science (বিজ্ঞান বিভাগ)</option>
+                    <option value="Commerce">Commerce (ব্যবসায় শিক্ষা)</option>
+                    <option value="Arts">Arts (মানবিক বিভাগ)</option>
+                </select>
+            </div>
+            
+            <button id="start-btn" onclick="initializeApp()">ড্যাশবোর্ডে প্রবেশ করুন</button>
+        </div>
+    </div>
+
+    <!-- ২. মূল ড্যাশবোর্ড স্ক্রিন (প্রথমে হাইড থাকবে) -->
+    <div id="dashboard-screen" class="screen hidden">
+        
+        <!-- টপ ব্যানার সেকশন (Cover Image Style) -->
+        <header id="top-banner" class="cover-banner">
+            <div class="banner-overlay">
+                <h1 id="display-inst-name">University Name</h1>
+                <p id="display-program-name">Program: CSE</p>
+                <button onclick="resetApp()" class="reset-btn">🔄 তথ্য পরিবর্তন</button>
+            </div>
+        </header>
+
+        <main class="dashboard-content">
+            <!-- ফিচার ট্যাব/বাটন সমূহ -->
+            <div class="control-panel">
+                <button onclick="openModal('manual-modal')" class="btn-primary">➕ ম্যানুয়াল রুটিন যোগ করুন</button>
+                <button onclick="openModal('upload-modal')" class="btn-secondary">📸 ছবি/ফাইল থেকে অটো-রুটিন</button>
+            </div>
+
+            <!-- রুটিন ডিসপ্লে সেকশন -->
+            <section class="routine-section">
+                <h2>📅 আপনার আজকের রুটিন (সিরিয়াল ওয়াইজ)</h2>
+                <div id="routine-list" class="routine-grid">
+                    <!-- জাভাস্ক্রিপ্ট এর মাধ্যমে এখানে রুটিন কার্ডগুলো লোড হবে -->
+                    <p class="no-routine">কোনো রুটিন সেট করা নেই। উপরে বাটন চাপুন।</p>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- ৩. ম্যানুয়াল এন্ট্রি মোডাল (পপ-আপ) -->
+    <div id="manual-modal" class="modal hidden">
+        <div class="modal-content">
+            <h3>নতুন রুটিন এন্ট্রি</h3>
+            <form id="manual-form" onsubmit="saveManualRoutine(event)">
+                <input type="text" id="m-subject" placeholder="Subject Name" required>
+                <input type="text" id="m-code" placeholder="Course Code" required>
+                <input type="text" id="m-teacher" placeholder="Teacher Name" required>
+                <input type="text" id="m-room" placeholder="Room No" required>
+                <input type="time" id="m-time" required>
+                <select id="m-day" required>
+                    <option value="Saturday">শনিবার (Saturday)</option>
+                    <option value="Sunday">রবিবার (Sunday)</option>
+                    <option value="Monday">সোমবার (Monday)</option>
+                    <option value="Tuesday">মঙ্গলবার (Tuesday)</option>
+                    <option value="Wednesday">বুধবার (Wednesday)</option>
+                    <option value="Thursday">বৃহস্পতিবার (Thursday)</option>
+                    <option value="Friday">শুক্রবার (Friday)</option>
+                </select>
+                <div class="modal-buttons">
+                    <button type="submit" class="btn-save">সেভ করুন</button>
+                    <button type="button" onclick="closeModal('manual-modal')" class="btn-cancel">বাতিল</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ৪. ইমেজ/ফাইল আপলোড মোডাল (পপ-আপ) -->
+    <div id="upload-modal" class="modal hidden">
+        <div class="modal-content">
+            <h3>স্মার্ট রুটিন স্ক্যানার (AI)</h3>
+            <div class="input-group">
+                <label>আপনার নির্দিষ্ট সেকশন নাম (যেমন: A, B, Sec-2):</label>
+                <input type="text" id="filter-section" placeholder="সঠিক সেকশন নাম লিখুন">
+            </div>
+            <div class="input-group">
+                <label>রুটিন ফাইল/ছবি আপলোড করুন:</label>
+                <input type="file" id="routine-file" accept="image/*, application/pdf">
+            </div>
+            <div id="scan-status" class="status-text"></div>
+            <div class="modal-buttons">
+                <button onclick="processRoutineFile()" class="btn-save">প্রসেস ও এক্সট্রাক্ট</button>
+                <button type="button" onclick="closeModal('upload-modal')" class="btn-cancel">বাতিল</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ব্যাকগ্রাউন্ড নোটিফিকেশন অ্যালার্ম অডিও ট্যাগ -->
+    <audio id="alarm-sound" src="https://assets.mixkit.co/active_storage/sfx/2869/2869-default.wav" loop></audio>
+
+    <script src="app.js"></script>
+</body>
+</html>
