@@ -1,85 +1,68 @@
 // ==========================================
-// ১. সার্ভিস ওয়ার্কার রেজিস্ট্রেশন (PWA ও ব্যাকগ্রাউন্ড নোটিফিকেশন)
+// 1. Service Worker Registration
 // ==========================================
 if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('./sw.js')
-        .then(() => console.log("AmarRoutine Service Worker Registered Successfully!"))
-        .catch(err => console.log("Service Worker Registration Failed:", err));
+        .then(() => console.log("Service Worker Registered!"))
+        .catch(err => console.log("SW Registration Failed:", err));
 }
 
-// ==========================================
-// ২. গ্লোবাল ভেরিয়েবল এবং স্টেট ম্যানেজমেন্ট
-// ==========================================
 let currentRoutine = [];
 
-// অ্যাপ লোড হওয়ার পর ইনিশিয়াল চেক
 document.addEventListener("DOMContentLoaded", () => {
     checkExistingUser();
     requestNotificationPermission();
-    
-    // প্রতি মিনিটে ব্যাকগ্রাউন্ড অ্যালার্ম চেকার চালু করা (60000 ms = 1 minute)
+    // Background system checks schedule matching states every 60 seconds
     setInterval(checkUpcomingClasses, 60000);
 });
 
-// ব্রাউজারের কাছে নোটিফিকেশন পারমিশন চাওয়া
 function requestNotificationPermission() {
     if ("Notification" in window) {
-        Notification.requestPermission().then(permission => {
-            if (permission === "granted") {
-                console.log("Notification permission granted.");
-            }
-        });
+        Notification.requestPermission();
     }
 }
 
-// পুরাতন ইউজারের ডাটা লোকাল স্টোরেজে আছে কিনা চেক করা
 function checkExistingUser() {
     const instName = localStorage.getItem("instName");
     const programName = localStorage.getItem("programName");
-    
     if (instName && programName) {
         showDashboard(instName, programName);
     }
 }
 
 // ==========================================
-// ৩. অনবোর্ডিং এবং ডাইনামিক UI থিমিং
+// 2. Onboarding & Dynamic Theme Controls
 // ==========================================
 function initializeApp() {
     const instName = document.getElementById("inst-name").value.trim();
     const programName = document.getElementById("dept-program").value;
 
     if (!instName || !programName) {
-        alert("দয়া করে সব তথ্য সঠিকভাবে দিন!");
+        alert("Please enter all required information correctly!");
         return;
     }
 
-    // লোকাল স্টোরেজে ইউজারের প্রাথমিক প্রোফাইল সেভ
     localStorage.setItem("instName", instName);
     localStorage.setItem("programName", programName);
-
     showDashboard(instName, programName);
 }
 
 function showDashboard(inst, program) {
-    // স্ক্রিন টগল করা
     document.getElementById("onboarding-screen").classList.add("hidden");
     document.getElementById("dashboard-screen").classList.remove("hidden");
 
-    // ড্যাশবোর্ড ব্যানারে টেক্সট সেট করা
     document.getElementById("display-inst-name").innerText = inst;
     document.getElementById("display-program-name").innerText = `Program: ${program}`;
 
-    // ডাইনামিক থিম অ্যাপ্লাই করা (যেমন: cse হলে theme-cse ক্লাস বডিতে অ্যাড হবে)
-    document.body.className = ""; // আগের সব থিম ক্লাস রিমুভ
+    // Apply exact styling context rules based on choice
+    document.body.className = ""; 
     document.body.classList.add(`theme-${program.toLowerCase()}`);
 
-    // রুটিন লোড করা
     loadRoutine();
 }
 
 function resetApp() {
-    if (confirm("আপনি কি তথ্য পরিবর্তন করতে চান? আপনার বর্তমান রুটিন ডাটা মুছে যাবে না।")) {
+    if (confirm("Are you sure you want to change your profile? Saved routine items will persist.")) {
         localStorage.removeItem("instName");
         localStorage.removeItem("programName");
         document.getElementById("onboarding-screen").classList.remove("hidden");
@@ -87,41 +70,42 @@ function resetApp() {
     }
 }
 
-// ==========================================
-// ৪. মোডাল (Pop-up) কন্ট্রোল
-// ==========================================
-function openModal(id) { 
-    document.getElementById(id).classList.remove("hidden"); 
-}
-
-function closeModal(id) { 
-    document.getElementById(id).classList.add("hidden"); 
-}
+function openModal(id) { document.getElementById(id).classList.remove("hidden"); }
+function closeModal(id) { document.getElementById(id).classList.add("hidden"); }
 
 // ==========================================
-// ৫. ম্যানুয়াল রুটিন সেভ এবং ডিসপ্লে লজিক
+// 3. Manual Routine Management
 // ==========================================
 function saveManualRoutine(e) {
-    e.preventDefault();
+    e.preventDefault(); // Stop forms from reloading the tab environment
     
+    const subject = document.getElementById("m-subject").value.trim();
+    const code = document.getElementById("m-code").value.trim();
+    const teacher = document.getElementById("m-teacher").value.trim();
+    const room = document.getElementById("m-room").value.trim();
+    const time = document.getElementById("m-time").value;
+    const day = document.getElementById("m-day").value;
+
+    if (!subject || !code || !time) {
+        alert("Please enter Subject, Course Code, and Time!");
+        return;
+    }
+
     const newClass = {
         id: Date.now(),
-        subject: document.getElementById("m-subject").value.trim(),
-        code: document.getElementById("m-code").value.trim(),
-        teacher: document.getElementById("m-teacher").value.trim(),
-        room: document.getElementById("m-room").value.trim(),
-        time: document.getElementById("m-time").value, // Format: HH:MM (24-hour)
-        day: document.getElementById("m-day").value
+        subject: subject,
+        code: code,
+        teacher: teacher || "N/A",
+        room: room || "N/A",
+        time: time, 
+        day: day
     };
 
     currentRoutine.push(newClass);
     localStorage.setItem("routineData", JSON.stringify(currentRoutine));
     
-    // ফর্ম রিসেট ও মোডাল বন্ধ করা
     document.getElementById("manual-form").reset();
     closeModal("manual-modal");
-    
-    // ড্যাশবোর্ড আপডেট করা
     renderRoutine();
 }
 
@@ -131,17 +115,16 @@ function loadRoutine() {
     renderRoutine();
 }
 
-// রুটিন সময় অনুযায়ী সিরিয়াল ওয়াইজ সাজিয়ে ড্যাশবোর্ডে রেন্ডার করা
 function renderRoutine() {
     const routineList = document.getElementById("routine-list");
     routineList.innerHTML = "";
 
     if (currentRoutine.length === 0) {
-        routineList.innerHTML = `<p class="no-routine">কোনো রুটিন সেট করা নেই। উপরে বাটন চাপুন।</p>`;
+        routineList.innerHTML = `<p class="no-routine">No schedule set. Use the buttons above to add classes.</p>`;
         return;
     }
 
-    // সময় অনুযায়ী ছোট থেকে বড় (Chronological Order) ক্রমানুসারে সাজানো
+    // Chronological order layout sorting rules (Ascending time serialization)
     const sortedRoutine = [...currentRoutine].sort((a, b) => a.time.localeCompare(b.time));
 
     sortedRoutine.forEach(item => {
@@ -150,34 +133,33 @@ function renderRoutine() {
         card.innerHTML = `
             <span class="time-tag">⏰ ${convertTo12Hour(item.time)}</span>
             <h3>${item.subject} (${item.code})</h3>
-            <p class="teacher">👨‍🏫 শিক্ষক: ${item.teacher}</p>
-            <p>🚪 রুম নম্বর: ${item.room}</p>
-            <p>📅 বার: ${item.day}</p>
-            <button onclick="deleteRoutine(${item.id})" style="margin-top:12px; background:none; border:none; color:#dc3545; cursor:pointer; font-size:12px; font-weight:bold; width:fit-content; padding:0;">🗑️ মুছে ফেলুন</button>
+            <p class="teacher">👨‍🏫 Teacher: ${item.teacher}</p>
+            <p>🚪 Room No: ${item.room}</p>
+            <p>📅 Day: ${item.day}</p>
+            <button onclick="deleteRoutine(${item.id})" style="margin-top:10px; background:none; border:none; color:#dc3545; cursor:pointer; font-size:12px; font-weight:bold;">🗑️ Delete</button>
         `;
         routineList.appendChild(card);
     });
 }
 
 function deleteRoutine(id) {
-    if (confirm("আপনি কি এই ক্লাসটি রুটিন থেকে ডিলিট করতে চান?")) {
+    if (confirm("Are you sure you want to remove this class entry?")) {
         currentRoutine = currentRoutine.filter(item => item.id !== id);
         localStorage.setItem("routineData", JSON.stringify(currentRoutine));
         renderRoutine();
     }
 }
 
-// 24 Hour টাইম ফরম্যাটকে সুন্দর 12 Hour (AM/PM) ফরম্যাটে রূপান্তর
 function convertTo12Hour(timeString) {
     let [hours, minutes] = timeString.split(':');
     let ampm = hours >= 12 ? 'PM' : 'AM';
     hours = hours % 12;
-    hours = hours ? hours : 12; // ০ টা বাজলে ১২ করা
+    hours = hours ? hours : 12;
     return `${hours}:${minutes} ${ampm}`;
 }
 
 // ==========================================
-// ৬. AI OCR (ছবি থেকে নির্দিষ্ট সেকশনের রুটিন এক্সট্রাকশন)
+// 4. AI OCR Automated Filtering Engine
 // ==========================================
 async function processRoutineFile() {
     const fileInput = document.getElementById("routine-file");
@@ -185,51 +167,61 @@ async function processRoutineFile() {
     const statusText = document.getElementById("scan-status");
 
     if (!sectionName || fileInput.files.length === 0) {
-        alert("দয়া করে সেকশনের নাম এবং রুটিন ছবি দুটিই প্রদান করুন!");
+        alert("Please specify the target section code and upload an image file!");
         return;
     }
 
-    statusText.innerText = "⏳ ছবি স্ক্যান করা হচ্ছে (AI Processing)... অনুগ্রহ করে অপেক্ষা করুন।";
+    statusText.style.color = "#ffc107";
+    statusText.innerText = "⏳ AI scanning image file... Please hold on.";
     
     const file = fileInput.files[0];
     
     try {
-        // Tesseract.js লাইব্রেরি দিয়ে ইমেজ থেকে টেক্সট এক্সট্রাক্ট করা
-        const result = await Tesseract.recognize(file, 'eng');
+        // Tesseract tracking log capture execution
+        const result = await Tesseract.recognize(file, 'eng', {
+            logger: m => {
+                if(m.status === 'recognizing text') {
+                    statusText.innerText = `⏳ Scanning status: ${Math.floor(m.progress * 100)}%`;
+                }
+            }
+        });
+        
         const text = result.data.text;
-        
-        statusText.innerText = "🔍 আপনার সেকশনের ডাটা ফিল্টার করা হচ্ছে...";
-        
         const lines = text.split('\n');
         let matchedClasses = 0;
 
         lines.forEach(line => {
-            // যদি লাইনের ভেতরে ইউজারের ইনপুট দেওয়া নির্দিষ্ট সেকশন নাম থাকে
+            // Process target strings if matching parameters exist
             if (line.toLowerCase().includes(sectionName.toLowerCase())) {
-                
-                // হোয়াইটস্পেস বা গ্যাপের ওপর ভিত্তি করে টেক্সটকে শব্দে ভাগ করা
                 const words = line.split(/\s+/).filter(w => w.trim() !== "");
                 
-                if (words.length >= 4) {
-                    // এক্সট্রাক্ট করা টেক্সটকে একটি অবজেক্টে রূপান্তর (সাধারণ স্ট্রাকচার অনুযায়ী)
-                    const mockClass = {
+                if (words.length >= 2) {
+                    // Extract execution time limits
+                    let extractedTime = "09:00"; 
+                    const timeRegex = /(\d{1,2}:\d{2})/;
+                    const foundTime = line.match(timeRegex);
+                    if (foundTime) {
+                        extractedTime = foundTime[1].padStart(5, '0'); 
+                    }
+
+                    // Scan and detect appropriate context day limits
+                    let extractedDay = "Sunday"; 
+                    const daysArray = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+                    for (let d of daysArray) {
+                        if(line.toLowerCase().includes(d.toLowerCase())) { extractedDay = d; break; }
+                    }
+
+                    const extractedClass = {
                         id: Date.now() + Math.random(),
                         subject: words[0] || "Auto Subject",
                         code: words[1] || "000",
-                        teacher: words[words.length - 1] || "Unknown",
+                        teacher: words[words.length - 1] || "TBA",
                         room: words[words.length - 2] || "N/A",
-                        time: "09:00", // ডিফল্ট বা এস্টিমেটেড টাইম (ছবি অনুযায়ী পার্সিং আরো নিখুঁত করা যায়)
-                        day: "Sunday"  // ডিফল্ট ডে
+                        time: extractedTime,
+                        day: extractedDay
                     };
-                    
-                    // ট্রাই টু গেস টাইম যদি ফরম্যাট মিলে (যেমন: 10:30)
-                    const timeRegex = /\b\d{2}:\d{2}\b/;
-                    const foundTime = line.match(timeRegex);
-                    if (foundTime) {
-                        mockClass.time = foundTime[0];
-                    }
 
-                    currentRoutine.push(mockClass);
+                    currentRoutine.push(extractedClass);
                     matchedClasses++;
                 }
             }
@@ -238,23 +230,25 @@ async function processRoutineFile() {
         if (matchedClasses > 0) {
             localStorage.setItem("routineData", JSON.stringify(currentRoutine));
             renderRoutine();
-            statusText.innerText = `✅ সফলভাবে আপনার সেকশনের ${matchedClasses} টি ক্লাস আলাদা করে সেভ করা হয়েছে!`;
-            setTimeout(() => {
-                closeModal("upload-modal");
-                statusText.innerText = "";
-            }, 2500);
+            statusText.style.color = "#28a745";
+            statusText.innerText = `✅ Successfully extracted ${matchedClasses} classes matching section "${sectionName}"!`;
+            fileInput.value = "";
+            document.getElementById("filter-section").value = "";
+            setTimeout(() => { closeModal("upload-modal"); statusText.innerText = ""; }, 2500);
         } else {
-            statusText.innerText = "❌ আপনার সেকশনের কোনো স্পষ্ট তথ্য খুঁজে পাওয়া যায়নি। ম্যানুয়ালি ট্রাই করুন।";
+            statusText.style.color = "#dc3545";
+            statusText.innerText = `❌ No schedule data discovered for section "${sectionName}". Check image quality.`;
         }
 
     } catch (error) {
         console.error(error);
-        statusText.innerText = "❌ ফাইল প্রসেস করতে সমস্যা হয়েছে। আবার চেষ্টা করুন।";
+        statusText.style.color = "#dc3545";
+        statusText.innerText = "❌ Processing failure occurred during AI scanner tracking!";
     }
 }
 
 // ==========================================
-// ৭. ব্যাকগ্রাউন্ড অ্যালার্ম ও নোটিফিকেশন লজিক
+// 5. Automated 45-Minute Notification & Alarm Ring Engine
 // ==========================================
 function checkUpcomingClasses() {
     if (currentRoutine.length === 0) return;
@@ -262,17 +256,14 @@ function checkUpcomingClasses() {
     const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
     const now = new Date();
     const todayName = days[now.getDay()];
-    
-    // বর্তমান সময়কে মিনিটে রূপান্তর (যেমন: 10:15 AM = 10*60 + 15 = 615 মিনিট)
     const currentMinutes = now.getHours() * 60 + now.getMinutes();
 
     currentRoutine.forEach(item => {
-        // শুধুমাত্র আজকের দিনের ক্লাস ফিল্টার করবে
         if (item.day.toLowerCase() === todayName.toLowerCase()) {
             const [classHour, classMinute] = item.time.split(':').map(Number);
             const classMinutes = classHour * 60 + classMinute;
 
-            // যদি ক্লাস শুরু হতে ঠিক ৪৫ মিনিট বাকি থাকে (classMinutes - currentMinutes === 45)
+            // Trigger notification exactly 45 minutes ahead of schedule 
             if (classMinutes - currentMinutes === 45) {
                 triggerAlarm(item.subject, item.room);
             }
@@ -281,32 +272,21 @@ function checkUpcomingClasses() {
 }
 
 function triggerAlarm(subject, room) {
-    // ১. ব্রাউজারে পুশ নোটিফিকেশন পাঠানো
     if (Notification.permission === "granted") {
-        new Notification("AmarRoutine ক্লাসের সময় হয়েছে! ⏰", {
-            body: `৪৫ মিনিট পর আপনার "${subject}" ক্লাস শুরু হবে। রুম নম্বর: ${room}`,
-            icon: "https://cdn-icons-png.flaticon.com/512/2693/2693507.png",
-            tag: "class-alert",
-            requireInteraction: true // ইউজার ক্লিক না করা পর্যন্ত নোটিফিকেশন থাকবে
+        new Notification("AmarRoutine Alert! ⏰", {
+            body: `Your class "${subject}" starts in 45 minutes. Room: ${room}`,
+            icon: "https://cdn-icons-png.flaticon.com/512/2693/2693507.png"
         });
     }
 
-    // ২. অটোমেটিক অ্যালার্ম সাউন্ড প্লে করা
     const alarmSound = document.getElementById("alarm-sound");
     if (alarmSound) {
-        // ব্রাউজার পলিসির কারণে প্লে করার ট্রাই-ক্যাচ ব্লক
         alarmSound.play().then(() => {
-            console.log("অ্যালার্ম বাজছে...");
-            
-            // ঠিক ১৫ সেকেন্ড (১৫০০০ মিলি-সেকেন্ড) পর অ্যালার্ম অটোমেটিক স্টপ করা
+            // Execution limit timer: Forces sound tracking pause precisely at 15 seconds
             setTimeout(() => {
                 alarmSound.pause();
-                alarmSound.currentTime = 0; // অডিওর প্লে-হেড শুরুতে নিয়ে যাওয়া
-                console.log("১৫ সেকেন্ড পূর্ণ হওয়ায় অ্যালার্ম স্বয়ংক্রিয়ভাবে বন্ধ হয়েছে।");
+                alarmSound.currentTime = 0; 
             }, 15000);
-            
-        }).catch(err => {
-            console.log("ইউজার ব্রাউজারে কোনো ইন্টারঅ্যাকশন (ক্লিক) না করায় অডিও প্লে হতে পারেনি:", err);
-        });
+        }).catch(e => console.log("Audio playback blocked. Interact with the dashboard window first."));
     }
 }
