@@ -5,8 +5,9 @@ document.addEventListener("DOMContentLoaded", () => {
     checkExistingUser();
     requestNotificationPermission();
     
-    setInterval(updateSmartClock, 1000);
-    updateSmartClock();
+    // ব্যাকগ্রাউন্ড মেকানিক্যাল অ্যানালগ ঘড়ি এবং ডিজিটাল ক্লক সিঙ্ক লুপ
+    setInterval(synchronizeMechanicalClock, 1000);
+    synchronizeMechanicalClock();
     
     fetchLiveWeather();
 
@@ -18,71 +19,94 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 });
 
-function updateSmartClock() {
+// ⏰ মেকানিক্যাল অ্যানালগ ক্লক এবং ডিজিটাল টাইম রিফ্রেশ ইঞ্জিন
+function synchronizeMechanicalClock() {
     const now = new Date();
-    let hours = now.getHours();
-    let minutes = now.getMinutes();
-    let seconds = now.getSeconds();
-    let ampm = hours >= 12 ? 'PM' : 'AM';
-    hours = hours % 12 || 12;
-    hours = hours < 10 ? '0' + hours : hours;
-    minutes = minutes < 10 ? '0' + minutes : minutes;
-    seconds = seconds < 10 ? '0' + seconds : seconds;
     
-    document.getElementById("digital-clock").innerText = `${hours}:${minutes}:${seconds} ${ampm}`;
+    const seconds = now.getSeconds();
+    const minutes = now.getMinutes();
+    const hours = now.getHours();
+
+    // কাঁটার অবস্থান হিসাব করার নিখুঁত গাণিতিক সমীকরণ (Degrees Calculation)
+    const secondDegrees = ((seconds / 60) * 360);
+    const minuteDegrees = ((minutes / 60) * 360) + ((seconds / 60) * 6);
+    const hourDegrees = ((hours / 12) * 360) + ((minutes / 60) * 30);
+
+    // DOM নোডে মেকানিক্যাল সুইং রেন্ডারিং
+    document.getElementById("clock-second").style.transform = `rotate(${secondDegrees}deg)`;
+    document.getElementById("clock-minute").style.transform = `rotate(${minuteDegrees}deg)`;
+    document.getElementById("clock-hour").style.transform = `rotate(${hourDegrees}deg)`;
+
+    // ডিজিটাল ডিসপ্লে ব্যাকআপ টেক্সট ফরম্যাটিং
+    let ampm = hours >= 12 ? 'PM' : 'AM';
+    let displayHours = hours % 12 || 12;
+    let displayMinutes = minutes < 10 ? '0' + minutes : minutes;
+    let displaySeconds = seconds < 10 ? '0' + seconds : seconds;
+    displayHours = displayHours < 10 ? '0' + displayHours : displayHours;
+
+    document.getElementById("digital-clock").innerText = `${displayHours}:${displayMinutes}:${displaySeconds} ${ampm}`;
     const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
     document.getElementById("live-date").innerText = now.toLocaleDateString('en-US', options);
 }
 
+// ওపెನ್ মেটিও লাইভ ক্লাউড ও ওয়েদার ট্র্যাকার
 function fetchLiveWeather() {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(async (position) => {
-            const lat = position.coords.latitude;
-            const lon = position.coords.longitude;
             try {
+                const lat = position.coords.latitude;
+                const lon = position.coords.longitude;
                 const response = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`);
                 const data = await response.json();
                 if(data && data.current_weather) {
-                    const temp = data.current_weather.temperature;
-                    const wind = data.current_weather.windspeed;
                     document.getElementById("weather-box").innerHTML = `
-                        <div class="weather-card">
-                            <span class="weather-icon">🌡️</span>
-                            <div class="weather-details">
-                                <span class="temp-text">${temp}°C</span>
-                                <span class="wind-text">💨 ${wind} km/h</span>
-                            </div>
-                        </div>
-                    `;
+                        <div class="weather-hud-card">
+                            <span class="hud-temp">${data.current_weather.temperature}°C</span>
+                            <span class="hud-status">💨 Wind: ${data.current_weather.windspeed} km/h</span>
+                        </div>`;
                 }
-            } catch (err) {
-                document.getElementById("weather-box").innerHTML = "<p class='w-err'>🌤️ Offline</p>";
+            } catch (e) {
+                document.getElementById("weather-box").innerHTML = "🌤️ Environment Normal";
             }
         }, () => {
-            document.getElementById("weather-box").innerHTML = "<p class='w-err'>📍 Blocked</p>";
+            document.getElementById("weather-box").innerHTML = "📍 GPS Signal Off";
         });
     }
 }
 
-// ⭐ ডায়নামিক এডভান্সড থিম ম্যাপিং ইঞ্জিন
-function applyCourseTheme(program) {
+// 🎨 ইন্টেলিজেন্ট ডিপার্টমেন্ট থিম ইঞ্জিন (Set Specific UI Accents based on your Course Selection)
+function executeDynamicThemeBinding(program) {
     const body = document.body;
     
-    // ১. Science গ্রপসমূহ (Emerald Accent)
-    const scienceList = ["CSE", "SWE", "EEE", "Civil", "Mechanical", "Textile", "BSc Physics", "BSc Chemistry", "BSc Math", "College Science", "School Science"];
+    // ১. Science & Engineering ট্র্যাকসমূহ (যেমন: CSE হলে ম্যাট্রিক্স সাইবার গ্রিন থিম)
+    const scienceTracks = [
+        "CSE", "SWE", "EEE", "CE", "ME", "IPE", "TE", "Architecture", 
+        "Pharmacy", "Biochemistry", "Microbiology", "BSc Physics", 
+        "BSc Chemistry", "BSc Math", "Statistics", "GEB", "Environmental Science",
+        "College Science", "School Science"
+    ];
     
-    // ২. Commerce গ্রপসমূহ (Amber Accent)
-    const commerceList = ["BBA", "MBA", "Accounting", "Finance", "Management", "Marketing", "College Commerce", "School Commerce"];
+    // ২. Commerce & Business Administration ট্র্যাকসমূহ (এক্সিকিউটিভ অ্যাম্বার গোল্ড থিম)
+    const commerceTracks = [
+        "BBA", "Accounting", "Finance", "Marketing", "HRM", "Management", 
+        "International Business", "MIS", "THM", "College Commerce", "School Commerce"
+    ];
     
-    // ৩. Arts গ্রপসমূহ (Sky Blue Accent)
-    const artsList = ["English", "Bangla", "LLB", "Economics", "Sociology", "Political Science", "Journalism", "College Arts", "School Arts"];
+    // ৩. Arts, Law & Social Science ট্র্যাকসমূহ (ডিপ ভাইব্রেন্ট স্কাই ব্লু থিম)
+    const artsTracks = [
+        "English", "LLB", "Economics", "Bangla", "Political Science", "IR", 
+        "Sociology", "Media Journalism", "Public Administration", "History", 
+        "Philosophy", "Fine Arts", "College Arts", "School Arts"
+    ];
 
-    if (scienceList.includes(program)) {
-        body.setAttribute("data-theme", "cyber-emerald");
-    } else if (commerceList.includes(program)) {
-        body.setAttribute("data-theme", "atomic-amber");
-    } else if (artsList.includes(program)) {
-        body.setAttribute("data-theme", "fusion-sky");
+    if (scienceTracks.includes(program)) {
+        body.setAttribute("data-theme", "theme-cse-cyber");
+    } else if (commerceTracks.includes(program)) {
+        body.setAttribute("data-theme", "theme-commerce-amber");
+    } else if (artsTracks.includes(program)) {
+        body.setAttribute("data-theme", "theme-arts-sky");
+    } else {
+        body.setAttribute("data-theme", "theme-default");
     }
 }
 
@@ -90,11 +114,11 @@ function showDashboard(inst, program) {
     document.getElementById("onboarding-screen").classList.add("hidden");
     document.getElementById("dashboard-screen").classList.remove("hidden");
     
-    // নির্দিষ্ট রুলস মেইনটেইন করে প্রফেশনাল হেডিং ডিসপ্লে করা
+    // 'Gobindaganj' বা প্রতিষ্ঠানের নাম ক্যাপিটাল করার রুলস এবং 'Project Objective' প্রফেশনাল হেডিং রুলস মেইনটেইন করা
     document.getElementById("display-inst-name").innerText = inst.toUpperCase();
     document.getElementById("display-program").innerText = program;
     
-    applyCourseTheme(program);
+    executeDynamicThemeBinding(program);
     loadRoutine();
     loadExamRoutine();
 }
@@ -102,31 +126,11 @@ function showDashboard(inst, program) {
 function initializeApp() {
     const instName = document.getElementById("inst-name").value.trim();
     const programName = document.getElementById("dept-program").value;
-    if (!instName) return alert("Please specify your Institution Name.");
+    if (!instName || !programName) return alert("Please specify both Institution name and program profile!");
     
     localStorage.setItem("instName", instName);
     localStorage.setItem("programName", programName);
     showDashboard(instName, programName);
-}
-
-function downloadRoutineImage() {
-    const area = document.getElementById("routine-capture-area");
-    area.classList.add("exporting-active");
-    
-    const computedBg = getComputedStyle(document.body).getPropertyValue('--bg-canvas').trim() || "#0b0f19";
-    
-    html2canvas(area, {
-        scale: 3, 
-        backgroundColor: computedBg,
-        useCORS: true,
-        logging: false
-    }).then(canvas => {
-        const imageLink = document.createElement("a");
-        imageLink.download = `Routine_Canvas_${localStorage.getItem("programName")}.jpg`;
-        imageLink.href = canvas.toDataURL("image/jpeg", 0.95);
-        imageLink.click();
-        area.classList.remove("exporting-active");
-    });
 }
 
 async function saveManualRoutine(e) {
@@ -142,28 +146,10 @@ async function saveManualRoutine(e) {
     currentRoutine.push(newClass);
     localStorage.setItem("routineData", JSON.stringify(currentRoutine));
     
-    await scheduleRoutineNotification(newClass);
+    await dispatchNotification(newClass, "class");
     closeModal('manual-modal');
     document.getElementById("manual-form").reset();
     renderRoutine();
-}
-
-async function scheduleRoutineNotification(classItem) {
-    try {
-        if (window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.LocalNotifications) {
-            const daysMap = { 'sunday': 1, 'monday': 2, 'tuesday': 3, 'wednesday': 4, 'thursday': 5, 'friday': 6, 'saturday': 7 };
-            const [hours, minutes] = classItem.time.split(':').map(Number);
-            await window.Capacitor.Plugins.LocalNotifications.schedule({
-                notifications: [{
-                    id: classItem.id,
-                    title: `⏰ Lecture Starting!`,
-                    body: `${classItem.subject} (${classItem.code}) is scheduled at venue: ${classItem.room}.`,
-                    schedule: { on: { weekday: daysMap[classItem.day.toLowerCase()], hour: hours, minute: minutes }, repeats: true, allowWhileIdle: true },
-                    sound: true
-                }]
-            });
-        }
-    } catch(e){}
 }
 
 async function saveExamRoutine(e) {
@@ -173,74 +159,71 @@ async function saveExamRoutine(e) {
     const time = document.getElementById("e-time").value;
     const date = document.getElementById("e-date").value;
 
-    const newExam = { id: Date.now() + 1, subject, code, time, date };
+    const newExam = { id: Date.now() + 5, subject, code, time, date };
     examRoutine.push(newExam);
     localStorage.setItem("examRoutineData", JSON.stringify(examRoutine));
     
-    await scheduleExamNotification(newExam);
+    await dispatchNotification(newExam, "exam");
     closeModal('exam-modal');
     document.getElementById("exam-form").reset();
     renderExamRoutine();
 }
 
-async function scheduleExamNotification(exam) {
+async function dispatchNotification(item, type) {
     try {
-        if (window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.LocalNotifications) {
-            const [hours, minutes] = exam.time.split(':').map(Number);
-            const examDate = new Date(exam.date);
-            examDate.setHours(hours, minutes);
-            const alertTime = new Date(examDate.getTime() - (2 * 60 * 60 * 1000)); // ২ ঘণ্টা আগে এলার্ট
-
-            await window.Capacitor.Plugins.LocalNotifications.schedule({
-                notifications: [{
-                    id: exam.id,
-                    title: `🚨 Upcoming Examination Alert!`,
-                    body: `Your schedule for '${exam.subject}' begins at ${convertTo12Hour(exam.time)}.`,
-                    schedule: { at: alertTime, allowWhileIdle: true },
-                    sound: true
-                }]
-            });
+        if (window.Capacitor?.Plugins?.LocalNotifications) {
+            const { LocalNotifications } = window.Capacitor.Plugins;
+            if(type === "class") {
+                const daysMap = { 'sunday': 1, 'monday': 2, 'tuesday': 3, 'wednesday': 4, 'thursday': 5, 'friday': 6, 'saturday': 7 };
+                const [hours, minutes] = item.time.split(':').map(Number);
+                await LocalNotifications.schedule({
+                    notifications: [{
+                        id: item.id,
+                        title: `⏰ Lecture Session Alert!`,
+                        body: `${item.subject} (${item.code}) is scheduled at room: ${item.room}.`,
+                        schedule: { on: { weekday: daysMap[item.day.toLowerCase()], hour: hours, minute: minutes }, repeats: true, allowWhileIdle: true },
+                        sound: true
+                    }]
+                });
+            } else {
+                const [hours, minutes] = item.time.split(':').map(Number);
+                const exDate = new Date(item.date);
+                exDate.setHours(hours, minutes);
+                const alertTime = new Date(exDate.getTime() - (2 * 60 * 60 * 1000)); // ২ ঘণ্টা আগে ব্যাকগ্রাউন্ড রিমাইন্ডার পুশ হবে
+                await LocalNotifications.schedule({
+                    notifications: [{
+                        id: item.id,
+                        title: `🚨 Critical Exam Reminder!`,
+                        body: `Examination for '${item.subject}' starts in 2 hours.`,
+                        schedule: { at: alertTime, allowWhileIdle: true },
+                        sound: true
+                    }]
+                });
+            }
         }
-    } catch (e) {}
-}
-
-function loadRoutine() {
-    const stored = localStorage.getItem("routineData");
-    if (stored) { currentRoutine = JSON.parse(stored); renderRoutine(); }
-}
-
-function loadExamRoutine() {
-    const stored = localStorage.getItem("examRoutineData");
-    if (stored) { examRoutine = JSON.parse(stored); renderExamRoutine(); }
+    } catch(err){}
 }
 
 function renderRoutine() {
     const container = document.getElementById("routine-container");
     container.innerHTML = "";
-    if (currentRoutine.length === 0) return;
-
-    const div = document.createElement("div");
-    div.innerHTML = `<h2 class="section-title">📅 Academic Schedule</h2>`;
-    
+    if (currentRoutine.length === 0) {
+        container.innerHTML = `<div class="empty-state-notice">Your academic list is empty. Commit new schedules using the dashboard buttons.</div>`;
+        return;
+    }
     currentRoutine.forEach(item => {
         const card = document.createElement("div");
-        card.className = "routine-card style-class";
+        card.className = "routine-card node-class";
         card.innerHTML = `
-            <span class="delete-icon" onclick="deleteClass(${item.id})">✕</span>
-            <div class="card-body">
-                <h3>${item.subject}</h3>
-                <span class="sub-code">${item.code}</span>
-                <div class="meta-info">
-                    <span>👨‍🏫 Instructor: <b>${item.teacher}</b></span>
-                    <span>🚪 Room/Lab: <b>${item.room}</b></span>
-                    <span>🗓️ Day: <b>${item.day}</b></span>
-                </div>
+            <span class="delete-trigger" onclick="deleteNode(${item.id}, 'class')">✕</span>
+            <div class="card-contents">
+                <h4>${item.subject}</h4>
+                <p class="node-meta">${item.code} | Room: ${item.room} | Instructor: ${item.teacher}</p>
+                <div class="badge-day">${item.day}</div>
             </div>
-            <div class="card-time-tag">⏰ ${convertTo12Hour(item.time)}</div>
-        `;
-        div.appendChild(card);
+            <div class="node-time-tag">⏰ ${convertTo12Hour(item.time)}</div>`;
+        container.appendChild(card);
     });
-    container.appendChild(div);
 }
 
 function renderExamRoutine() {
@@ -248,64 +231,59 @@ function renderExamRoutine() {
     container.innerHTML = "";
     if (examRoutine.length === 0) return;
 
-    const div = document.createElement("div");
-    div.innerHTML = `<h2 class="section-title title-exam-accent">📝 Examination Timeline</h2>`;
-    
+    const title = document.createElement("h3");
+    title.className = "exam-session-title";
+    title.innerText = "📝 PROJECT OBJECTIVE: EXAMINATION NODES";
+    container.appendChild(title);
+
     examRoutine.forEach(item => {
         const card = document.createElement("div");
-        card.className = "routine-card style-exam";
+        card.className = "routine-card node-exam";
         card.innerHTML = `
-            <span class="delete-icon" onclick="deleteExam(${item.id})">✕</span>
-            <div class="card-body">
-                <h3>${item.subject}</h3>
-                <span class="sub-code exam-code-badge">${item.code}</span>
-                <div class="meta-info">
-                    <span style="color:#f59e0b">📅 Date: <b>${item.date}</b></span>
-                </div>
+            <span class="delete-trigger" onclick="deleteNode(${item.id}, 'exam')">✕</span>
+            <div class="card-contents">
+                <h4>${item.subject} (Examination)</h4>
+                <p class="node-meta">${item.code} | Date Matrix: <b>${item.date}</b></p>
             </div>
-            <div class="card-time-tag exam-time-tag">⏰ ${convertTo12Hour(item.time)}</div>
-        `;
-        div.appendChild(card);
+            <div class="node-time-tag exam-accent-tag">⏰ ${convertTo12Hour(item.time)}</div>`;
+        container.appendChild(card);
     });
-    container.appendChild(div);
 }
 
-async function deleteClass(id) {
-    if (confirm("Remove this entry?")) {
+async function deleteNode(id, type) {
+    if(confirm("Confirm removal of this schedule matrix node?")) {
         try { if(window.Capacitor) await window.Capacitor.Plugins.LocalNotifications.cancel({ notifications: [{ id }] }); } catch(e){}
-        currentRoutine = currentRoutine.filter(item => item.id !== id);
-        localStorage.setItem("routineData", JSON.stringify(currentRoutine));
-        renderRoutine();
+        if(type === 'class') {
+            currentRoutine = currentRoutine.filter(x => x.id !== id);
+            localStorage.setItem("routineData", JSON.stringify(currentRoutine));
+            renderRoutine();
+        } else {
+            examRoutine = examRoutine.filter(x => x.id !== id);
+            localStorage.setItem("examRoutineData", JSON.stringify(examRoutine));
+            renderExamRoutine();
+        }
     }
 }
 
-async function deleteExam(id) {
-    if (confirm("Remove this exam timeline?")) {
-        try { if(window.Capacitor) await window.Capacitor.Plugins.LocalNotifications.cancel({ notifications: [{ id }] }); } catch(e){}
-        examRoutine = examRoutine.filter(item => item.id !== id);
-        localStorage.setItem("examRoutineData", JSON.stringify(examRoutine));
-        renderExamRoutine();
-    }
+function downloadRoutineImage() {
+    const area = document.getElementById("routine-capture-area");
+    area.classList.add("canvas-export-running");
+    const bg = getComputedStyle(document.body).getPropertyValue('--bg-wrapper-core').trim() || "#131a26";
+    
+    html2canvas(area, { scale: 3, backgroundColor: bg, useCORS: true }).then(canvas => {
+        const lnk = document.createElement("a");
+        lnk.download = `Routine_Manifest_${localStorage.getItem("programName")}.jpg`;
+        lnk.href = canvas.toDataURL("image/jpeg", 0.98);
+        lnk.click();
+        area.classList.remove("canvas-export-running");
+    });
 }
 
-function convertTo12Hour(timeString) {
-    let [hours, minutes] = timeString.split(':');
-    let ampm = hours >= 12 ? 'PM' : 'AM';
-    hours = hours % 12 || 12;
-    return `${hours}:${minutes} ${ampm}`;
-}
-
+function loadRoutine() { const s = localStorage.getItem("routineData"); if(s) { currentRoutine = JSON.parse(s); renderRoutine(); } }
+function loadExamRoutine() { const s = localStorage.getItem("examRoutineData"); if(s) { examRoutine = JSON.parse(s); renderExamRoutine(); } }
+function convertTo12Hour(t) { let [h, m] = t.split(':'); let ampm = h >= 12 ? 'PM' : 'AM'; h = h % 12 || 12; return `${h}:${m} ${ampm}`; }
 function openModal(id) { document.getElementById(id).classList.remove("hidden"); }
 function closeModal(id) { document.getElementById(id).classList.add("hidden"); }
-
-function requestNotificationPermission() {
-    try { if (window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.LocalNotifications) { window.Capacitor.Plugins.LocalNotifications.requestPermissions(); } } catch (e) {}
-}
-
-function resetApp() {
-    if (confirm("Wipe workspace clean? All configurations will be lost.")) {
-        try { if(window.Capacitor) window.Capacitor.Plugins.LocalNotifications.clear(); } catch(e){}
-        localStorage.clear();
-        location.reload();
-    }
-}
+function checkExistingUser() { const i = localStorage.getItem("instName"), p = localStorage.getItem("programName"); if(i && p) showDashboard(i, p); }
+function requestNotificationPermission() { try { window.Capacitor?.Plugins?.LocalNotifications?.requestPermissions(); } catch(e){} }
+function resetApp() { if(confirm("Wipe configuration storage and clear active runtime session?")) { localStorage.clear(); location.reload(); } }
