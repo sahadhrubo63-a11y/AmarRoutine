@@ -1,223 +1,79 @@
-/* ==========================================
-   Basic Reset & Base Layout
-   ========================================== */
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
-
-body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    transition: background 0.4s ease-in-out, color 0.3s ease;
-    background-color: #f0f2f5;
-    color: #222;
-    padding: 10px;
-}
-
-.container {
-    max-width: 650px;
-    margin: 40px auto;
-    padding: 30px;
-    border-radius: 14px;
-    background: #ffffff;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.06);
-    text-align: center;
-}
-
-.hidden { display: none !important; }
-
-/* ==========================================
-   DYNAMIC BACKGROUND THEME COLORS
-   ========================================== */
-
-/* 🔬 1. Science Background Theme: Modern Cyber Deep Slate */
-body.theme-science {
-    background: linear-gradient(135deg, #0f172a, #1e293b, #0f172a);
-}
-body.theme-science .container {
-    background: #1e293b;
-    color: #f8fafc;
-    border: 1px solid #06b6d4;
-    box-shadow: 0 10px 30px rgba(6, 182, 212, 0.2);
-}
-body.theme-science .routine-card {
-    background: #0f172a;
-    border-left: 5px solid #06b6d4;
-    color: #f1f5f9;
-}
-body.theme-science h2, body.theme-science h1 { color: #22d3ee; }
-
-/* 💼 2. Commerce Background Theme: Royal Executive Navy & Gold */
-body.theme-commerce {
-    background: linear-gradient(135deg, #1e3a8a, #0f172a, #172554);
-}
-body.theme-commerce .container {
-    background: #1e2238;
-    color: #ffffff;
-    border: 1px solid #fbbf24;
-    box-shadow: 0 10px 30px rgba(251, 191, 36, 0.15);
-}
-body.theme-commerce .routine-card {
-    background: #252a44;
-    border-left: 5px solid #fbbf24;
-    color: #f8fafc;
-}
-body.theme-commerce h2, body.theme-commerce h1 { color: #fbbf24; }
-
-/* 🎨 3. Arts Background Theme: Elegant Deep Wine / Terracotta Maroon */
-body.theme-arts {
-    background: linear-gradient(135deg, #4c0519, #881337, #4c0519);
-}
-body.theme-arts .container {
-    background: #4c1125;
-    color: #fff1f2;
-    border: 1px solid #fda4af;
-    box-shadow: 0 10px 30px rgba(253, 164, 175, 0.2);
-}
-body.theme-arts .routine-card {
-    background: #310a18;
-    border-left: 5px solid #fda4af;
-    color: #ffe4e6;
-}
-body.theme-arts h2, body.theme-arts h1 { color: #fecdd3; }
-
-/* ==========================================
-   UI Components Styles
-   ========================================== */
-.welcome-box p {
-    margin-bottom: 20px;
-    font-size: 15px;
-    opacity: 0.9;
-}
-
-.input-group {
-    margin-top: 15px;
-    text-align: left;
-}
-
-.input-group label {
-    display: block;
-    font-weight: 600;
-    margin-bottom: 5px;
-    font-size: 14px;
-}
-
-.input-group input, .input-group select {
-    width: 100%;
-    padding: 12px;
-    border: 1px solid #cbd5e1;
-    border-radius: 8px;
-    background-color: transparent;
-    color: inherit;
-    font-size: 14px;
-}
-
-optgroup {
-    background: #fff;
-    color: #333;
-}
-
-.btn-primary {
-    width: 100%;
-    padding: 12px;
-    background-color: #2563eb;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    font-weight: bold;
-    cursor: pointer;
-    margin-top: 20px;
-    font-size: 15px;
-    transition: 0.2s;
-}
-.btn-primary:hover { opacity: 0.9; }
-
-.dashboard-header {
+/* ⏰ Clock & Weather Dynamic Widget UI */
+.smart-widget {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 1px solid rgba(255,255,255,0.15);
-    padding-bottom: 15px;
+    background: #1e293b;
+    padding: 15px 20px;
+    border-radius: 12px;
     margin-bottom: 25px;
+    border: 1px solid #334155;
+    color: #f8fafc;
     text-align: left;
 }
-.dashboard-header h1 { font-size: 20px; }
-
-.btn-reset {
-    padding: 6px 12px;
-    background: rgba(255,255,255,0.1);
-    border: 1px solid currentColor;
-    color: inherit;
-    border-radius: 6px;
-    cursor: pointer;
+#digital-clock {
+    font-size: 24px;
+    font-weight: 800;
+    color: #3b82f6;
+    letter-spacing: 1px;
+}
+#live-date {
     font-size: 12px;
+    color: #94a3b8;
+    margin-top: 3px;
+}
+.weather-card {
+    text-align: right;
+    font-size: 14px;
 }
 
-.action-bar {
-    text-align: left;
-    margin-bottom: 20px;
+/* 🖼️ Action and Download Theme Buttons */
+.btn-exam {
+    background: #f59e0b !important;
 }
-
-.btn-action {
+.btn-download {
     padding: 10px 20px;
-    background: #16a34a;
+    background: #8b5cf6;
     color: white;
     border: none;
     border-radius: 8px;
     cursor: pointer;
     font-weight: bold;
+    transition: 0.2s;
+}
+.btn-download:hover {
+    background: #7c3aed;
 }
 
-.routine-card {
+/* 🎨 Routine Capture Board Theme */
+.routine-theme-board {
     padding: 15px;
-    margin-bottom: 15px;
-    border-radius: 8px;
-    text-align: left;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-}
-
-.routine-card h3 { margin: 5px 0; font-size: 16px; }
-
-.time-tag {
-    font-size: 12px;
-    font-weight: bold;
-    color: #ef4444;
-}
-
-.btn-delete {
-    background: none;
-    border: none;
-    color: #f43f5e;
-    font-weight: bold;
-    cursor: pointer;
-    font-size: 12px;
-    margin-top: 10px;
-}
-
-/* Modal setup */
-.modal {
-    position: fixed;
-    top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0,0,0,0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 999;
-}
-
-.modal-content {
-    background: #ffffff;
-    color: #1e293b;
-    padding: 30px;
     border-radius: 12px;
-    width: 90%;
-    max-width: 420px;
-    position: relative;
+    background: transparent;
+    transition: all 0.3s;
 }
-
-.close-btn {
-    position: absolute;
-    top: 10px; right: 15px;
-    font-size: 24px; cursor: pointer;
+.exporting-active {
+    background: #1e293b !important;
+    padding: 30px !important;
+    border: 2px solid #3b82f6;
+}
+.section-title {
+    margin: 25px 0 12px 0;
+    font-size: 18px;
+    text-align: left;
+    border-bottom: 2px solid #334155;
+    padding-bottom: 6px;
+}
+.style-class {
+    border-left: 5px solid #10b981;
+    background: #0f172a;
+    color: white;
+}
+.style-exam {
+    border-left: 5px solid #f59e0b;
+    background: #0f172a;
+    color: white;
+}
+.exam-time {
+    color: #f59e0b !important;
 }
