@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", () => {
     checkExistingUser();
     requestNotificationPermission();
     
-    // ব্যাকগ্রাউন্ড মেকানিক্যাল অ্যানালগ ঘড়ি এবং ডিজিটাল ক্লক সিঙ্ক লুপ
+    // ব্যাকগ্রাউন্ড মেকানিক্যাল অ্যানালগ ঘড়ি এবং ডিজিটাল ক্লক লুপ
     setInterval(synchronizeMechanicalClock, 1000);
     synchronizeMechanicalClock();
     
@@ -19,7 +19,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 });
 
-// ⏰ মেকানিক্যাল অ্যানালগ ক্লক এবং ডিজিটাল টাইম রিফ্রেশ ইঞ্জিন
+// ⏰ মেকানিক্যাল অ্যানালগ ঘড়ি ইঞ্জিন
 function synchronizeMechanicalClock() {
     const now = new Date();
     
@@ -27,17 +27,17 @@ function synchronizeMechanicalClock() {
     const minutes = now.getMinutes();
     const hours = now.getHours();
 
-    // কাঁটার অবস্থান হিসাব করার নিখুঁত গাণিতিক সমীকরণ (Degrees Calculation)
+    // ডিগ্রিতে সুইং ক্যালকুলেশন
     const secondDegrees = ((seconds / 60) * 360);
     const minuteDegrees = ((minutes / 60) * 360) + ((seconds / 60) * 6);
     const hourDegrees = ((hours / 12) * 360) + ((minutes / 60) * 30);
 
-    // DOM নোডে মেকানিক্যাল সুইং রেন্ডারিং
+    // ঘড়ির কাটায় CSS রোটেশন রেন্ডার করা
     document.getElementById("clock-second").style.transform = `rotate(${secondDegrees}deg)`;
     document.getElementById("clock-minute").style.transform = `rotate(${minuteDegrees}deg)`;
     document.getElementById("clock-hour").style.transform = `rotate(${hourDegrees}deg)`;
 
-    // ডিজিটাল ডিসপ্লে ব্যাকআপ টেক্সট ফরম্যাটিং
+    // ডিজিটাল ডিসপ্লে ব্যাকআপ
     let ampm = hours >= 12 ? 'PM' : 'AM';
     let displayHours = hours % 12 || 12;
     let displayMinutes = minutes < 10 ? '0' + minutes : minutes;
@@ -49,7 +49,7 @@ function synchronizeMechanicalClock() {
     document.getElementById("live-date").innerText = now.toLocaleDateString('en-US', options);
 }
 
-// ওపెನ್ মেটিও লাইভ ক্লাউড ও ওয়েদার ট্র্যাকার
+// লাইভ ওয়েদার ফিড
 function fetchLiveWeather() {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(async (position) => {
@@ -74,11 +74,11 @@ function fetchLiveWeather() {
     }
 }
 
-// 🎨 ইন্টেলিজেন্ট ডিপার্টমেন্ট থিম ইঞ্জিন (Set Specific UI Accents based on your Course Selection)
+// 🎨 কোর্স ক্যাটাগরি ভিত্তিক ফুল ব্যাকগ্রাউন্ড থিম সেটআপ
 function executeDynamicThemeBinding(program) {
     const body = document.body;
     
-    // ১. Science & Engineering ট্র্যাকসমূহ (যেমন: CSE হলে ম্যাট্রিক্স সাইবার গ্রিন থিম)
+    // ১. Science & Engineering ট্র্যাকসমূহ (সিলেক্ট করলে CSE থিম ফুল ব্যাকগ্রাউন্ড হবে)
     const scienceTracks = [
         "CSE", "SWE", "EEE", "CE", "ME", "IPE", "TE", "Architecture", 
         "Pharmacy", "Biochemistry", "Microbiology", "BSc Physics", 
@@ -86,13 +86,13 @@ function executeDynamicThemeBinding(program) {
         "College Science", "School Science"
     ];
     
-    // ২. Commerce & Business Administration ট্র্যাকসমূহ (এক্সিকিউটিভ অ্যাম্বার গোল্ড থিম)
+    // ২. Commerce & Business Administration ট্র্যাকসমূহ (অ্যাম্বার/গোল্ডেন ব্যাকগ্রাউন্ড)
     const commerceTracks = [
         "BBA", "Accounting", "Finance", "Marketing", "HRM", "Management", 
         "International Business", "MIS", "THM", "College Commerce", "School Commerce"
     ];
     
-    // ৩. Arts, Law & Social Science ট্র্যাকসমূহ (ডিপ ভাইব্রেন্ট স্কাই ব্লু থিম)
+    // ৩. Arts, Law & Social Science ট্র্যাকসমূহ (ডিপ ভাইব্রেন্ট স্কাই ব্লু ব্যাকগ্রাউন্ড)
     const artsTracks = [
         "English", "LLB", "Economics", "Bangla", "Political Science", "IR", 
         "Sociology", "Media Journalism", "Public Administration", "History", 
@@ -114,7 +114,6 @@ function showDashboard(inst, program) {
     document.getElementById("onboarding-screen").classList.add("hidden");
     document.getElementById("dashboard-screen").classList.remove("hidden");
     
-    // 'Gobindaganj' বা প্রতিষ্ঠানের নাম ক্যাপিটাল করার রুলস এবং 'Project Objective' প্রফেশনাল হেডিং রুলস মেইনটেইন করা
     document.getElementById("display-inst-name").innerText = inst.toUpperCase();
     document.getElementById("display-program").innerText = program;
     
@@ -126,7 +125,7 @@ function showDashboard(inst, program) {
 function initializeApp() {
     const instName = document.getElementById("inst-name").value.trim();
     const programName = document.getElementById("dept-program").value;
-    if (!instName || !programName) return alert("Please specify both Institution name and program profile!");
+    if (!instName || !programName) return alert("Please fill up all fields!");
     
     localStorage.setItem("instName", instName);
     localStorage.setItem("programName", programName);
@@ -189,7 +188,7 @@ async function dispatchNotification(item, type) {
                 const [hours, minutes] = item.time.split(':').map(Number);
                 const exDate = new Date(item.date);
                 exDate.setHours(hours, minutes);
-                const alertTime = new Date(exDate.getTime() - (2 * 60 * 60 * 1000)); // ২ ঘণ্টা আগে ব্যাকগ্রাউন্ড রিমাইন্ডার পুশ হবে
+                const alertTime = new Date(exDate.getTime() - (2 * 60 * 60 * 1000));
                 await LocalNotifications.schedule({
                     notifications: [{
                         id: item.id,
@@ -251,7 +250,7 @@ function renderExamRoutine() {
 }
 
 async function deleteNode(id, type) {
-    if(confirm("Confirm removal of this schedule matrix node?")) {
+    if(confirm("Confirm removal of this node?")) {
         try { if(window.Capacitor) await window.Capacitor.Plugins.LocalNotifications.cancel({ notifications: [{ id }] }); } catch(e){}
         if(type === 'class') {
             currentRoutine = currentRoutine.filter(x => x.id !== id);
@@ -286,4 +285,4 @@ function openModal(id) { document.getElementById(id).classList.remove("hidden");
 function closeModal(id) { document.getElementById(id).classList.add("hidden"); }
 function checkExistingUser() { const i = localStorage.getItem("instName"), p = localStorage.getItem("programName"); if(i && p) showDashboard(i, p); }
 function requestNotificationPermission() { try { window.Capacitor?.Plugins?.LocalNotifications?.requestPermissions(); } catch(e){} }
-function resetApp() { if(confirm("Wipe configuration storage and clear active runtime session?")) { localStorage.clear(); location.reload(); } }
+function resetApp() { if(confirm("Wipe configuration storage?")) { localStorage.clear(); location.reload(); } }
