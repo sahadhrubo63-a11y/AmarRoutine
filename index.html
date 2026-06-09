@@ -3,134 +3,169 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Amar Routine - Professional Workspace</title>
+    <title>Amar Routine - Enterprise Scheduler</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head>
 <body>
 
-    <div id="onboarding-screen" class="container">
-        <div class="welcome-box">
-            <div class="brand-badge">🎯 Academic Workspace</div>
-            <h2>Welcome to Amar Routine</h2>
-            <p>Create a personalized dashboard tailored to your academic curriculum.</p>
+    <div id="onboarding-screen" class="auth-wrapper">
+        <div class="auth-card">
+            <div class="logo-area">
+                <h1>AmarRoutine <span class="logo-icon">⏰</span></h1>
+                <p>Enter your institutional information to configure your active dashboard workspace</p>
+            </div>
             
-            <div class="input-group">
-                <label for="inst-name">Institution Name (University / College / School)</label>
+            <div class="form-group">
+                <label>University / School / College Name:</label>
                 <input type="text" id="inst-name" placeholder="e.g., NUBT Khulna CAPITAL" autocomplete="off">
             </div>
 
-            <div class="input-group">
-                <label for="dept-program">Select Your Department / Course / Group</label>
+            <div class="form-group">
+                <label>Select Your Department / Course / Group:</label>
                 <select id="dept-program">
-                    <optgroup label="🔬 University - Science & Engineering (Emerald)">
+                    <option value="" disabled selected>-- Select Option --</option>
+                    
+                    <optgroup label="🔬 University - Science & Engineering">
                         <option value="CSE">CSE (Computer Science & Engineering)</option>
                         <option value="SWE">SWE (Software Engineering)</option>
                         <option value="EEE">EEE (Electrical & Electronic Engineering)</option>
-                        <option value="Civil">Civil Engineering</option>
-                        <option value="Mechanical">Mechanical Engineering</option>
-                        <option value="Textile">Textile Engineering</option>
+                        <option value="CE">CE (Civil Engineering)</option>
+                        <option value="ME">ME (Mechanical Engineering)</option>
+                        <option value="IPE">IPE (Industrial & Production Engineering)</option>
+                        <option value="TE">TE (Textile Engineering)</option>
+                        <option value="Architecture">Architecture</option>
+                        <option value="Pharmacy">B.Pharm (Pharmacy)</option>
+                        <option value="Biochemistry">Biochemistry & Molecular Biology</option>
+                        <option value="Microbiology">Microbiology</option>
                         <option value="BSc Physics">BSc in Physics</option>
                         <option value="BSc Chemistry">BSc in Chemistry</option>
                         <option value="BSc Math">BSc in Mathematics</option>
-                    </optgroup>
-                    
-                    <optgroup label="💼 University - Business & Commerce (Amber)">
-                        <option value="BBA">BBA (Bachelor of Business Administration)</option>
-                        <option value="MBA">MBA (Master of Business Administration)</option>
-                        <option value="Accounting">Accounting & Information Systems</option>
-                        <option value="Finance">Finance & Banking</option>
-                        <option value="Management">Management Studies</option>
-                        <option value="Marketing">Marketing</option>
+                        <option value="Statistics">Statistics</option>
+                        <option value="GEB">Genetic Engineering & Biotechnology</option>
+                        <option value="Environmental Science">Environmental Science</option>
                     </optgroup>
 
-                    <optgroup label="🎨 University - Arts & Social Sciences (Sky Blue)">
-                        <option value="English">BA in English</option>
-                        <option value="Bangla">BA in Bangla</option>
+                    <optgroup label="💼 University - Commerce & Business">
+                        <option value="BBA">BBA (General Business Administration)</option>
+                        <option value="Accounting">Accounting & Information Systems (AIS)</option>
+                        <option value="Finance">Finance & Banking</option>
+                        <option value="Marketing">Marketing</option>
+                        <option value="HRM">Human Resource Management (HRM)</option>
+                        <option value="Management">Management Studies</option>
+                        <option value="International Business">International Business</option>
+                        <option value="MIS">Management Information Systems (MIS)</option>
+                        <option value="THM">Tourism & Hospitality Management</option>
+                    </optgroup>
+
+                    <optgroup label="🎨 University - Arts, Law & Social Science">
+                        <option value="English">BA in English (Linguistics & Literature)</option>
                         <option value="LLB">LL.B (Bachelor of Laws)</option>
                         <option value="Economics">BSS in Economics</option>
-                        <option value="Sociology">BSS in Sociology</option>
+                        <option value="Bangla">BA in Bangla</option>
                         <option value="Political Science">BSS in Political Science</option>
-                        <option value="Journalism">Media & Journalism</option>
+                        <option value="IR">International Relations (IR)</option>
+                        <option value="Sociology">BSS in Sociology</option>
+                        <option value="Media Journalism">Media & Journalism</option>
+                        <option value="Public Administration">Public Administration</option>
+                        <option value="History">BA in History</option>
+                        <option value="Philosophy">BA in Philosophy</option>
+                        <option value="Fine Arts">BFA (Fine Arts)</option>
                     </optgroup>
 
-                    <optgroup label="🏫 College / Higher Secondary (11-12)">
-                        <option value="College Science">College - Science Group</option>
-                        <option value="College Commerce">College - Business Studies (Commerce)</option>
-                        <option value="College Arts">College - Humanities (Arts)</option>
+                    <optgroup label="🏫 College / Higher Secondary (HSC)">
+                        <option value="College Science">College - Science Group (বিজ্ঞান)</option>
+                        <option value="College Commerce">College - Business Studies (ব্যবসায় শিক্ষা)</option>
+                        <option value="College Arts">College - Humanities (মানবিক)</option>
                     </optgroup>
 
-                    <optgroup label="🎒 School / Secondary (9-10)">
-                        <option value="School Science">School - Science Group</option>
-                        <option value="School Commerce">School - Business Studies (Commerce)</option>
-                        <option value="School Arts">School - Humanities (Arts)</option>
+                    <optgroup label="🎒 School / Secondary (SSC)">
+                        <option value="School Science">School - Science Group (বিজ্ঞান)</option>
+                        <option value="School Commerce">School - Business Studies (ব্যবসায় শিক্ষা)</option>
+                        <option value="School Arts">School - Humanities (মানবিক)</option>
                     </optgroup>
                 </select>
             </div>
-            <button class="btn-primary" onclick="initializeApp()">Generate Workspace ➡️</button>
+
+            <button class="btn-submit-onboard" onclick="initializeApp()">Generate Active Dashboard</button>
         </div>
     </div>
 
-    <div id="dashboard-screen" class="container hidden">
+    <div id="dashboard-screen" class="dashboard-wrapper hidden">
         
-        <div class="smart-widget">
-            <div class="clock-section">
-                <div id="digital-clock">00:00:00 AM</div>
-                <div id="live-date">Loading active session...</div>
-            </div>
-            <div class="weather-section" id="weather-box">
-                <div class="weather-skeleton">📍 Synchronizing location...</div>
-            </div>
-        </div>
-
-        <div class="dashboard-header">
-            <div>
-                <h1 id="display-inst-name">ACADEMIC INSTITUTION</h1>
-                <div class="program-badge">
-                    <span class="pulse-indicator"></span>
-                    <span id="display-program">Department Portal</span>
+        <div class="dashboard-top-nav">
+            <div class="profile-pill">
+                <span class="user-avatar">🎯</span>
+                <div class="profile-meta">
+                    <h3 id="display-inst-name">ACADEMIC WORKSPACE</h3>
+                    <div class="program-badge-row">
+                        <span class="live-pulse"></span>
+                        <p id="display-program">Portal Loading...</p>
+                    </div>
                 </div>
             </div>
-            <button class="btn-reset" onclick="resetApp()">Reset Workspace</button>
+            <button class="btn-change-info" onclick="resetApp()">Wipe / Change Info</button>
         </div>
 
-        <div class="action-bar">
-            <div class="action-left">
-                <button class="btn-action btn-add-class" onclick="openModal('manual-modal')">➕ Add Class</button>
-                <button class="btn-action btn-add-exam" onclick="openModal('exam-modal')">📝 Add Exam</button>
+        <div class="smart-hud-widget">
+            <div class="analog-clock-container">
+                <div class="analog-clock">
+                    <div class="hand hour" id="clock-hour"></div>
+                    <div class="hand minute" id="clock-minute"></div>
+                    <div class="hand second" id="clock-second"></div>
+                    <div class="center-nut"></div>
+                </div>
+                <div class="digital-mini-display">
+                    <div id="digital-clock">00:00:00 AM</div>
+                    <div id="live-date">Syncing Calendar Matrix...</div>
+                </div>
             </div>
-            <button class="btn-download" onclick="downloadRoutineImage()">🖼️ Export Canvas</button>
+            
+            <div class="weather-hud-box" id="weather-box">
+                <div class="hud-pulse">📍 Core Location Tracking...</div>
+            </div>
         </div>
 
-        <div id="routine-capture-area" class="routine-theme-board">
-            <div id="routine-container"></div>
+        <div class="action-grid-buttons">
+            <button class="btn-dash btn-add-manual" onclick="openModal('manual-modal')">➕ Add Routine Class</button>
+            <button class="btn-dash btn-add-exam" onclick="openModal('exam-modal')">📝 Schedule Exam Timeline</button>
+        </div>
+
+        <div class="view-header-title">
+            <span>📅 Configured Academic Schedules</span>
+        </div>
+
+        <div id="routine-capture-area" class="routine-canvas">
+            <div id="routine-container">
+                <div class="empty-state-notice">Your academic list is empty. Commit new schedules using the dashboard buttons.</div>
+            </div>
             <div id="exam-container"></div>
         </div>
+        
+        <button class="btn-floating-download" onclick="downloadRoutineImage()">📸 Export Professional Routine Image</button>
     </div>
 
     <div id="manual-modal" class="modal hidden">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>➕ Schedule New Class</h2>
-                <span class="close-btn" onclick="closeModal('manual-modal')">&times;</span>
+        <div class="modal-box">
+            <div class="modal-head">
+                <h2>Schedule New Class Node</h2>
+                <span class="close-x" onclick="closeModal('manual-modal')">✕</span>
             </div>
-            <form id="manual-form" class="pro-form">
-                <div class="form-grid">
-                    <input type="text" id="m-subject" placeholder="Subject / Course Title" required>
-                    <input type="text" id="m-code" placeholder="Course Code / Subject ID" required>
-                    <input type="text" id="m-teacher" placeholder="Teacher Name / Code">
-                    <input type="text" id="m-room" placeholder="Room / Lab / Building">
-                </div>
-                <div class="form-row">
-                    <div class="input-field">
+            <form id="manual-form" class="modal-form-core">
+                <input type="text" id="m-subject" placeholder="Subject / Course Title" required>
+                <input type="text" id="m-code" placeholder="Course Code / Reference ID" required>
+                <input type="text" id="m-teacher" placeholder="Instructor Name / Initials">
+                <input type="text" id="m-room" placeholder="Room / Laboratory ID / Building">
+                <div class="form-flex-row">
+                    <div class="field-item">
                         <label>Start Time</label>
                         <input type="time" id="m-time" required>
                     </div>
-                    <div class="input-field">
-                        <label>Week Day</label>
+                    <div class="field-item">
+                        <label>Day of Week</label>
                         <select id="m-day">
                             <option value="Saturday">Saturday</option>
                             <option value="Sunday">Sunday</option>
@@ -142,33 +177,31 @@
                         </select>
                     </div>
                 </div>
-                <button type="submit" class="btn-submit">Commit to Schedule</button>
+                <button type="submit" class="btn-action-commit">Commit Class Entry</button>
             </form>
         </div>
     </div>
 
     <div id="exam-modal" class="modal hidden">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>📝 Create Exam Timeline</h2>
-                <span class="close-btn" onclick="closeModal('exam-modal')">&times;</span>
+        <div class="modal-box">
+            <div class="modal-head">
+                <h2>Create Examination Node</h2>
+                <span class="close-x" onclick="closeModal('exam-modal')">✕</span>
             </div>
-            <form id="exam-form" class="pro-form">
-                <div class="form-grid">
-                    <input type="text" id="e-subject" placeholder="Exam Subject Title" required>
-                    <input type="text" id="e-code" placeholder="Course Code" required>
-                </div>
-                <div class="form-row">
-                    <div class="input-field">
+            <form id="exam-form" class="modal-form-core">
+                <input type="text" id="e-subject" placeholder="Examination Title" required>
+                <input type="text" id="e-code" placeholder="Course Code" required>
+                <div class="form-flex-row">
+                    <div class="field-item">
                         <label>Exam Start Time</label>
                         <input type="time" id="e-time" required>
                     </div>
-                    <div class="input-field">
+                    <div class="field-item">
                         <label>Calendar Date</label>
                         <input type="date" id="e-date" required>
                     </div>
                 </div>
-                <button type="submit" class="btn-submit btn-submit-exam">Publish Timeline</button>
+                <button type="submit" class="btn-action-commit spec-exam-btn">Publish Exam Event</button>
             </form>
         </div>
     </div>
