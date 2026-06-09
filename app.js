@@ -5,11 +5,9 @@ document.addEventListener("DOMContentLoaded", () => {
     checkExistingUser();
     requestNotificationPermission();
     
-    // লাইভ ক্লক ইঞ্জিন শুরু
     setInterval(updateSmartClock, 1000);
     updateSmartClock();
     
-    // লাইভ লোকেশন ও ওয়েদার আপডেট
     fetchLiveWeather();
 
     if (document.getElementById("manual-form")) {
@@ -20,11 +18,8 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 });
 
-// ১. স্মার্ট ডিজিটাল ক্লক ও ডে-উইক ক্যালকুলেটর
 function updateSmartClock() {
     const now = new Date();
-    
-    // টাইম ফরম্যাটিং
     let hours = now.getHours();
     let minutes = now.getMinutes();
     let seconds = now.getSeconds();
@@ -35,13 +30,10 @@ function updateSmartClock() {
     seconds = seconds < 10 ? '0' + seconds : seconds;
     
     document.getElementById("digital-clock").innerText = `${hours}:${minutes}:${seconds} ${ampm}`;
-
-    // ডেট ও উইক নেম ক্যালকুলেশন
     const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
     document.getElementById("live-date").innerText = now.toLocaleDateString('en-US', options);
 }
 
-// ২. লোকেশন ট্র্যাক করে লাইভ ওয়েদার আপডেট (Open-Meteo Open-Source API)
 function fetchLiveWeather() {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(async (position) => {
@@ -55,128 +47,86 @@ function fetchLiveWeather() {
                     const wind = data.current_weather.windspeed;
                     document.getElementById("weather-box").innerHTML = `
                         <div class="weather-card">
-                            <span style="font-size:20px;">🌡️</span> <b>${temp}°C</b> <br>
-                            <span style="font-size:12px; color:#a1a1aa;">💨 Wind: ${wind} km/h</span>
+                            <span class="weather-icon">🌡️</span>
+                            <div class="weather-details">
+                                <span class="temp-text">${temp}°C</span>
+                                <span class="wind-text">💨 ${wind} km/h</span>
+                            </div>
                         </div>
                     `;
                 }
             } catch (err) {
-                document.getElementById("weather-box").innerHTML = "<p>🌤️ Weather offline</p>";
+                document.getElementById("weather-box").innerHTML = "<p class='w-err'>🌤️ Offline</p>";
             }
         }, () => {
-            document.getElementById("weather-box").innerHTML = "<p>📍 Location blocked</p>";
+            document.getElementById("weather-box").innerHTML = "<p class='w-err'>📍 Blocked</p>";
         });
     }
 }
 
-// ৩. এক্সাম রুটিন ডাটা সেভ এবং নোটিফিকেশন ইঞ্জিন
-async function saveExamRoutine(e) {
-    e.preventDefault();
-    const subject = document.getElementById("e-subject").value.trim();
-    const code = document.getElementById("e-code").value.trim();
-    const time = document.getElementById("e-time").value;
-    const date = document.getElementById("e-date").value;
-
-    const newExam = {
-        id: Date.now() + 1,
-        subject,
-        code,
-        time,
-        date
-    };
-
-    examRoutine.push(newExam);
-    localStorage.setItem("examRoutineData", JSON.stringify(examRoutine));
+// ⭐ ডায়নামিক এডভান্সড থিম ম্যাপিং ইঞ্জিন
+function applyCourseTheme(program) {
+    const body = document.body;
     
-    // এক্সামের জন্য কাস্টম নোটিফিকেশন শিডিউল করা
-    await scheduleExamNotification(newExam);
-
-    closeModal('exam-modal');
-    document.getElementById("exam-form").reset();
-    renderExamRoutine();
-}
-
-// ৪. থিম ফলো করে রুটিনকে চমৎকার ইমেজে রূপান্তর ও ডাউনলোড করা
-function downloadRoutineImage() {
-    const area = document.getElementById("routine-capture-area");
+    // ১. Science গ্রপসমূহ (Emerald Accent)
+    const scienceList = ["CSE", "SWE", "EEE", "Civil", "Mechanical", "Textile", "BSc Physics", "BSc Chemistry", "BSc Math", "College Science", "School Science"];
     
-    // ডাউনলোডের আগে সুন্দর লুক দেওয়ার জন্য একটি কাস্টম প্রিমিয়াম স্টাইল যোগ করা
-    area.classList.add("exporting-active");
+    // ২. Commerce গ্রপসমূহ (Amber Accent)
+    const commerceList = ["BBA", "MBA", "Accounting", "Finance", "Management", "Marketing", "College Commerce", "School Commerce"];
     
-    html2canvas(area, {
-        scale: 2, // ইমেজ কোয়ালিটি HD করার জন্য
-        backgroundColor: "#1e293b", // থিম ব্যাকগ্রাউন্ড কালার
-        useCORS: true
-    }).then(canvas => {
-        const imageLink = document.createElement("a");
-        imageLink.download = "AmarRoutine_Dashboard.jpg";
-        imageLink.href = canvas.toDataURL("image/jpeg", 0.9);
-        imageLink.click();
-        
-        area.classList.remove("exporting-active");
-    });
-}
+    // ৩. Arts গ্রপসমূহ (Sky Blue Accent)
+    const artsList = ["English", "Bangla", "LLB", "Economics", "Sociology", "Political Science", "Journalism", "College Arts", "School Arts"];
 
-// ৫. এক্সাম নোটিফিকেশন ইঞ্জিন
-async function scheduleExamNotification(exam) {
-    try {
-        if (window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.LocalNotifications) {
-            const { LocalNotifications } = window.Capacitor.Plugins;
-            const [hours, minutes] = exam.time.split(':').map(Number);
-            const examDate = new Date(exam.date);
-            examDate.setHours(hours);
-            examDate.setMinutes(minutes);
-            
-            // পরীক্ষার ঠিক ২ ঘণ্টা আগে রিমাইন্ডার ট্রিগার করবে
-            const alertTime = new Date(examDate.getTime() - (2 * 60 * 60 * 1000));
-
-            await LocalNotifications.schedule({
-                notifications: [
-                    {
-                        id: exam.id,
-                        title: `🚨 Exam Alert!`,
-                        body: `Today Your '${exam.subject} (${exam.code} Exam ${convertTo12Hour(exam.time)} This is starting.Get ready.!`,
-                        schedule: { at: alertTime, allowWhileIdle: true },
-                        sound: true,
-                        vibrate: true
-                    }
-                ]
-            });
-        }
-    } catch (e) { console.log(e); }
-}
-
-// বাকী গ্লোবাল ফাংশনসমূহ এবং রেন্ডারিং ও ক্লিয়ারিং লজিক
-async function requestNotificationPermission() {
-    try {
-        if (window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.LocalNotifications) {
-            await window.Capacitor.Plugins.LocalNotifications.requestPermissions();
-        }
-    } catch (e) {}
-}
-
-function checkExistingUser() {
-    const instName = localStorage.getItem("instName");
-    const programName = localStorage.getItem("programName");
-    if (instName && programName) { showDashboard(instName, programName); }
-}
-
-function initializeApp() {
-    const instName = document.getElementById("inst-name").value.trim();
-    const programName = document.getElementById("dept-program").value;
-    if (!instName) return alert("Institution Name!");
-    localStorage.setItem("instName", instName);
-    localStorage.setItem("programName", programName);
-    showDashboard(instName, programName);
+    if (scienceList.includes(program)) {
+        body.setAttribute("data-theme", "cyber-emerald");
+    } else if (commerceList.includes(program)) {
+        body.setAttribute("data-theme", "atomic-amber");
+    } else if (artsList.includes(program)) {
+        body.setAttribute("data-theme", "fusion-sky");
+    }
 }
 
 function showDashboard(inst, program) {
     document.getElementById("onboarding-screen").classList.add("hidden");
     document.getElementById("dashboard-screen").classList.remove("hidden");
+    
+    // নির্দিষ্ট রুলস মেইনটেইন করে প্রফেশনাল হেডিং ডিসপ্লে করা
     document.getElementById("display-inst-name").innerText = inst.toUpperCase();
     document.getElementById("display-program").innerText = program;
+    
+    applyCourseTheme(program);
     loadRoutine();
     loadExamRoutine();
+}
+
+function initializeApp() {
+    const instName = document.getElementById("inst-name").value.trim();
+    const programName = document.getElementById("dept-program").value;
+    if (!instName) return alert("Please specify your Institution Name.");
+    
+    localStorage.setItem("instName", instName);
+    localStorage.setItem("programName", programName);
+    showDashboard(instName, programName);
+}
+
+function downloadRoutineImage() {
+    const area = document.getElementById("routine-capture-area");
+    area.classList.add("exporting-active");
+    
+    const computedBg = getComputedStyle(document.body).getPropertyValue('--bg-canvas').trim() || "#0b0f19";
+    
+    html2canvas(area, {
+        scale: 3, 
+        backgroundColor: computedBg,
+        useCORS: true,
+        logging: false
+    }).then(canvas => {
+        const imageLink = document.createElement("a");
+        imageLink.download = `Routine_Canvas_${localStorage.getItem("programName")}.jpg`;
+        imageLink.href = canvas.toDataURL("image/jpeg", 0.95);
+        imageLink.click();
+        area.classList.remove("exporting-active");
+    });
 }
 
 async function saveManualRoutine(e) {
@@ -206,14 +156,52 @@ async function scheduleRoutineNotification(classItem) {
             await window.Capacitor.Plugins.LocalNotifications.schedule({
                 notifications: [{
                     id: classItem.id,
-                    title: `⏰ It's time for class!`,
-                    body: `${classItem.subject} Class Room ${classItem.room}-This is starting.`,
+                    title: `⏰ Lecture Starting!`,
+                    body: `${classItem.subject} (${classItem.code}) is scheduled at venue: ${classItem.room}.`,
                     schedule: { on: { weekday: daysMap[classItem.day.toLowerCase()], hour: hours, minute: minutes }, repeats: true, allowWhileIdle: true },
                     sound: true
                 }]
             });
         }
     } catch(e){}
+}
+
+async function saveExamRoutine(e) {
+    e.preventDefault();
+    const subject = document.getElementById("e-subject").value.trim();
+    const code = document.getElementById("e-code").value.trim();
+    const time = document.getElementById("e-time").value;
+    const date = document.getElementById("e-date").value;
+
+    const newExam = { id: Date.now() + 1, subject, code, time, date };
+    examRoutine.push(newExam);
+    localStorage.setItem("examRoutineData", JSON.stringify(examRoutine));
+    
+    await scheduleExamNotification(newExam);
+    closeModal('exam-modal');
+    document.getElementById("exam-form").reset();
+    renderExamRoutine();
+}
+
+async function scheduleExamNotification(exam) {
+    try {
+        if (window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.LocalNotifications) {
+            const [hours, minutes] = exam.time.split(':').map(Number);
+            const examDate = new Date(exam.date);
+            examDate.setHours(hours, minutes);
+            const alertTime = new Date(examDate.getTime() - (2 * 60 * 60 * 1000)); // ২ ঘণ্টা আগে এলার্ট
+
+            await window.Capacitor.Plugins.LocalNotifications.schedule({
+                notifications: [{
+                    id: exam.id,
+                    title: `🚨 Upcoming Examination Alert!`,
+                    body: `Your schedule for '${exam.subject}' begins at ${convertTo12Hour(exam.time)}.`,
+                    schedule: { at: alertTime, allowWhileIdle: true },
+                    sound: true
+                }]
+            });
+        }
+    } catch (e) {}
 }
 
 function loadRoutine() {
@@ -232,16 +220,23 @@ function renderRoutine() {
     if (currentRoutine.length === 0) return;
 
     const div = document.createElement("div");
-    div.innerHTML = `<h2 class="section-title">📅 Class Schedule</h2>`;
+    div.innerHTML = `<h2 class="section-title">📅 Academic Schedule</h2>`;
     
     currentRoutine.forEach(item => {
         const card = document.createElement("div");
         card.className = "routine-card style-class";
         card.innerHTML = `
-            <span class="delete-icon" onclick="deleteClass(${item.id})">❌</span>
-            <h3>${item.subject} (${item.code})</h3>
-            <p>👨‍🏫 ${item.teacher} | 🚪 Room: ${item.room} | 🗓️ ${item.day}</p>
-            <span class="time-tag">⏰ ${convertTo12Hour(item.time)}</span>
+            <span class="delete-icon" onclick="deleteClass(${item.id})">✕</span>
+            <div class="card-body">
+                <h3>${item.subject}</h3>
+                <span class="sub-code">${item.code}</span>
+                <div class="meta-info">
+                    <span>👨‍🏫 Instructor: <b>${item.teacher}</b></span>
+                    <span>🚪 Room/Lab: <b>${item.room}</b></span>
+                    <span>🗓️ Day: <b>${item.day}</b></span>
+                </div>
+            </div>
+            <div class="card-time-tag">⏰ ${convertTo12Hour(item.time)}</div>
         `;
         div.appendChild(card);
     });
@@ -254,16 +249,21 @@ function renderExamRoutine() {
     if (examRoutine.length === 0) return;
 
     const div = document.createElement("div");
-    div.innerHTML = `<h2 class="section-title" style="color:#f59e0b;">📝 Exam Schedule</h2>`;
+    div.innerHTML = `<h2 class="section-title title-exam-accent">📝 Examination Timeline</h2>`;
     
     examRoutine.forEach(item => {
         const card = document.createElement("div");
         card.className = "routine-card style-exam";
         card.innerHTML = `
-            <span class="delete-icon" onclick="deleteExam(${item.id})">❌</span>
-            <h3>${item.subject} (${item.code})</h3>
-            <p>📅 Date: ${item.date}</p>
-            <span class="time-tag exam-time">⏰ ${convertTo12Hour(item.time)}</span>
+            <span class="delete-icon" onclick="deleteExam(${item.id})">✕</span>
+            <div class="card-body">
+                <h3>${item.subject}</h3>
+                <span class="sub-code exam-code-badge">${item.code}</span>
+                <div class="meta-info">
+                    <span style="color:#f59e0b">📅 Date: <b>${item.date}</b></span>
+                </div>
+            </div>
+            <div class="card-time-tag exam-time-tag">⏰ ${convertTo12Hour(item.time)}</div>
         `;
         div.appendChild(card);
     });
@@ -271,7 +271,7 @@ function renderExamRoutine() {
 }
 
 async function deleteClass(id) {
-    if (confirm("Delete the Class?")) {
+    if (confirm("Remove this entry?")) {
         try { if(window.Capacitor) await window.Capacitor.Plugins.LocalNotifications.cancel({ notifications: [{ id }] }); } catch(e){}
         currentRoutine = currentRoutine.filter(item => item.id !== id);
         localStorage.setItem("routineData", JSON.stringify(currentRoutine));
@@ -280,7 +280,7 @@ async function deleteClass(id) {
 }
 
 async function deleteExam(id) {
-    if (confirm("Delete the exam schedule?")) {
+    if (confirm("Remove this exam timeline?")) {
         try { if(window.Capacitor) await window.Capacitor.Plugins.LocalNotifications.cancel({ notifications: [{ id }] }); } catch(e){}
         examRoutine = examRoutine.filter(item => item.id !== id);
         localStorage.setItem("examRoutineData", JSON.stringify(examRoutine));
@@ -298,8 +298,12 @@ function convertTo12Hour(timeString) {
 function openModal(id) { document.getElementById(id).classList.remove("hidden"); }
 function closeModal(id) { document.getElementById(id).classList.add("hidden"); }
 
+function requestNotificationPermission() {
+    try { if (window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.LocalNotifications) { window.Capacitor.Plugins.LocalNotifications.requestPermissions(); } } catch (e) {}
+}
+
 function resetApp() {
-    if (confirm("Reset all data?")) {
+    if (confirm("Wipe workspace clean? All configurations will be lost.")) {
         try { if(window.Capacitor) window.Capacitor.Plugins.LocalNotifications.clear(); } catch(e){}
         localStorage.clear();
         location.reload();
