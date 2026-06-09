@@ -134,8 +134,8 @@ async function scheduleExamNotification(exam) {
                 notifications: [
                     {
                         id: exam.id,
-                        title: `🚨 পরীক্ষার অ্যালার্ট!`,
-                        body: `আজ আপনার '${exam.subject} (${exam.code})' পরীক্ষাটি ${convertTo12Hour(exam.time)} এ শুরু হবে। প্রস্তুতি নিন!`,
+                        title: `🚨 Exam Alert!`,
+                        body: `Today Your '${exam.subject} (${exam.code} Exam ${convertTo12Hour(exam.time)} This is starting.Get ready.!`,
                         schedule: { at: alertTime, allowWhileIdle: true },
                         sound: true,
                         vibrate: true
@@ -164,7 +164,7 @@ function checkExistingUser() {
 function initializeApp() {
     const instName = document.getElementById("inst-name").value.trim();
     const programName = document.getElementById("dept-program").value;
-    if (!instName) return alert("প্রতিস্থানের নাম দিন!");
+    if (!instName) return alert("Institution Name!");
     localStorage.setItem("instName", instName);
     localStorage.setItem("programName", programName);
     showDashboard(instName, programName);
@@ -206,8 +206,8 @@ async function scheduleRoutineNotification(classItem) {
             await window.Capacitor.Plugins.LocalNotifications.schedule({
                 notifications: [{
                     id: classItem.id,
-                    title: `⏰ ক্লাসের সময় হয়েছে!`,
-                    body: `${classItem.subject} ক্লাসটি রুম ${classItem.room}-এ শুরু হচ্ছে।`,
+                    title: `⏰ It's time for class!`,
+                    body: `${classItem.subject} Class Room ${classItem.room}-This is starting.`,
                     schedule: { on: { weekday: daysMap[classItem.day.toLowerCase()], hour: hours, minute: minutes }, repeats: true, allowWhileIdle: true },
                     sound: true
                 }]
@@ -271,7 +271,7 @@ function renderExamRoutine() {
 }
 
 async function deleteClass(id) {
-    if (confirm("ক্লাসটি ডিলিট করবেন?")) {
+    if (confirm("Delete the Class?")) {
         try { if(window.Capacitor) await window.Capacitor.Plugins.LocalNotifications.cancel({ notifications: [{ id }] }); } catch(e){}
         currentRoutine = currentRoutine.filter(item => item.id !== id);
         localStorage.setItem("routineData", JSON.stringify(currentRoutine));
@@ -280,7 +280,7 @@ async function deleteClass(id) {
 }
 
 async function deleteExam(id) {
-    if (confirm("পরীক্ষার শিডিউলটি ডিলিট করবেন?")) {
+    if (confirm("Delete the exam schedule?")) {
         try { if(window.Capacitor) await window.Capacitor.Plugins.LocalNotifications.cancel({ notifications: [{ id }] }); } catch(e){}
         examRoutine = examRoutine.filter(item => item.id !== id);
         localStorage.setItem("examRoutineData", JSON.stringify(examRoutine));
@@ -299,7 +299,7 @@ function openModal(id) { document.getElementById(id).classList.remove("hidden");
 function closeModal(id) { document.getElementById(id).classList.add("hidden"); }
 
 function resetApp() {
-    if (confirm("সব ডাটা রিসেট করবেন?")) {
+    if (confirm("Reset all data?")) {
         try { if(window.Capacitor) window.Capacitor.Plugins.LocalNotifications.clear(); } catch(e){}
         localStorage.clear();
         location.reload();
