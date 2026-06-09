@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Amar Routine - Dynamic University Planner</title>
     <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head>
 <body>
 
@@ -15,7 +16,7 @@
             
             <div class="input-group">
                 <label for="inst-name">University / School / College Name:</label>
-                <input type="text" id="inst-name" placeholder="e.g. Northern University of Business and Technology Khulna">
+                <input type="text" id="inst-name" placeholder="e.g. NUBT Khulna">
             </div>
 
             <div class="input-group">
@@ -27,55 +28,42 @@
                         <option value="EEE">EEE (Electrical & Electronic Engineering)</option>
                         <option value="Civil">Civil Engineering</option>
                         <option value="Mechanical">Mechanical Engineering</option>
-                        <option value="Textile">Textile Engineering</option>
-                        <option value="Pharmacy">Bachelor of Pharmacy</option>
-                        <option value="BSc-Physics">B.Sc. in Physics</option>
-                        <option value="BSc-Math">B.Sc. in Mathematics</option>
-                    </optgroup>
-                    
-                    <optgroup label="💼 Commerce Background">
-                        <option value="BBA">BBA (Bachelor of Business Administration)</option>
-                        <option value="Accounting">Accounting & Information Systems</option>
-                        <option value="Finance">Finance & Banking</option>
-                        <option value="Management">Management Studies</option>
-                        <option value="Marketing">Marketing</option>
-                        <option value="HRM">Human Resource Management</option>
-                    </optgroup>
-                    
-                    <optgroup label="🎨 Arts / Humanities Background">
-                        <option value="English">BA in English</option>
-                        <option value="LLB">LLB (Bachelor of Laws)</option>
-                        <option value="Economics">BSS in Economics</option>
-                        <option value="Sociology">Sociology</option>
-                        <option value="Bangla">BA in Bangla</option>
-                        <option value="Journalism">Journalism & Media Studies</option>
-                        <option value="History">BA in History</option>
                     </optgroup>
                 </select>
             </div>
-
-            <button class="btn-primary" onclick="initializeApp()">Create Dashboard 🚀</button>
+            <button class="btn-primary" onclick="initializeApp()">Next Step ➡️</button>
         </div>
     </div>
 
     <div id="dashboard-screen" class="container hidden">
-        <header class="dashboard-header">
-            <div>
-                <h1 id="display-inst-name">UNIVERSITY NAME</h1>
-                <p id="display-program-name">Program: CSE</p>
+        <div class="smart-widget">
+            <div class="clock-section">
+                <div id="digital-clock">00:00:00 AM</div>
+                <div id="live-date">Loading Date, Day...</div>
             </div>
-            <button class="btn-reset" onclick="resetApp()">🔄 Change Info</button>
-        </header>
-
-        <div class="action-bar">
-            <button class="btn-action" onclick="openModal('manual-modal')">➕ Add Class Manually</button>
+            <div class="weather-section" id="weather-box">
+                <p>🌤️ Weather Tracking...</p>
+            </div>
         </div>
 
-        <main class="routine-section">
-            <h2>📅 Your Class Schedule</h2>
-            <div id="routine-list">
-                </div>
-        </main>
+        <div class="dashboard-header">
+            <div>
+                <h1 id="display-inst-name">UNIVERSITY NAME</h1>
+                <p id="display-program" class="program-sub">Department/Program Name</p>
+            </div>
+            <button class="btn-reset" onclick="resetApp()">Reset All</button>
+        </div>
+
+        <div class="action-bar">
+            <button class="btn-action" onclick="openModal('manual-modal')">➕ Class</button>
+            <button class="btn-action btn-exam" onclick="openModal('exam-modal')">📝 Exam</button>
+            <button class="btn-download" onclick="downloadRoutineImage()">🖼️ Download Image</button>
+        </div>
+
+        <div id="routine-capture-area" class="routine-theme-board">
+            <div id="routine-container"></div>
+            <div id="exam-container"></div>
+        </div>
     </div>
 
     <div id="manual-modal" class="modal hidden">
@@ -84,9 +72,9 @@
             <h2>➕ Add New Class</h2>
             <form id="manual-form">
                 <input type="text" id="m-subject" placeholder="Subject Name" required>
-                <input type="text" id="m-code" placeholder="Course Code (e.g. CSE 2101)" required>
-                <input type="text" id="m-teacher" placeholder="Teacher Code (e.g. TAJ)">
-                <input type="text" id="m-room" placeholder="Room/Lab No (e.g. 201)">
+                <input type="text" id="m-code" placeholder="Course Code" required>
+                <input type="text" id="m-teacher" placeholder="Teacher Code">
+                <input type="text" id="m-room" placeholder="Room/Lab No">
                 <input type="time" id="m-time" required>
                 <select id="m-day">
                     <option value="Saturday">Saturday</option>
@@ -102,8 +90,24 @@
         </div>
     </div>
 
-    <audio id="alarm-sound" src="https://assets.mixkit.co/active_storage/sfx/2869/2869-120.wav" preload="auto"></audio>
+    <div id="exam-modal" class="modal hidden">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal('exam-modal')">&times;</span>
+            <h2>📝 Add Exam Schedule</h2>
+            <form id="exam-form">
+                <input type="text" id="e-subject" placeholder="Subject/Course Name" required>
+                <input type="text" id="e-code" placeholder="Course Code" required>
+                <label>Set Time:</label>
+                <input type="time" id="e-time" required>
+                <label>Set Date:</label>
+                <input type="date" id="e-date" required>
+                <button type="submit" class="btn-primary" style="margin-top: 15px;">Save Exam</button>
+            </form>
+        </div>
+    </div>
 
+    <audio id="alarm-sound" src="https://assets.mixkit.co/active_storage/sfx/911/911-84.wav" preload="auto"></audio>
+    <script src="capacitor.js"></script>
     <script src="app.js"></script>
 </body>
 </html>
