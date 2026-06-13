@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Academic Command Center - Onboarding Selection Edition</title>
+    <title>Academic Command Center - HTML Course Registry Edition</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght=400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head>
@@ -19,26 +19,43 @@
         </div>
         <div class="wizard-form">
             <div class="form-field">
-                <label>Institution Name</label>
+                <label>Institution / University Name</label>
                 <input type="text" id="setup-inst" placeholder="e.g., Northern University of Business & Technology">
             </div>
 
             <div class="form-field">
-                <label>Course / Subject Category Selection</label>
-                <select id="setup-program" required>
+                <label>1. Select Category Track</label>
+                <select id="setup-category" required>
                     <option value="" disabled selected>-- Choose Category Track --</option>
-                    <option value="University (Science & CSE Related)">University (Science & CSE Related)</option>
-                    <option value="University (Commerce Related)">University (Commerce Related)</option>
-                    <option value="University (Arts & Humanities)">University (Arts & Humanities)</option>
-                    <option value="School/College (Science Group)">School/College (Science Group)</option>
-                    <option value="School/College (Commerce Group)">School/College (Commerce Group)</option>
-                    <option value="School/College (Arts Group)">School/College (Arts Group)</option>
+                    <option value="university">University Tracks</option>
+                    <option value="school_college">School / College Groups</option>
+                </select>
+            </div>
+
+            <div id="course-group-field" class="form-field hidden">
+                <label>2. Course / Group Name</label>
+                <select id="setup-program" required>
+                    <option value="" disabled selected>-- Select Course / Group --</option>
+                    
+                    <optgroup label="University Tracks" class="track-group university-group hidden">
+                        <option value="CSE (Computer Science)">CSE (Computer Science)</option>
+                        <option value="Software Engineering">Software Engineering</option>
+                        <option value="EEE (Electrical Eng)">EEE (Electrical Eng)</option>
+                        <option value="BBA (Management/HRM)">BBA (Management/HRM)</option>
+                        <option value="BBA (Finance/Accounting)">BBA (Finance/Accounting)</option>
+                    </optgroup>
+
+                    <optgroup label="School / College Groups" class="track-group school_college-group hidden">
+                        <option value="Science Group">Science Group</option>
+                        <option value="Commerce Group">Commerce Group</option>
+                        <option value="Arts Group">Arts Group</option>
+                    </optgroup>
                 </select>
             </div>
 
             <div id="wizard-subject-select-field" class="form-field hidden">
-                <label>Select Your Courses / Subjects (Press to Select)</label>
-                <p class="field-instruction-note">Choose the subjects you want to include in your routine matrix:</p>
+                <label>3. Select Specific Subjects (Press to Select)</label>
+                <p class="field-instruction-note">Choose the specific subjects for your routine matrix:</p>
                 <div id="wizard-subject-checkbox-pool" class="wizard-checkbox-grid"></div>
             </div>
 
@@ -75,8 +92,8 @@
 
         <div class="dashboard-meta-row">
             <div class="identity-badge">
-                <h2 id="dash-display-inst">INSTITUTION STRUCTURE</h2>
-                <p id="dash-display-meta">PROGRAM ARCHIVE MATRIX</p>
+                <h2 id="dash-display-inst">UNIVERSITY NAME</h2>
+                <p id="dash-display-meta">COURSE/GROUP NAME | SECTION: N/A</p>
             </div>
             <button class="btn-reset-system" onclick="purgeSystemKernel()">Flush System Data</button>
         </div>
@@ -89,8 +106,8 @@
 
             <div id="class-routine-capture-frame" class="clean-canvas-print-block">
                 <div class="canvas-header-identity">
-                    <h1 class="target-inst-name">INSTITUTION TITLE</h1>
-                    <p class="target-program-manifest">CLASS ROUTINE SCHEDULE</p>
+                    <h1 class="target-inst-name">UNIVERSITY NAME</h1>
+                    <p class="target-program-manifest">COURSE/GROUP NAME — CLASS ROUTINE MATRIX</p>
                     <div class="target-section-pill">SECTION: <span class="target-sec-val">N/A</span></div>
                 </div>
                 <div class="table-responsive-containment">
@@ -107,14 +124,12 @@
                                 <th>FRIDAY</th>
                             </tr>
                         </thead>
-                        <tbody id="class-matrix-body">
-                            </tbody>
+                        <tbody id="class-matrix-body"></tbody>
                     </table>
                 </div>
             </div>
             <button class="btn-build-engine btn-download-class" onclick="processFidelitySnapshot('class-routine-capture-frame', 'Class_Routine')">📸 Download Class Routine Image Only</button>
         </div>
-
 
         <div class="routine-management-wrapper" style="margin-top: 50px;">
             <div class="section-admin-bar">
@@ -124,8 +139,8 @@
 
             <div id="exam-routine-capture-frame" class="clean-canvas-print-block">
                 <div class="canvas-header-identity">
-                    <h1 class="target-inst-name">INSTITUTION TITLE</h1>
-                    <p class="target-program-manifest" style="color: #d97706 !important;">EXAMINATION SCHEDULE MATRIX</p>
+                    <h1 class="target-inst-name">UNIVERSITY NAME</h1>
+                    <p class="target-program-manifest" style="color: #d97706 !important;">COURSE/GROUP NAME — EXAMINATION TIMELINE</p>
                     <div class="target-section-pill" style="background: #d97706 !important;">SECTION: <span class="target-sec-val">N/A</span></div>
                 </div>
                 <div class="table-responsive-containment">
@@ -142,8 +157,7 @@
                                 <th>FRIDAY</th>
                             </tr>
                         </thead>
-                        <tbody id="exam-matrix-body">
-                            </tbody>
+                        <tbody id="exam-matrix-body"></tbody>
                     </table>
                 </div>
             </div>
