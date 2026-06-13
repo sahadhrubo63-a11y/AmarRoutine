@@ -3,20 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dynamic Academic Routine Dashboard</title>
+    <title>Amar Routine - Ultimate Dynamic Dashboard</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&family=Fira+Code:wght@400;600&family=Montserrat:wght@600;800&family=Playfair+Display:ital,wght@0,600;1,400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;900&family=Plus+Jakarta+Sans:wght@400;600;800&family=Fira+Code:wght@500;700&family=Montserrat:wght@700;900&family=Playfair+Display:ital,wght@0,700;1,400&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head>
 <body>
 
-    <div id="onboarding-screen" class="auth-wrapper">
+    <div id="onboarding-screen" class="auth-container">
         <div class="auth-card">
             <div class="logo-area">
-                <h1>Amar Routine ⏰</h1>
-                <p>Configure your academic spectrum to activate custom interface vibes</p>
+                <h2>Amar Routine ⏰</h2>
+                <p>Configure your institution and course context to sync custom dashboard aesthetics.</p>
             </div>
             
             <div class="form-group">
@@ -25,115 +25,128 @@
             </div>
 
             <div class="form-group">
-                <label>Select Your Course / Department / Group:</label>
+                <label>Select Your Department / Group:</label>
                 <select id="dept-program">
                     <option value="" disabled selected>-- Select Option --</option>
-                    
                     <optgroup label="🔬 University - Tech & Engineering">
                         <option value="CSE">CSE (Computer Science & Engineering)</option>
                         <option value="SWE">SWE (Software Engineering)</option>
                         <option value="EEE">EEE (Electrical & Electronic Engineering)</option>
                         <option value="CE">CE (Civil Engineering)</option>
                         <option value="ME">ME (Mechanical Engineering)</option>
-                        <option value="IPE">IPE (Industrial & Production Engineering)</option>
-                        <option value="TE">TE (Textile Engineering)</option>
                     </optgroup>
-
                     <optgroup label="💼 University - Business & Commerce">
                         <option value="BBA">BBA (Bachelor of Business Administration)</option>
-                        <option value="Accounting">Accounting & Information Systems</option>
+                        <option value="Accounting">Accounting & Info Systems</option>
                         <option value="Finance">Finance & Banking</option>
-                        <option value="Management">Management (HRM)</option>
-                        <option value="Marketing">Marketing Management</option>
-                        <option value="MBA">MBA (Master of Business Administration)</option>
                     </optgroup>
-
-                    <optgroup label="🎨 University - Arts, Law & Humanities">
-                        <option value="English">BA in English Literature & Linguistics</option>
+                    <optgroup label="🎨 University - Arts & Law">
+                        <option value="English">BA in English Literature</option>
                         <option value="LLB">LL.B (Bachelor of Laws)</option>
                         <option value="Bangla">BA in Bangla Literature</option>
-                        <option value="Economics">BSS in Economics</option>
-                        <option value="Sociology">BSS in Sociology</option>
-                        <option value="Political Science">BSS in Political Science</option>
-                        <option value="Journalism">Mass Communication & Journalism</option>
                     </optgroup>
-
-                    <optgroup label="🏫 School / College Level Groups">
+                    <optgroup label="🏫 School / College Level">
                         <option value="Science">Science (বিজ্ঞান বিভাগ)</option>
-                        <option value="Commerce">Commerce / Business Studies (ব্যবসায় শিক্ষা বিভাগ)</option>
+                        <option value="Commerce">Commerce (ব্যবসায় শিক্ষা বিভাগ)</option>
                         <option value="Arts">Arts / Humanities (মানবিক বিভাগ)</option>
                     </optgroup>
                 </select>
             </div>
 
-            <button class="btn-submit-onboard" onclick="initializeApp()">Generate Active Dashboard</button>
+            <button class="btn-submit" onclick="initializeApp()">Enter Dashboard</button>
         </div>
     </div>
 
     <div id="dashboard-screen" class="dashboard-wrapper hidden">
         
-        <div class="dashboard-top-nav">
-            <div class="profile-pill">
-                <span class="user-avatar">🎯</span>
-                <div class="profile-meta">
-                    <h3 id="display-inst-name">ACADEMIC WORKSPACE</h3>
-                    <div class="program-badge-row">
-                        <span class="live-pulse"></span>
-                        <p id="display-program">Loading Workspace...</p>
-                    </div>
+        <div class="smart-widget-panel">
+            <div class="clock-capsule">
+                <div class="clock-outer-shape">
+                    <div id="digital-clock">00:00:00 AM</div>
                 </div>
+                <div id="live-date">Loading active temporal metrics...</div>
             </div>
-            <button class="btn-change-info" onclick="resetApp()">Wipe / Change Space</button>
-        </div>
-
-        <div class="action-grid-buttons">
-            <button class="btn-dash btn-add-manual" onclick="openModal('manual-modal')">➕ Add Routine Class</button>
-        </div>
-
-        <div id="routine-capture-area" class="routine-canvas">
-            <div class="canvas-header-meta">
-                <h2 id="canvas-inst-title">INSTITUTION</h2>
-                <p id="canvas-dept-title">DEPARTMENT MANIFEST</p>
-            </div>
-            <div id="routine-container">
-                <div class="empty-state-notice">Workspace empty. Insert class slots to populate the matrix.</div>
+            <div id="weather-box" class="weather-capsule">
+                <p>📍 Scanning GPS...</p>
             </div>
         </div>
 
-        <button class="btn-floating-download" onclick="generateRoutinePreview()">📸 Generate & Update Image Preview</button>
+        <div class="meta-branding-row">
+            <div class="brand-info">
+                <h1 id="display-inst-name">ACADEMIC INTERFACES</h1>
+                <p id="display-program">Dynamic Domain Matrix</p>
+            </div>
+            <button class="btn-reset" onclick="resetApp()">Wipe / Change Course</button>
+        </div>
 
-        <div id="preview-section" class="preview-card-box hidden">
-            <div class="view-header-title">🔥 LIVE ROUTINE IMAGE PREVIEW</div>
+        <div class="action-trigger-bar">
+            <button class="btn-action btn-add-class" onclick="openModal('manual-modal')">➕ Add Class Node</button>
+            <button class="btn-action btn-add-exam" onclick="openModal('exam-modal')">📝 Add Exam Slot</button>
+        </div>
+
+        <div id="routine-capture-container" class="canvas-print-envelope">
+            <div class="canvas-watermark-header">
+                <h1 id="canvas-inst-title">INSTITUTION</h1>
+                <p id="canvas-dept-title">CLASS SCHEDULE • CUSTOM BUILDER</p>
+                <div class="section-pill">SECTION — DATA ARCHIVE</div>
+            </div>
+            
+            <div class="table-responsive-wrapper">
+                <table class="grid-timetable">
+                    <thead>
+                        <tr>
+                            <th>TIME</th>
+                            <th>SATURDAY</th>
+                            <th>SUNDAY</th>
+                            <th>MONDAY</th>
+                            <th>TUESDAY</th>
+                            <th>WEDNESDAY</th>
+                            <th>THURSDAY</th>
+                            <th>FRIDAY</th>
+                        </tr>
+                    </thead>
+                    <tbody id="grid-timetable-body">
+                        </tbody>
+                </table>
+            </div>
+
+            <div id="exam-render-area"></div>
+        </div>
+
+        <button class="btn-build-preview" onclick="generateRoutineImagePreview()">📸 Generate & Review High-Res Image</button>
+
+        <div id="preview-section" class="preview-output-card hidden">
+            <div class="preview-headline">🔥 LIVE PREMIUM IMAGE PREVIEW</div>
             <div id="image-preview-holder"></div>
-            <a id="download-anchor" class="btn-download-action" download="My_Academic_Routine.jpg">📥 Download Routine Image</a>
+            <a id="download-anchor" class="btn-download-trigger" download="My_Dynamic_Routine.jpg">📥 Download High-Res Image</a>
         </div>
     </div>
 
     <div id="manual-modal" class="modal hidden">
         <div class="modal-box">
             <div class="modal-head">
-                <h2>Add Class Configuration</h2>
+                <h3>Add New Class Segment</h3>
                 <span class="close-x" onclick="closeModal('manual-modal')">✕</span>
             </div>
-            <form id="manual-form" class="modal-form-core">
-                <input type="text" id="m-subject" placeholder="Subject Title" required>
-                <input type="text" id="m-code" placeholder="Course Code / No." required>
-                <input type="text" id="m-teacher" placeholder="Instructor Name / Initials">
-                <input type="text" id="m-room" placeholder="Room ID / Lab Arena">
+            <form id="manual-form" class="modal-form">
+                <input type="text" id="m-subject" placeholder="Subject Name (e.g. OOP II / DSA)" required>
+                <input type="text" id="m-code" placeholder="Course Code (e.g. CSE 2110)" required>
+                <input type="text" id="m-teacher" placeholder="Instructor Initials / Code (e.g. LAB 2)">
+                <input type="text" id="m-room" placeholder="Room ID / Lab No (e.g. 202)">
                 
-                <div class="form-flex-row">
-                    <div class="field-item">
+                <div class="form-row-flex">
+                    <div class="input-item">
                         <label>When Start 🟢</label>
                         <input type="time" id="m-start-time" required>
                     </div>
-                    <div class="field-item">
+                    <div class="input-item">
                         <label>When End 🔴</label>
                         <input type="time" id="m-end-time" required>
                     </div>
                 </div>
 
-                <div class="form-group" style="margin-bottom:0;">
-                    <label style="color:#fff;">Weekday</label>
+                <div class="input-item">
+                    <label>Assigned Weekday</label>
                     <select id="m-day">
                         <option value="Saturday">Saturday</option>
                         <option value="Sunday">Sunday</option>
@@ -144,11 +157,36 @@
                         <option value="Friday">Friday</option>
                     </select>
                 </div>
-                <button type="submit" class="btn-action-commit">Commit Class Entry</button>
+                <button type="submit" class="btn-commit">Commit Class Entry</button>
             </form>
         </div>
     </div>
 
+    <div id="exam-modal" class="modal hidden">
+        <div class="modal-box">
+            <div class="modal-head">
+                <h3>Add Exam Configuration</h3>
+                <span class="close-x" onclick="closeModal('exam-modal')">✕</span>
+            </div>
+            <form id="exam-form" class="modal-form">
+                <input type="text" id="e-subject" placeholder="Subject / Course Name" required>
+                <input type="text" id="e-code" placeholder="Course Code" required>
+                <div class="form-row-flex">
+                    <div class="input-item">
+                        <label>Exam Time</label>
+                        <input type="time" id="e-time" required>
+                    </div>
+                    <div class="input-item">
+                        <label>Exam Date</label>
+                        <input type="date" id="e-date" required>
+                    </div>
+                </div>
+                <button type="submit" class="btn-commit" style="background: #f59e0b;">Commit Exam Entry</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="capacitor.js"></script>
     <script src="app.js"></script>
 </body>
 </html>
