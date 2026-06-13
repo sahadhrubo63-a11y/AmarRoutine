@@ -1,31 +1,17 @@
 let classDatabase = [];
 let examDatabase = [];
-let selectedUserSubjects = []; // 👈 ইউজারের উইজার্ড স্ক্রিনে সিলেক্ট করা কোর্সের ডেটা রাখার অ্যারে
+let selectedUserSubjects = [];
 
-// 📚 ইউনিভার্সাল সাবজেক্ট এবং কোর্স রেজিস্ট্রি
-const masterSubjectRegistry = {
-    "University (Science & CSE Related)": [
-        "CSE", "Software Engineering", "EEE", "Civil Engineering", "Mechanical Engineering", 
-        "Textile Engineering", "Architecture", "Mathematics", "Physics", "Chemistry", 
-        "Statistics", "Microbiology", "Pharmacy", "Biochemistry"
-    ],
-    "University (Commerce Related)": [
-        "Accounting & Information Systems", "Finance", "Banking & Insurance", "Marketing", 
-        "Management Studies", "HRM", "MIS", "International Business", "Supply Chain Management"
-    ],
-    "University (Arts & Humanities)": [
-        "English Literature", "LL.B (Law)", "Economics", "Bangla", "Sociology", 
-        "Political Science", "International Relations", "Journalism & Media", "Public Administration"
-    ],
-    "School/College (Science Group)": [
-        "Physics", "Chemistry", "Higher Mathematics", "Biology", "ICT", "Bangla", "English"
-    ],
-    "School/College (Commerce Group)": [
-        "Accounting", "Finance & Banking", "Business Organization", "Production Management", "ICT", "Bangla", "English"
-    ],
-    "School/College (Arts Group)": [
-        "Civics & Good Governance", "History", "Islamic History", "Geography", "Economics", "Logic", "Social Work", "Bangla", "English"
-    ]
+// 📚 শুধুমাত্র সাবজেক্ট ডাটা অবজেক্ট (কোর্সের অপশনগুলো সরাসরি HTML এ চলে গেছে)
+const subjectRegistryMap = {
+    "CSE (Computer Science)": ["Programming in C", "Data Structures", "Algorithms", "Database Systems", "Operating Systems", "Computer Networks", "Digital Logic Design"],
+    "Software Engineering": ["Software Requirements", "Software Architecture", "Software Quality Assurance", "Design Patterns", "Web Engineering", "Mobile App Dev"],
+    "EEE (Electrical Eng)": ["Circuit Analysis", "Electronics I", "Digital Electronics", "Electrical Machines", "Power Systems", "Signal & Systems"],
+    "BBA (Management/HRM)": ["Principles of Management", "Organizational Behavior", "Human Resource Management", "Strategic Management", "Business Communication"],
+    "BBA (Finance/Accounting)": ["Financial Accounting", "Corporate Finance", "Cost Accounting", "Auditing", "Taxation", "Financial Institutions"],
+    "Science Group": ["Physics", "Chemistry", "Higher Mathematics", "Biology", "ICT", "Bangla", "English"],
+    "Commerce Group": ["Accounting", "Finance & Banking", "Business Organization", "Production Management", "ICT", "Bangla", "English"],
+    "Arts Group": ["Civics & Good Governance", "History", "Islamic History", "Geography", "Economics", "Logic", "Bangla", "English"]
 };
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -33,46 +19,114 @@ document.addEventListener("DOMContentLoaded", () => {
     setInterval(executeAnalogWallClockEngine, 1000);
     executeAnalogWallClockEngine();
     fetchAtmosphericData();
-    initWizardCourseViewer();
+    initWizardCascadeEngine();
 });
 
-// 📌 ১. ইন্টারফেসে ঢোকার সময় ক্যাটাগরি সিলেক্ট করলে তার ভেতরের সব কোর্স ডাইনামিক চেকবাক্স ফিল্ড আকারে জেনারেট করার ইঞ্জিন
-function initWizardCourseViewer() {
+// 📌 ডাইনামিক ফিল্টারিং ইঞ্জিন (HTML অপশনগ্রুপ শো/হাইড মেকানিজম)
+function initWizardCascadeEngine() {
+    const categorySelect = document.getElementById("setup-category");
+    const courseFieldWrapper = document.getElementById("course-group-field");
     const programSelect = document.getElementById("setup-program");
     const subjectFieldWrapper = document.getElementById("wizard-subject-select-field");
     const checkboxPool = document.getElementById("wizard-subject-checkbox-pool");
-    
-    if (programSelect && subjectFieldWrapper && checkboxPool) {
-        programSelect.addEventListener("change", (e) => {
-            const selectedTrack = e.target.value;
-            const targetSubjects = masterSubjectRegistry[selectedTrack] || [];
-            
-            checkboxPool.innerHTML = ""; // আগের জেনারেট করা ডাটা ক্লিয়ার করুন
 
-            if (targetSubjects.length > 0) {
-                targetSubjects.forEach((subject, index) => {
-                    // প্রতিটি সাবজেক্টের জন্য একটি চমৎকার কাস্টম চেকবাক্স কন্টেইনার তৈরি করুন
-                    const itemLabel = document.createElement("label");
-                    itemLabel.className = "wizard-checkbox-card";
-                    
-                    itemLabel.innerHTML = `
-                        <input type="checkbox" value="${subject}" checked class="subject-checkbox-input">
-                        <span class="custom-indicator"></span>
-                        <span class="subject-title-text">${subject}</span>
-                    `;
-                    checkboxPool.appendChild(itemLabel);
-                });
-                
-                // উইজার্ডে সাবজেক্ট সিলেকশন বক্সটি অ্যানিমেশন সহ শো করুন
-                subjectFieldWrapper.classList.remove("hidden");
-            } else {
-                subjectFieldWrapper.classList.add("hidden");
-            }
-        });
-    }
+    if (!categorySelect || !programSelect) return;
+
+    // ১. ক্যাটাগরি চেঞ্জ হলে HTML এর নির্দিষ্ট Optgroup দৃশ্যমান হবে
+    categorySelect.addEventListener("change", (e) => {
+        const cat = e.target.value;
+        programSelect.value = ""; // ড্রপডাউন রিসেট করুন
+        
+        // সমস্ত optgroup আগে হাইড করুন
+        document.querySelectorAll(".track-group").forEach(el => el.classList.add("hidden"));
+        
+        // সিলেক্ট করা ক্যাটাগরির optgroup শো করুন
+        const activeGroup = document.querySelector(`.${cat}-group`);
+        if (activeGroup) {
+            activeGroup.classList.remove("hidden");
+            courseFieldWrapper.classList.remove("hidden");
+        } else {
+            courseFieldWrapper.classList.add("hidden");
+        }
+        subjectFieldWrapper.classList.add("hidden"); 
+    });
+
+    // ২. কোর্স/গ্রুপ সিলেক্ট করলে সাবজেক্ট বক্স রেন্ডার হবে
+    programSelect.addEventListener("change", (e) => {
+        const selectedCourse = e.target.value;
+        const subjects = subjectRegistryMap[selectedCourse] || [];
+
+        checkboxPool.innerHTML = "";
+
+        if (subjects.length > 0) {
+            subjects.forEach(subject => {
+                const label = document.createElement("label");
+                label.className = "wizard-checkbox-card";
+                label.innerHTML = `
+                    <input type="checkbox" value="${subject}" checked class="subject-checkbox-input">
+                    <span class="custom-indicator"></span>
+                    <span class="subject-title-text">${subject}</span>
+                `;
+                checkboxPool.appendChild(label);
+            });
+            subjectFieldWrapper.classList.remove("hidden");
+        } else {
+            subjectFieldWrapper.classList.add("hidden");
+        }
+    });
 }
 
-// 📌 ২. উইজার্ড স্ক্রিন থেকে যেসব সাবজেক্ট সিলেক্ট করা হয়েছে, সেগুলোকে ড্যাশবোর্ডের ইনপুট মডালে দ্রুত ব্যবহারের জন্য ট্যাবে রূপান্তর করার ইঞ্জিন
+// 📌 উইজার্ড থেকে ডেটা সংগ্রহ এবং ড্যাশবোর্ড অ্যাক্টিভেশন
+function buildSystemCore() {
+    const inst = document.getElementById("setup-inst").value.trim();
+    const prog = document.getElementById("setup-program").value;
+    const sect = document.getElementById("setup-section").value.trim();
+
+    if(!inst || !prog || !sect) return alert("Please fulfill all setup specifications.");
+
+    const checkedCheckboxes = document.querySelectorAll(".subject-checkbox-input:checked");
+    const selectedSubjects = Array.from(checkedCheckboxes).map(cb => cb.value);
+
+    if(selectedSubjects.length === 0) {
+        return alert("Please select at least one subject before activating.");
+    }
+
+    localStorage.setItem("core_inst", inst);
+    localStorage.setItem("core_prog", prog);
+    localStorage.setItem("core_sect", sect);
+    localStorage.setItem("core_selected_subjects", JSON.stringify(selectedSubjects));
+
+    deployWorkspace(inst, prog, sect);
+}
+
+function deployWorkspace(inst, prog, sect) {
+    document.getElementById("setup-screen").classList.add("hidden");
+    document.getElementById("dashboard-screen").classList.remove("hidden");
+
+    // 🎯 ড্যাশবোর্ড আইডেন্টিটি বার আপডেট (একসাথে সব ডেটা রিড করবে)
+    document.getElementById("dash-display-inst").innerText = inst.toUpperCase();
+    document.getElementById("dash-display-meta").innerText = `${prog.toUpperCase()} | SECTION: ${sect.toUpperCase()}`;
+
+    // পিএনজি এক্সপোর্ট ফ্রেম মেটাডাটা সিঙ্ক
+    document.querySelectorAll(".target-inst-name").forEach(el => el.innerText = inst.toUpperCase());
+    
+    const manifests = document.querySelectorAll(".target-program-manifest");
+    if(manifests[0]) manifests[0].innerText = `${prog.toUpperCase()} — CLASS ROUTINE MATRIX`;
+    if(manifests[1]) manifests[1].innerText = `${prog.toUpperCase()} — EXAMINATION TIMELINE`;
+
+    document.querySelectorAll(".target-sec-val").forEach(el => el.innerText = sect.toUpperCase());
+
+    const cDb = localStorage.getItem("db_classes_v2");
+    const eDb = localStorage.getItem("db_exams_v2");
+    if(cDb) classDatabase = JSON.parse(cDb);
+    if(eDb) examDatabase = JSON.parse(eDb);
+
+    compileClassGrid();
+    compileExamGrid();
+    injectDynamicClickTabs();
+}
+
+// 📌 কুইক-পিক মডাল ট্যাব ইনজেক্টর
 function injectDynamicClickTabs() {
     const savedSubjects = localStorage.getItem("core_selected_subjects");
     if (!savedSubjects) return;
@@ -89,9 +143,7 @@ function injectDynamicClickTabs() {
             tabBtn.type = "button";
             tabBtn.className = "click-pick-tab";
             tabBtn.innerText = subject;
-            tabBtn.onclick = () => {
-                document.getElementById("c-title").value = subject;
-            };
+            tabBtn.onclick = () => { document.getElementById("c-title").value = subject; };
             classContainer.appendChild(tabBtn);
         });
     }
@@ -103,15 +155,13 @@ function injectDynamicClickTabs() {
             tabBtn.type = "button";
             tabBtn.className = "click-pick-tab exam-tab-style";
             tabBtn.innerText = subject;
-            tabBtn.onclick = () => {
-                document.getElementById("e-title").value = subject;
-            };
+            tabBtn.onclick = () => { document.getElementById("e-title").value = subject; };
             examContainer.appendChild(tabBtn);
         });
     }
 }
 
-// 🕒 সার্কেল ক্লাসিক অ্যানালগ ওয়াল ক্লক
+// 🕒 অ্যানালগ ক্লক কোর ইঞ্জিন
 function executeAnalogWallClockEngine() {
     const hrHand = document.getElementById("wall-hour");
     const minHand = document.getElementById("wall-minute");
@@ -285,55 +335,6 @@ function processFidelitySnapshot(frameId, fileNamePrefix) {
     });
 }
 
-// 📌 উইজার্ড কনফিগারেশন সাবমিট করার কোর ইঞ্জিন লজিক
-function buildSystemCore() {
-    const inst = document.getElementById("setup-inst").value.trim();
-    const prog = document.getElementById("setup-program").value;
-    const sect = document.getElementById("setup-section").value.trim();
-
-    if(!inst || !prog || !sect) return alert("Please fulfill all setup specifications.");
-
-    // ইউজারের টিক মার্ক করা সাবজেক্টগুলো খুঁজে বের করে লোকালস্টোরেজে সেভ করার কোড
-    const checkedCheckboxes = document.querySelectorAll(".subject-checkbox-input:checked");
-    const selectedSubjects = Array.from(checkedCheckboxes).map(cb => cb.value);
-
-    if(selectedSubjects.length === 0) {
-        return alert("Please select at least one course/subject from the list before activating.");
-    }
-
-    localStorage.setItem("core_inst", inst);
-    localStorage.setItem("core_prog", prog);
-    localStorage.setItem("core_sect", sect);
-    localStorage.setItem("core_selected_subjects", JSON.stringify(selectedSubjects));
-
-    deployWorkspace(inst, prog, sect);
-}
-
-function deployWorkspace(inst, prog, sect) {
-    document.getElementById("setup-screen").classList.add("hidden");
-    document.getElementById("dashboard-screen").classList.remove("hidden");
-
-    document.getElementById("dash-display-inst").innerText = inst.toUpperCase();
-    document.getElementById("dash-display-meta").innerText = `${prog} | SECTION: ${sect}`;
-
-    document.querySelectorAll(".target-inst-name").forEach(el => el.innerText = inst.toUpperCase());
-    
-    const manifests = document.querySelectorAll(".target-program-manifest");
-    if(manifests[0]) manifests[0].innerText = `${prog} — CLASS ROUTINE MATRIX`;
-    if(manifests[1]) manifests[1].innerText = `${prog} — EXAMINATION TIMELINE`;
-
-    document.querySelectorAll(".target-sec-val").forEach(el => el.innerText = sect.toUpperCase());
-
-    const cDb = localStorage.getItem("db_classes_v2");
-    const eDb = localStorage.getItem("db_exams_v2");
-    if(cDb) classDatabase = JSON.parse(cDb);
-    if(eDb) examDatabase = JSON.parse(eDb);
-
-    compileClassGrid();
-    compileExamGrid();
-    injectDynamicClickTabs(); // 👈 অ্যাক্টিভেট করার সাথে সাথে ড্যাশবোর্ড ট্যাব লোড করবে
-}
-
 function insertClassItem(e) {
     e.preventDefault();
     const title = document.getElementById("c-title").value.trim();
@@ -395,7 +396,6 @@ function purgeSystemKernel() {
     }
 }
 
-// টাইম স্ট্রিং ফরম্যাটার
 function formatTwelveHour(timeStr) {
     if(!timeStr) return "00:00";
     let [h, m] = timeStr.split(':');
