@@ -3,34 +3,39 @@ let examDatabase = [];
 
 document.addEventListener("DOMContentLoaded", () => {
     evaluateSystemState();
-    // ক্রোনোগ্রাফ ওয়াচ সচল করার লাইভ ইঞ্জিন থ্রেড
-    setInterval(executeChronographEngine, 1000);
-    executeChronographEngine();
+    // অ্যানালগ ঘড়ির মেকানিজম সচল করার কোর লুপ থ্রেড
+    setInterval(executeAnalogWallClockEngine, 1000);
+    executeAnalogWallClockEngine();
     fetchAtmosphericData();
 });
 
-// ⏰ ১. বড় সাইজের মেকানিক্যাল ক্লক শেপ রানিং ওয়াচ
-function executeChronographEngine() {
-    const clockNum = document.getElementById("big-clock-numeric");
-    const clockCal = document.getElementById("big-calendar-date");
-    if(!clockNum || !clockCal) return;
+// 🕒 ১. সার্কেল টাইপ ক্লাসিক অ্যানালগ ওয়াল ক্লক মেকানিজম
+function executeAnalogWallClockEngine() {
+    const hrHand = document.getElementById("wall-hour");
+    const minHand = document.getElementById("wall-minute");
+    const secHand = document.getElementById("wall-second");
+    const calendarDate = document.getElementById("live-calendar-date");
+
+    if (!hrHand || !minHand || !secHand) return;
 
     const now = new Date();
-    let hours = now.getHours();
-    let minutes = now.getMinutes();
-    let seconds = now.getSeconds();
-    const ampm = hours >= 12 ? 'PM' : 'AM';
+    const seconds = now.getSeconds();
+    const minutes = now.getMinutes();
+    const hours = now.getHours();
 
-    hours = hours % 12 || 12;
-    hours = hours < 10 ? '0' + hours : hours;
-    minutes = minutes < 10 ? '0' + minutes : minutes;
-    seconds = seconds < 10 ? '0' + seconds : seconds;
+    // ডিগ্রিতে কনভার্ট করার গাণিতিক সমীকরণ
+    const secDegrees = ((seconds / 60) * 360);
+    const minDegrees = ((minutes / 60) * 360) + ((seconds / 60) * 6);
+    const hrDegrees = ((hours % 12 / 12) * 360) + ((minutes / 60) * 30);
 
-    clockNum.innerText = `${hours}:${minutes}:${seconds} ${ampm}`;
-    clockCal.innerText = now.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+    secHand.style.transform = `translateX(-50%) rotate(${secDegrees}deg)`;
+    minHand.style.transform = `translateX(-50%) rotate(${minDegrees}deg)`;
+    hrHand.style.transform = `translateX(-50%) rotate(${hrDegrees}deg)`;
+
+    calendarDate.innerText = now.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
 }
 
-// 📍 ২. লাইভ লোকেশন বেসড ওয়েডার ট্র্যাকিং
+// 📍 ২. লাইভ লোকেশন আবহাওয়া ট্র্যাকিং
 function fetchAtmosphericData() {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(async (pos) => {
@@ -43,43 +48,41 @@ function fetchAtmosphericData() {
                             <span class="station-radar-pulse">🌤️</span>
                             <div>
                                 <h3>${Math.round(data.current_weather.temperature)}°C</h3>
-                                <p>Atmospheric Sync Active</p>
+                                <p>Ecosystem Pulse Active</p>
                             </div>
                         </div>`;
                 }
             } catch(e) {
-                document.getElementById("live-weather-station").innerHTML = "<p>🌤️ Weather Tracking Offline</p>";
+                document.getElementById("live-weather-station").innerHTML = "<p>🌤️ Weather System Terminated</p>";
             }
         }, () => {
-            document.getElementById("live-weather-station").innerHTML = "<p>📍 Location Stream Inaccessible</p>";
+            document.getElementById("live-weather-station").innerHTML = "<p>📍 Geolocation Inaccessible</p>";
         });
     }
 }
 
-// 📊 ৩. ক্লাস এবং এক্সাম দুই টাইপের গ্রিড সিস্টেম জেনারেটর ইঞ্জিন
+// 📊 ৩. ক্লাস এবং এক্সাম ইন্টিগ্রেটেড গ্রিড রেন্ডারার
 function compileGridMatrix(targetDb, tbodyId, typePrefix) {
     const tbody = document.getElementById(tbodyId);
     tbody.innerHTML = "";
 
     if(targetDb.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="8" class="empty-matrix-fallback">No slots registered inside this routine category track.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="8" class="empty-matrix-fallback">No slots registered inside this routine directory.</td></tr>`;
         return;
     }
 
-    const systematicallySortedTimeSlots = [...new Set(targetDb.map(x => `${x.start} - ${x.end}`))].sort();
+    const sortedSlots = [...new Set(targetDb.map(x => `${x.start} - ${x.end}`))].sort();
     const cycleDays = ["Saturday", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
 
-    systematicallySortedTimeSlots.forEach(slot => {
+    sortedSlots.forEach(slot => {
         const tr = document.createElement("tr");
         
-        // ১ম কলাম টাইমস্ট্যাম্প এক্সিস ম্যাপ
         const tdTime = document.createElement("td");
         tdTime.className = "time-axis-index";
         const [st, et] = slot.split(" - ");
         tdTime.innerHTML = `<strong>${formatTwelveHour(st)}<br>to<br>${formatTwelveHour(et)}</strong>`;
         tr.appendChild(tdTime);
 
-        // সপ্তাহের ৭ দিন ট্র্যাকিং লুপ অবজেক্ট
         cycleDays.forEach(day => {
             const tdCell = document.createElement("td");
             const nodeMatch = targetDb.find(x => `${x.start} - ${x.end}` === slot && x.day.toLowerCase() === day.toLowerCase());
@@ -91,10 +94,10 @@ function compileGridMatrix(targetDb, tbodyId, typePrefix) {
                 tdCell.innerHTML = `
                     <div class="cell-matrix-wrapper">
                         <span class="node-purge-trigger" onclick="purgeNodeEntry(${nodeMatch.id}, '${typePrefix}')">✕</span>
-                        <div class="cell-primary-code">${nodeMatch.code}</div>
-                        <div class="cell-secondary-instructor">${nodeMatch.meta}</div>
+                        <div class="cell-primary-title">${nodeMatch.title}</div>
+                        <div class="cell-secondary-code">${nodeMatch.code}</div>
+                        <div class="cell-teacher-name">${nodeMatch.meta}</div>
                         <div class="cell-type-pill ${isLabTrack ? 'pill-lab' : 'pill-theory'}">${isLabTrack ? 'LAB' : 'THEORY'}</div>
-                        <div class="cell-footer-title">${nodeMatch.title}</div>
                     </div>`;
             } else {
                 tdCell.className = "barren-cell-space";
@@ -107,30 +110,29 @@ function compileGridMatrix(targetDb, tbodyId, typePrefix) {
     });
 }
 
-// 📸 ৪. সম্পূর্ণ ক্লিন মোডে আপনার স্ক্রিনশটের মতো হাই-রেজোলিউশন ইমেজ এক্সপোর্টার
-function processCanvasFidelitySnapshot() {
-    const canvasNode = document.getElementById("master-routine-capture-frame");
+// 📸 ৪. সম্পূর্ণ ক্লিন মোডে শুধুমাত্র নির্দিষ্ট আইডি ব্লক ইমেজে এক্সপোর্ট করার ইঞ্জিন
+function processFidelitySnapshot(frameId, fileNamePrefix) {
+    const canvasNode = document.getElementById(frameId);
     const livePreviewBox = document.getElementById("live-preview-box");
     const viewportHolder = document.getElementById("preview-viewport-holder");
 
-    // এক্সপোর্ট ইঞ্জিন লক অ্যাক্টিভেট (সিএসএস ক্লাসের মাধ্যমে বর্ডার বা মার্জিন ক্লিন করা হবে)
+    // এক্সপোর্ট ইঞ্জিন কনফিগারেশন লক অন (বর্ডার এবং এক্সট্রা শ্যাডো হাইড করার জন্য)
     canvasNode.classList.add("export-engine-lock-active");
 
     html2canvas(canvasNode, {
-        scale: 3, // ক্রিস্টাল ক্লিয়ার টেক্সট কোয়ালিটির জন্য ৩ গুণ সুপার স্যাম্পলিং
+        scale: 3, // সুপার ক্রিস্টাল ৩ গুণ শার্প কোয়ালিটি নিশ্চিত করার জন্য
         useCORS: true,
         backgroundColor: "#ffffff"
     }).then(canvas => {
         const rawBase64Uri = canvas.toDataURL("image/jpeg", 1.0);
         
-        // মনিটর স্ক্রিনে ভিউ ড্রপ ডাউন করা
         viewportHolder.innerHTML = `<img src="${rawBase64Uri}" class="rendered-frame-monitor"/>`;
         livePreviewBox.classList.remove("hidden");
 
-        // ক্লায়েন্ট সিস্টেমে ইমেজ ডাউনলোড পুশ
+        // ডাউনলোড কনস্ট্রাকশন ট্রিগার
         const downloadTrigger = document.createElement("a");
         downloadTrigger.href = rawBase64Uri;
-        downloadTrigger.download = `Academic_Routine_Manifest_${localStorage.getItem("core_sect") || "Export"}.jpg`;
+        downloadTrigger.download = `${fileNamePrefix}_Manifest_${localStorage.getItem("core_sect") || "Export"}.jpg`;
         document.body.appendChild(downloadTrigger);
         downloadTrigger.click();
         document.body.removeChild(downloadTrigger);
@@ -142,10 +144,10 @@ function processCanvasFidelitySnapshot() {
 
 function buildSystemCore() {
     const inst = document.getElementById("setup-inst").value.trim();
-    const prog = document.getElementById("setup-program").value;
+    const prog = document.getElementById("setup-program").value.trim();
     const sect = document.getElementById("setup-section").value.trim();
 
-    if(!inst || !prog || !sect) return alert("System configuration deployment blocked! Populate all parameters.");
+    if(!inst || !prog || !sect) return alert("System setup initialization blocked! Fill out all fields.");
 
     localStorage.setItem("core_inst", inst);
     localStorage.setItem("core_prog", prog);
@@ -158,32 +160,30 @@ function deployWorkspace(inst, prog, sect) {
     document.getElementById("setup-screen").classList.add("hidden");
     document.getElementById("dashboard-screen").classList.remove("hidden");
 
-    // মেটা ফিল্ড ডিস্ট্রিবিউশন
     document.getElementById("dash-display-inst").innerText = inst.toUpperCase();
     document.getElementById("dash-display-meta").innerText = `${prog} | SECTION: ${sect}`;
 
-    // এক্সপোর্ট ক্যানভাস ফ্রেমের মেটা এলিমেন্ট আপডেট
     document.querySelectorAll(".target-inst-name").forEach(el => el.innerText = inst.toUpperCase());
-    document.querySelectorAll(".target-program-manifest").forEach(el => {
-        if(!el.innerText.includes("EXAMINATION")) el.innerText = `${prog} CLASS ROUTINE MANIFEST`;
-    });
+    
+    const classManifests = document.querySelectorAll(".target-program-manifest");
+    if(classManifests[0]) classManifests[0].innerText = `${prog} — CLASS ROUTINE MANIFEST`;
+    if(classManifests[1]) classManifests[1].innerText = `${prog} — EXAMINATION SCHEDULE MATRIX`;
+
     document.querySelectorAll(".target-sec-val").forEach(el => el.innerText = sect.toUpperCase());
 
-    // ডাটাবেস রিকভারি অপারেশন
     const cDb = localStorage.getItem("db_classes");
     const eDb = localStorage.getItem("db_exams");
     if(cDb) classDatabase = JSON.parse(cDb);
     if(eDb) examDatabase = JSON.parse(eDb);
 
-    // দুই টাইপের রুটিন রেন্ডারিং কলব্যাক
     compileGridMatrix(classDatabase, "class-matrix-body", "CLASS");
     compileGridMatrix(examDatabase, "exam-matrix-body", "EXAM");
 }
 
 function insertClassItem(e) {
     e.preventDefault();
+    const title = document.getElementById("c-title").value;
     const code = document.getElementById("c-code").value.trim();
-    const title = document.getElementById("c-title").value.trim();
     const meta = document.getElementById("c-meta").value.trim();
     const start = document.getElementById("c-start").value;
     const end = document.getElementById("c-end").value;
@@ -199,8 +199,8 @@ function insertClassItem(e) {
 
 function insertExamItem(e) {
     e.preventDefault();
+    const title = document.getElementById("e-title").value;
     const code = document.getElementById("e-code").value.trim();
-    const title = document.getElementById("e-title").value.trim();
     const room = document.getElementById("e-room").value.trim();
     const start = document.getElementById("e-start").value;
     const end = document.getElementById("e-end").value;
@@ -215,7 +215,7 @@ function insertExamItem(e) {
 }
 
 function purgeNodeEntry(id, prefix) {
-    if(confirm(`Expunge targeted ${prefix} matrix segment node?`)) {
+    if(confirm(`Expunge selected ${prefix} asset node from tracking map?`)) {
         if(prefix === "CLASS") {
             classDatabase = classDatabase.filter(x => x.id !== id);
             localStorage.setItem("db_classes", JSON.stringify(classDatabase));
@@ -236,7 +236,7 @@ function evaluateSystemState() {
 }
 
 function purgeSystemKernel() {
-    if(confirm("Flush whole active localized ecosystem parameters?")) {
+    if(confirm("Flush whole localized storage cluster data?")) {
         localStorage.clear();
         location.reload();
     }
