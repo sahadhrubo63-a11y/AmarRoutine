@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Academic Command Center - HTML Course Registry Edition</title>
+    <title>Academic Command Center - High Flexibility Edition</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght=400;600;700;800&display=swap" rel="stylesheet">
@@ -36,7 +36,6 @@
                 <label>2. Course / Group Name</label>
                 <select id="setup-program" required>
                     <option value="" disabled selected>-- Select Course / Group --</option>
-                    
                     <optgroup label="University Tracks" class="track-group university-group hidden">
                         <option value="CSE (Computer Science)">CSE (Computer Science)</option>
                         <option value="Software Engineering">Software Engineering</option>
@@ -44,19 +43,12 @@
                         <option value="BBA (Management/HRM)">BBA (Management/HRM)</option>
                         <option value="BBA (Finance/Accounting)">BBA (Finance/Accounting)</option>
                     </optgroup>
-
                     <optgroup label="School / College Groups" class="track-group school_college-group hidden">
                         <option value="Science Group">Science Group</option>
                         <option value="Commerce Group">Commerce Group</option>
                         <option value="Arts Group">Arts Group</option>
                     </optgroup>
                 </select>
-            </div>
-
-            <div id="wizard-subject-select-field" class="form-field hidden">
-                <label>3. Select Specific Subjects (Press to Select)</label>
-                <p class="field-instruction-note">Choose the specific subjects for your routine matrix:</p>
-                <div id="wizard-subject-checkbox-pool" class="wizard-checkbox-grid"></div>
             </div>
 
             <div class="form-field">
@@ -86,7 +78,10 @@
             </div>
 
             <div id="live-weather-station" class="weather-station-card">
-                <p>🛰️ Synchronizing coordinates...</p>
+                <div class="weather-prompt-box" id="weather-prompt-area">
+                    <p style="font-size:12px; margin-bottom:8px; color:#94a3b8;">Location access required for weather tracking.</p>
+                    <button class="btn-weather-trigger" onclick="requestLocationWeather()">Allow Location 📍</button>
+                </div>
             </div>
         </div>
 
@@ -101,7 +96,7 @@
         <div class="routine-management-wrapper">
             <div class="section-admin-bar">
                 <h3>📚 Class Routine Modules</h3>
-                <button class="btn-ops btn-green" onclick="toggleModal('class-modal', true)">➕ Add Class Slot</button>
+                <button class="btn-ops btn-green" onclick="toggleModal('class-modal', true, false)">➕ Add Class Slot</button>
             </div>
 
             <div id="class-routine-capture-frame" class="clean-canvas-print-block">
@@ -134,7 +129,7 @@
         <div class="routine-management-wrapper" style="margin-top: 50px;">
             <div class="section-admin-bar">
                 <h3 style="color: #d97706;">📝 Examination Schedule Tracks</h3>
-                <button class="btn-ops btn-amber" onclick="toggleModal('exam-modal', true)">📝 Add Exam Slot</button>
+                <button class="btn-ops btn-amber" onclick="toggleModal('exam-modal', true, false)">📝 Add Exam Slot</button>
             </div>
 
             <div id="exam-routine-capture-frame" class="clean-canvas-print-block">
@@ -164,6 +159,16 @@
             <button class="btn-build-engine btn-download-exam" onclick="processFidelitySnapshot('exam-routine-capture-frame', 'Exam_Routine')">📸 Download Exam Routine Image Only</button>
         </div>
 
+        <div class="danger-zone-wrapper">
+            <h4>⚠️ Routine Purge & Maintenance Tracks</h4>
+            <p>Clearing the current dataset format resets all matrices back to structural baseline default configurations.</p>
+            <div class="danger-btn-row">
+                <button class="btn-danger-action" onclick="clearSpecificRoutine('CLASS')">Clear All Class Slots Only</button>
+                <button class="btn-danger-action" onclick="clearSpecificRoutine('EXAM')">Clear All Exam Slots Only</button>
+                <button class="btn-danger-action btn-danger-heavy" onclick="clearSpecificRoutine('ALL')">💥 Delete Entire Routine Content Data</button>
+            </div>
+        </div>
+
         <div id="live-preview-box" class="preview-monitor-card hidden">
             <h4>🔥 LIVE HIGH-FIDELITY IMAGE EXPORT PREVIEW</h4>
             <div id="preview-viewport-holder"></div>
@@ -173,17 +178,14 @@
     <div id="class-modal" class="modal-backdrop hidden">
         <div class="modal-surface-container">
             <div class="modal-surface-header">
-                <h3>Append Class Entry</h3>
+                <h3 id="class-modal-title">Append Class Entry</h3>
                 <span class="x-close" onclick="toggleModal('class-modal', false)">✕</span>
             </div>
-            <form id="class-form" onsubmit="insertClassItem(event)">
-                <label class="inner-label">Course / Subject Name</label>
-                <input type="text" id="c-title" placeholder="Select from tabs or type here..." required>
+            <form id="class-form" onsubmit="commitClassFormHandler(event)">
+                <input type="hidden" id="c-edit-id">
                 
-                <div class="quick-suggest-wrapper">
-                    <div class="suggest-label">⚡ Selected Track Tabs:</div>
-                    <div id="class-tabs-container" class="tabs-flex-pool"></div>
-                </div>
+                <label class="inner-label">Course / Subject Name</label>
+                <input type="text" id="c-title" placeholder="e.g., Data Structures / Physics" required>
 
                 <input type="text" id="c-code" placeholder="Course Code" required>
                 <input type="text" id="c-meta" placeholder="Teacher Name" required>
@@ -216,7 +218,7 @@
                     <option value="Thursday">Thursday</option>
                     <option value="Friday">Friday</option>
                 </select>
-                <button type="submit" class="btn-core">Commit Class Slot</button>
+                <button type="submit" class="btn-core" id="class-submit-btn">Commit Class Slot</button>
             </form>
         </div>
     </div>
@@ -224,17 +226,14 @@
     <div id="exam-modal" class="modal-backdrop hidden">
         <div class="modal-surface-container" style="border-top: 4px solid #d97706;">
             <div class="modal-surface-header">
-                <h3>Append Examination Entry</h3>
+                <h3 id="exam-modal-title">Append Examination Entry</h3>
                 <span class="x-close" onclick="toggleModal('exam-modal', false)">✕</span>
             </div>
-            <form id="exam-form" onsubmit="insertExamItem(event)">
+            <form id="exam-form" onsubmit="commitExamFormHandler(event)">
+                <input type="hidden" id="e-edit-id">
+
                 <label class="inner-label">Course / Subject Name</label>
-                <input type="text" id="e-title" placeholder="Select from tabs or type here..." required>
-                
-                <div class="quick-suggest-wrapper">
-                    <div class="suggest-label" style="color: #f59e0b;">⚡ Selected Track Tabs:</div>
-                    <div id="exam-tabs-container" class="tabs-flex-pool"></div>
-                </div>
+                <input type="text" id="e-title" placeholder="e.g., Computer Networks Exam" required>
 
                 <select id="e-day" required>
                     <option value="" disabled selected>-- Day week name --</option>
@@ -252,7 +251,7 @@
                     <input type="time" id="e-start" required>
                 </div>
 
-                <button type="submit" class="btn-core" style="background: #d97706;">Commit Exam Slot</button>
+                <button type="submit" class="btn-core" style="background: #d97706;" id="exam-submit-btn">Commit Exam Slot</button>
             </form>
         </div>
     </div>
