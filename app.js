@@ -1,5 +1,32 @@
 let classDatabase = [];
 let examDatabase = [];
+let selectedUserSubjects = []; // 👈 ইউজারের উইজার্ড স্ক্রিনে সিলেক্ট করা কোর্সের ডেটা রাখার অ্যারে
+
+// 📚 ইউনিভার্সাল সাবজেক্ট এবং কোর্স রেজিস্ট্রি
+const masterSubjectRegistry = {
+    "University (Science & CSE Related)": [
+        "CSE", "Software Engineering", "EEE", "Civil Engineering", "Mechanical Engineering", 
+        "Textile Engineering", "Architecture", "Mathematics", "Physics", "Chemistry", 
+        "Statistics", "Microbiology", "Pharmacy", "Biochemistry"
+    ],
+    "University (Commerce Related)": [
+        "Accounting & Information Systems", "Finance", "Banking & Insurance", "Marketing", 
+        "Management Studies", "HRM", "MIS", "International Business", "Supply Chain Management"
+    ],
+    "University (Arts & Humanities)": [
+        "English Literature", "LL.B (Law)", "Economics", "Bangla", "Sociology", 
+        "Political Science", "International Relations", "Journalism & Media", "Public Administration"
+    ],
+    "School/College (Science Group)": [
+        "Physics", "Chemistry", "Higher Mathematics", "Biology", "ICT", "Bangla", "English"
+    ],
+    "School/College (Commerce Group)": [
+        "Accounting", "Finance & Banking", "Business Organization", "Production Management", "ICT", "Bangla", "English"
+    ],
+    "School/College (Arts Group)": [
+        "Civics & Good Governance", "History", "Islamic History", "Geography", "Economics", "Logic", "Social Work", "Bangla", "English"
+    ]
+};
 
 document.addEventListener("DOMContentLoaded", () => {
     evaluateSystemState();
@@ -9,77 +36,77 @@ document.addEventListener("DOMContentLoaded", () => {
     initWizardCourseViewer();
 });
 
-// 📌 উইজার্ড ইন্টারফেসে ঢোকার সময় ইউনিভার্সিটির সব কোর্স লিস্ট প্রদর্শনের লজিক
+// 📌 ১. ইন্টারফেসে ঢোকার সময় ক্যাটাগরি সিলেক্ট করলে তার ভেতরের সব কোর্স ডাইনামিক চেকবাক্স ফিল্ড আকারে জেনারেট করার ইঞ্জিন
 function initWizardCourseViewer() {
     const programSelect = document.getElementById("setup-program");
+    const subjectFieldWrapper = document.getElementById("wizard-subject-select-field");
+    const checkboxPool = document.getElementById("wizard-subject-checkbox-pool");
     
-    if (programSelect) {
-        const courseViewer = document.createElement("div");
-        courseViewer.id = "wizard-course-viewer";
-        courseViewer.style.cssText = "margin-top: 15px; font-size: 13px; color: #1e293b; background: #f1f5f9; padding: 16px; border-radius: 14px; display: none; line-height: 1.6; border-left: 4px solid #0284c7; font-weight: 600; text-align: left; max-height: 250px; overflow-y: auto;";
-        programSelect.parentNode.appendChild(courseViewer);
-
+    if (programSelect && subjectFieldWrapper && checkboxPool) {
         programSelect.addEventListener("change", (e) => {
-            const selectedValue = e.target.value;
-            let coursesText = "";
+            const selectedTrack = e.target.value;
+            const targetSubjects = masterSubjectRegistry[selectedTrack] || [];
+            
+            checkboxPool.innerHTML = ""; // আগের জেনারেট করা ডাটা ক্লিয়ার করুন
 
-            if (selectedValue === "University (Science & CSE Related)") {
-                coursesText = `🏢 <strong>University Science & Engineering Courses:</strong><br>
-                • B.Sc. in Computer Science & Engineering (CSE)<br>
-                • B.Sc. in Software Engineering (SWE)<br>
-                • B.Sc. in Electrical & Electronic Engineering (EEE)<br>
-                • B.Sc. in Civil Engineering (CE)<br>
-                • B.Sc. in Mechanical Engineering (ME)<br>
-                • B.Sc. in Industrial & Production Engineering (IPE)<br>
-                • B.Sc. in Textile Engineering (TE)<br>
-                • Bachelor of Architecture (B.Arch)<br>
-                • Urban & Regional Planning (URP)<br>
-                • B.Sc. in Mathematics / Physics / Chemistry / Statistics<br>
-                • Biochemistry & Molecular Biology / Microbiology<br>
-                • Genetic Engineering & Biotechnology<br>
-                • Bachelor of Pharmacy (B.Pharm)<br>
-                • Environmental Science`;
-            } else if (selectedValue === "University (Commerce Related)") {
-                coursesText = `🏢 <strong>University Commerce & Business Courses:</strong><br>
-                • Bachelor of Business Administration (BBA)<br>
-                • Accounting & Information Systems (AIS)<br>
-                • Finance & Banking<br>
-                • Marketing<br>
-                • Management Studies<br>
-                • Human Resource Management (HRM)<br>
-                • Management Information Systems (MIS)<br>
-                • International Business (IB)<br>
-                • Tourism & Hospitality Management<br>
-                • Supply Chain Management<br>
-                • Entrepreneurship Development`;
-            } else if (selectedValue === "University (Arts & Humanities)") {
-                coursesText = `🏢 <strong>University Arts, Humanities & Social Science Courses:</strong><br>
-                • BA (Hons) in English Literature & Linguistics<br>
-                • LL.B (Hons) / Law & Justice<br>
-                • BSS/B.Sc. in Economics<br>
-                • BA in Bangla Literature & Language<br>
-                • Sociology / Political Science<br>
-                • International Relations (IR)<br>
-                • Journalism & Media Studies<br>
-                • Public Administration / Anthropology<br>
-                • Philosophy / History / Islamic History & Culture<br>
-                • B.Sc. in Psychology<br>
-                • Bachelor of Fine Arts (BFA / Charukala)<br>
-                • Criminology / Development Studies`;
-            } else if (selectedValue === "School/College (Science Group)") {
-                coursesText = "🔬 <strong>School/College Science Subjects:</strong><br>• Physics, Chemistry, Higher Mathematics, Biology, ICT, Bangla, English Core Frameworks";
-            } else if (selectedValue === "School/College (Commerce Group)") {
-                coursesText = "📊 <strong>School/College Commerce Subjects:</strong><br>• Accounting, Finance & Banking, Business Organization & Management, Production Management, ICT";
-            } else if (selectedValue === "School/College (Arts Group)") {
-                coursesText = "🎨 <strong>School/College Arts Subjects:</strong><br>• Civics & Good Governance, History, Islamic History, Geography, Economics, Logic, Social Work";
-            }
-
-            if (coursesText) {
-                courseViewer.innerHTML = coursesText;
-                courseViewer.style.display = "block";
+            if (targetSubjects.length > 0) {
+                targetSubjects.forEach((subject, index) => {
+                    // প্রতিটি সাবজেক্টের জন্য একটি চমৎকার কাস্টম চেকবাক্স কন্টেইনার তৈরি করুন
+                    const itemLabel = document.createElement("label");
+                    itemLabel.className = "wizard-checkbox-card";
+                    
+                    itemLabel.innerHTML = `
+                        <input type="checkbox" value="${subject}" checked class="subject-checkbox-input">
+                        <span class="custom-indicator"></span>
+                        <span class="subject-title-text">${subject}</span>
+                    `;
+                    checkboxPool.appendChild(itemLabel);
+                });
+                
+                // উইজার্ডে সাবজেক্ট সিলেকশন বক্সটি অ্যানিমেশন সহ শো করুন
+                subjectFieldWrapper.classList.remove("hidden");
             } else {
-                courseViewer.style.display = "none";
+                subjectFieldWrapper.classList.add("hidden");
             }
+        });
+    }
+}
+
+// 📌 ২. উইজার্ড স্ক্রিন থেকে যেসব সাবজেক্ট সিলেক্ট করা হয়েছে, সেগুলোকে ড্যাশবোর্ডের ইনপুট মডালে দ্রুত ব্যবহারের জন্য ট্যাবে রূপান্তর করার ইঞ্জিন
+function injectDynamicClickTabs() {
+    const savedSubjects = localStorage.getItem("core_selected_subjects");
+    if (!savedSubjects) return;
+
+    selectedUserSubjects = JSON.parse(savedSubjects);
+    
+    const classContainer = document.getElementById("class-tabs-container");
+    const examContainer = document.getElementById("exam-tabs-container");
+    
+    if (classContainer) {
+        classContainer.innerHTML = "";
+        selectedUserSubjects.forEach(subject => {
+            const tabBtn = document.createElement("button");
+            tabBtn.type = "button";
+            tabBtn.className = "click-pick-tab";
+            tabBtn.innerText = subject;
+            tabBtn.onclick = () => {
+                document.getElementById("c-title").value = subject;
+            };
+            classContainer.appendChild(tabBtn);
+        });
+    }
+
+    if (examContainer) {
+        examContainer.innerHTML = "";
+        selectedUserSubjects.forEach(subject => {
+            const tabBtn = document.createElement("button");
+            tabBtn.type = "button";
+            tabBtn.className = "click-pick-tab exam-tab-style";
+            tabBtn.innerText = subject;
+            tabBtn.onclick = () => {
+                document.getElementById("e-title").value = subject;
+            };
+            examContainer.appendChild(tabBtn);
         });
     }
 }
@@ -228,7 +255,7 @@ function compileExamGrid() {
     });
 }
 
-// 📸 ইমেজ স্ন্যাপশট জেনারেটর
+// 📸 ইমেজ রেন্ডারিং ও এক্সপোর্ট ইঞ্জিন
 function processFidelitySnapshot(frameId, fileNamePrefix) {
     const canvasNode = document.getElementById(frameId);
     const livePreviewBox = document.getElementById("live-preview-box");
@@ -258,6 +285,7 @@ function processFidelitySnapshot(frameId, fileNamePrefix) {
     });
 }
 
+// 📌 উইজার্ড কনফিগারেশন সাবমিট করার কোর ইঞ্জিন লজিক
 function buildSystemCore() {
     const inst = document.getElementById("setup-inst").value.trim();
     const prog = document.getElementById("setup-program").value;
@@ -265,9 +293,18 @@ function buildSystemCore() {
 
     if(!inst || !prog || !sect) return alert("Please fulfill all setup specifications.");
 
+    // ইউজারের টিক মার্ক করা সাবজেক্টগুলো খুঁজে বের করে লোকালস্টোরেজে সেভ করার কোড
+    const checkedCheckboxes = document.querySelectorAll(".subject-checkbox-input:checked");
+    const selectedSubjects = Array.from(checkedCheckboxes).map(cb => cb.value);
+
+    if(selectedSubjects.length === 0) {
+        return alert("Please select at least one course/subject from the list before activating.");
+    }
+
     localStorage.setItem("core_inst", inst);
     localStorage.setItem("core_prog", prog);
     localStorage.setItem("core_sect", sect);
+    localStorage.setItem("core_selected_subjects", JSON.stringify(selectedSubjects));
 
     deployWorkspace(inst, prog, sect);
 }
@@ -294,6 +331,7 @@ function deployWorkspace(inst, prog, sect) {
 
     compileClassGrid();
     compileExamGrid();
+    injectDynamicClickTabs(); // 👈 অ্যাক্টিভেট করার সাথে সাথে ড্যাশবোর্ড ট্যাব লোড করবে
 }
 
 function insertClassItem(e) {
@@ -357,6 +395,7 @@ function purgeSystemKernel() {
     }
 }
 
+// টাইম স্ট্রিং ফরম্যাটার
 function formatTwelveHour(timeStr) {
     if(!timeStr) return "00:00";
     let [h, m] = timeStr.split(':');
