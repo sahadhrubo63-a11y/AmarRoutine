@@ -1,5 +1,5 @@
 /* ==========================================================================
-   🌌 Premium Cybernetic Interface Global Architecture Styling
+   🌌 Cybernetic Architecture Global System Styling
    ========================================================================== */
 :root {
     --shell-bg-dark: #040712;
@@ -24,127 +24,131 @@ body {
 }
 
 /* ==========================================================================
-   🗃️ Onboarding Wizard Styles 
+   🗃️ Onboarding Wizard Styles
    ========================================================================== */
 .wizard-panel { background: #ffffff; color: #0f172a; width: 100%; max-width: 500px; padding: 45px 35px; border-radius: 28px; align-self: center; box-shadow: 0 35px 75px rgba(0,0,0,0.8); }
 .wizard-header h2 { font-size: 24px; font-weight: 800; margin-bottom: 6px; letter-spacing: -0.5px; }
-.wizard-header p { color: #64748b; font-size: 13px; margin-bottom: 30px; line-height: 1.4; }
-.form-field { margin-bottom: 22px; text-align: left; }
-.form-field label { display: block; font-size: 11px; font-weight: 800; color: #475569; text-transform: uppercase; margin-bottom: 8px; letter-spacing: 0.5px; }
-.form-field input { width: 100%; padding: 15px; border-radius: 14px; border: 2px solid #e2e8f0; font-size: 14px; outline: none; font-weight: 600; color: #0f172a; background: #f8fafc; }
-.form-field input:focus { border-color: var(--neon-blue); }
+.wizard-header p { color: #64748b; font-size: 13px; margin-bottom: 30px; }
+.form-field { margin-bottom: 22px; }
+.form-field label { display: block; font-size: 11px; font-weight: 800; color: #475569; text-transform: uppercase; margin-bottom: 8px; }
+.form-field input, .form-field select { width: 100%; padding: 15px; border-radius: 14px; border: 2px solid #e2e8f0; font-size: 14px; outline: none; font-weight: 600; color: #0f172a; background: #f8fafc; }
+.form-field input:focus, .form-field select:focus { border-color: var(--neon-blue); }
 .btn-core { width: 100%; padding: 16px; background: #0284c7; border: none; color: white; border-radius: 14px; font-weight: 700; font-size: 15px; cursor: pointer; transition: 0.2s; }
 .btn-core:hover { background: #0369a1; transform: translateY(-1px); }
 
+/* Custom Scrollbar for Course Viewer */
+#wizard-course-viewer::-webkit-scrollbar { width: 6px; }
+#wizard-course-viewer::-webkit-scrollbar-track { background: #f1f5f9; }
+#wizard-course-viewer::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+
 /* ==========================================================================
-   🎛️ Command Center Core Layout Layers
+   🎛️ Workspace Layout
    ========================================================================== */
-.dashboard-shell { width: 100%; max-width: 1245px; background: var(--glass-facade); border: 1px solid var(--border-contour); padding: 35px; border-radius: 32px; backdrop-filter: blur(25px); box-shadow: 0 40px 95px rgba(0,0,0,0.6); align-self: flex-start; }
+.dashboard-shell { width: 100%; max-width: 1245px; background: var(--glass-facade); border: 1px solid var(--border-contour); padding: 35px; border-radius: 32px; backdrop-filter: blur(25px); box-shadow: 0 40px 95px rgba(0,0,0,0.6); }
 .analytics-control-grid { display: grid; grid-template-columns: 1.3fr 0.7fr; gap: 24px; margin-bottom: 35px; }
 
-/* ==========================================================================
-   🕒 CLASSIC MECHANICAL CIRCLE WALL CLOCK SYSTEM
-   ========================================================================== */
+/* 🕒 Analog Circle Clock */
 .clock-station { background: rgba(0,0,0,0.4); border: 1px solid var(--border-contour); padding: 25px; border-radius: 24px; display: flex; align-items: center; justify-content: space-around; gap: 20px; }
-.analog-wall-clock { width: 140px; height: 140px; border: 6px solid var(--text-core); border-radius: 50%; position: relative; background: #070d19; box-shadow: 0 0 20px rgba(14, 165, 233, 0.2), inset 0 0 15px rgba(0,0,0,0.6); }
-.clock-face-center { width: 10px; height: 10px; background: var(--neon-blue); border-radius: 50%; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 10; box-shadow: 0 0 8px var(--neon-blue); }
+.analog-wall-clock { width: 130px; height: 130px; border: 5px solid var(--text-core); border-radius: 50%; position: relative; background: #070d19; }
+.clock-face-center { width: 10px; height: 10px; background: var(--neon-blue); border-radius: 50%; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 10; }
 .clock-hand { position: absolute; bottom: 50%; left: 50%; transform-origin: bottom center; transform: translateX(-50%) rotate(0deg); border-radius: 4px; }
-.hand-hour { width: 5px; height: 35px; background: #ffffff; z-index: 5; }
-.hand-minute { width: 3.5px; height: 50px; background: #cbd5e1; z-index: 6; }
-.hand-second { width: 1.5px; height: 55px; background: var(--neon-blue); z-index: 7; }
-
-/* Clock Face Typographic Numeric Points */
-.clock-number { position: absolute; font-size: 12px; font-weight: 800; color: var(--text-muted); }
+.hand-hour { width: 5px; height: 32px; background: #ffffff; z-index: 5; }
+.hand-minute { width: 3.5px; height: 46px; background: #cbd5e1; z-index: 6; }
+.hand-second { width: 1.5px; height: 50px; background: var(--neon-blue); z-index: 7; }
+.clock-number { position: absolute; font-size: 11px; font-weight: 800; color: var(--text-muted); }
 .num-12 { top: 6px; left: 50%; transform: translateX(-50%); color: #fff; }
 .num-3 { right: 8px; top: 50%; transform: translateY(-50%); }
 .num-6 { bottom: 6px; left: 50%; transform: translateX(-50%); }
 .num-9 { left: 8px; top: 50%; transform: translateY(-50%); }
 
-#live-calendar-date { font-size: 14px; color: var(--text-core); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; line-height: 1.6; max-width: 200px; text-align: left; }
-
+#live-calendar-date { font-size: 13px; color: var(--text-core); font-weight: 700; text-transform: uppercase; text-align: left; }
 .weather-station-card { background: rgba(255,255,255,0.02); border: 1px solid var(--border-contour); border-radius: 24px; padding: 20px; display: flex; align-items: center; justify-content: center; }
 .weather-station-wrapper { display: flex; align-items: center; gap: 16px; text-align: left; }
-.station-radar-pulse { font-size: 34px; }
-.weather-station-wrapper h3 { font-size: 24px; font-weight: 800; color: #fff; }
+.station-radar-pulse { font-size: 30px; }
+.weather-station-wrapper h3 { font-size: 22px; font-weight: 800; }
 .weather-station-wrapper p { font-size: 11px; color: var(--text-muted); }
 
 .dashboard-meta-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; border-bottom: 1px dashed var(--border-contour); padding-bottom: 20px; }
-.identity-badge h2 { font-size: 18px; font-weight: 800; letter-spacing: -0.3px; }
+.identity-badge h2 { font-size: 18px; font-weight: 800; }
 .identity-badge p { font-size: 12px; color: var(--neon-blue); font-weight: 700; margin-top: 3px; }
-.btn-reset-system { background: rgba(239, 68, 68, 0.1); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.2); padding: 10px 20px; border-radius: 30px; font-size: 11px; font-weight: 700; cursor: pointer; transition: 0.2s; }
+.btn-reset-system { background: rgba(239, 68, 68, 0.1); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.2); padding: 10px 20px; border-radius: 30px; font-size: 11px; font-weight: 700; cursor: pointer; }
 .btn-reset-system:hover { background: #ef4444; color: white; }
 
 .routine-management-wrapper { background: rgba(0,0,0,0.15); padding: 25px; border-radius: 24px; border: 1px solid var(--border-contour); }
 .section-admin-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-.section-admin-bar h3 { font-size: 15px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; color: var(--neon-blue); }
+.section-admin-bar h3 { font-size: 14px; font-weight: 800; text-transform: uppercase; color: var(--neon-blue); }
 
-.btn-ops { padding: 12px 24px; border-radius: 12px; border: none; font-size: 13px; font-weight: 800; cursor: pointer; color: white; transition: 0.2s; }
+.btn-ops { padding: 12px 24px; border-radius: 12px; border: none; font-size: 13px; font-weight: 800; cursor: pointer; color: white; }
 .btn-green { background: #10b981; }
 .btn-amber { background: #d97706; }
-.btn-ops:hover { transform: translateY(-2px); filter: brightness(1.1); }
 
 /* ==========================================================================
-   📊 SNAPSHOT RENDERING FRAMEWORK (স্ক্রিনশটের মতো হু-ব-হু ক্লিন লেআউট)
+   📊 HIGH FIDELITY EXPORT MATRIX BLOCK
    ========================================================================== */
-.clean-canvas-print-block { background: #ffffff !important; color: #0f172a !important; padding: 35px; border-radius: 16px; border: 1px solid #cbd5e1; box-shadow: 0 4px 20px rgba(0,0,0,0.03); }
-.canvas-header-identity { text-align: center; margin-bottom: 25px; position: relative; }
-.target-inst-name { font-size: 22px; font-weight: 900; color: #0f172a; letter-spacing: -0.5px; text-transform: uppercase; }
-.target-program-manifest { font-size: 12px; color: #2563eb; font-weight: 800; letter-spacing: 0.5px; margin-top: 5px; text-transform: uppercase; }
+.clean-canvas-print-block { background: #ffffff !important; color: #0f172a !important; padding: 35px; border-radius: 16px; border: 1px solid #cbd5e1; }
+.canvas-header-identity { text-align: center; margin-bottom: 25px; }
+.target-inst-name { font-size: 22px; font-weight: 900; color: #0f172a; text-transform: uppercase; }
+.target-program-manifest { font-size: 12px; color: #2563eb; font-weight: 800; margin-top: 5px; text-transform: uppercase; }
 .target-section-pill { display: inline-block; background: #0f172a; color: #ffffff !important; font-size: 11px; font-weight: 800; padding: 6px 16px; border-radius: 6px; margin-top: 12px; }
 
-/* High fidelity table core styles sheets */
 .table-responsive-containment { width: 100%; overflow-x: auto; border-radius: 10px; border: 1px solid #cbd5e1; margin-top: 15px; }
-.grid-fidelity-table { width: 100%; border-collapse: collapse; min-width: 950px; background: #ffffff; text-align: center; }
+.grid-fidelity-table { width: 100%; border-collapse: collapse; min-width: 980px; background: #ffffff; text-align: center; }
 .grid-fidelity-table th { background: #0f172a; color: #ffffff !important; padding: 15px 8px; font-size: 11px; font-weight: 800; border: 1px solid #1e293b; text-transform: uppercase; }
-.grid-fidelity-table td { border: 1px solid #cbd5e1; padding: 10px 6px; vertical-align: middle; height: 115px; width: 12.5%; }
+.grid-fidelity-table td { border: 1px solid #cbd5e1; padding: 12px 8px; vertical-align: middle; height: 130px; width: 12.5%; }
 
-/* Table Categories Variances */
+/* 📝 এক্সাম রুটিন ভ্যারিয়েন্ট */
 .exam-table-variant th { background: #d97706 !important; border-color: #b45309 !important; }
+.exam-time-head { background: #fffbeb !important; color: #b45309 !important; }
 
-.time-axis-index { background: #f8fafc; font-size: 11px; color: #0f172a; font-weight: 800; line-height: 1.4; text-transform: uppercase; }
+.time-axis-index { background: #f8fafc; font-size: 11px; color: #0f172a; font-weight: 800; line-height: 1.4; }
 .empty-matrix-fallback { text-align: center; color: #94a3b8; font-size: 13px; font-style: italic; }
-.barren-cell-space { color: #cbd5e1; font-size: 14px; }
+.barren-cell-space { color: #e2e8f0; font-size: 14px; }
+.exam-barren { background: #fafafa !important; }
 
-/* Occupied Internal Grid System */
-.occupied-fidelity-cell { background: #ffffff; position: relative; }
-.cell-matrix-wrapper { display: flex; flex-direction: column; justify-content: space-between; height: 100%; padding: 4px 0; }
-.cell-primary-title { font-size: 12px; font-weight: 800; color: #0f172a; line-height: 1.3; white-space: normal; word-wrap: break-word; }
-.cell-secondary-code { font-size: 11px; font-weight: 700; color: #2563eb; margin-top: 2px; }
-.cell-teacher-name { font-size: 10px; color: #64748b; font-weight: 600; margin-top: 1px; }
-.cell-type-pill { display: inline-block; align-self: center; font-size: 9px; font-weight: 800; padding: 1px 6px; border-radius: 4px; margin: 4px 0; }
+/* 📦 রুটিন ডাটা সেল বক্স */
+.occupied-fidelity-cell { background: #ffffff; position: relative; padding: 6px !important; }
+.cell-matrix-wrapper { display: flex; flex-direction: column; justify-content: center; height: 100%; gap: 3px; position: relative; }
+.cell-primary-title { font-size: 12px; font-weight: 800; color: #0f172a; line-height: 1.2; }
+.cell-secondary-code { font-size: 11px; font-weight: 700; color: #1e40af; }
+.cell-teacher-name { font-size: 11px; color: #475569; font-weight: 600; }
+.cell-room-no { font-size: 11px; color: #64748b; font-weight: 700; }
+
+.cell-type-pill { display: inline-block; align-self: center; font-size: 9px; font-weight: 800; padding: 2px 8px; border-radius: 4px; margin-top: 2px; }
 .pill-theory { background: #eff6ff; color: #2563eb !important; border: 1px solid #bfdbfe; }
 .pill-lab { background: #fff7ed; color: #ea580c !important; border: 1px solid #ffedd5; }
 
-/* Custom exam parameters styling overrides inside grid engine */
-.exam-table-variant .cell-secondary-code { color: #d97706 !important; }
+/* 📝 এক্সাম ডেডিকেটেড বক্স */
+.exam-box-cell { background: #fffbeb !important; border: 2px dashed #f59e0b !important; border-radius: 6px; }
+.exam-cell-subject { font-size: 12px; font-weight: 800; color: #92400e; }
+.exam-cell-time { font-size: 11px; font-weight: 700; color: #b45309; }
+.exam-cell-day-pill { align-self: center; background: #d97706; color: white !important; font-size: 9px; font-weight: 800; padding: 2px 6px; border-radius: 4px; }
 
-.node-purge-trigger { position: absolute; top: 4px; right: 6px; color: #cbd5e1; font-size: 10px; cursor: pointer; transition: 0.2s; z-index: 10; }
+.node-purge-trigger { position: absolute; top: -2px; right: -2px; color: #cbd5e1; font-size: 11px; cursor: pointer; z-index: 10; }
 .node-purge-trigger:hover { color: #ef4444; }
 
-/* 🔒 SNAPSHOT ENGINE LOCK INTERFACES */
-.export-engine-lock-active { border: none !important; box-shadow: none !important; border-radius: 0 !important; width: 1125px !important; }
+.export-engine-lock-active { border: none !important; box-shadow: none !important; border-radius: 0 !important; width: 1150px !important; }
 
 /* ==========================================================================
-   🖼️ Output Preview Render Module
+   🖼️ Snapshot Preview Monitor
    ========================================================================== */
-.btn-build-engine { width: 100%; margin-top: 20px; padding: 15px; border: none; border-radius: 12px; font-weight: 800; font-size: 14px; cursor: pointer; transition: 0.2s; }
+.btn-build-engine { width: 100%; margin-top: 20px; padding: 15px; border: none; border-radius: 12px; font-weight: 800; font-size: 14px; cursor: pointer; }
 .btn-download-class { background: rgba(16, 185, 129, 0.1); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.2); }
 .btn-download-exam { background: rgba(217, 119, 6, 0.1); color: #fbbf24; border: 1px solid rgba(217, 119, 6, 0.2); }
-.btn-build-engine:hover { background: #ffffff; color: #000; transform: translateY(-1px); }
 
 .preview-monitor-card { background: rgba(0,0,0,0.3); border: 2px solid var(--neon-blue); padding: 25px; border-radius: 24px; margin-top: 35px; text-align: center; }
-.preview-monitor-card h4 { font-size: 12px; color: var(--neon-blue); margin-bottom: 15px; letter-spacing: 0.5px; }
-.rendered-frame-monitor { width: 100%; border-radius: 12px; border: 1px solid var(--border-contour); box-shadow: 0 15px 40px rgba(0,0,0,0.6); }
+.preview-monitor-card h4 { font-size: 12px; color: var(--neon-blue); margin-bottom: 15px; }
+.rendered-frame-monitor { width: 100%; border-radius: 12px; box-shadow: 0 15px 40px rgba(0,0,0,0.6); }
 
 /* ==========================================================================
-   🪟 Administration Operational Modal Drawer Sheet
+   🪟 Modals Context Frame
    ========================================================================== */
 .modal-backdrop { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(4, 7, 15, 0.85); backdrop-filter: blur(5px); display: flex; align-items: center; justify-content: center; z-index: 7000; }
 .modal-surface-container { background: #0b1325; border: 1px solid var(--border-contour); border-top: 4px solid var(--neon-blue); width: 92%; max-width: 440px; padding: 30px; border-radius: 20px; box-shadow: 0 30px 60px rgba(0,0,0,0.7); }
 .modal-surface-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 22px; }
 .modal-surface-header h3 { font-size: 16px; font-weight: 800; }
 .x-close { cursor: pointer; color: var(--text-muted); }
-#class-form, #exam-form { display: flex; flex-direction: column; gap: 14px; }
+#class-form, #exam-form { display: flex; flex-direction: column; gap: 14px; text-align: left; }
 #class-form input, #class-form select, #exam-form input, #exam-form select { width: 100%; padding: 13px; background: #030712; border: 1px solid var(--border-contour); border-radius: 10px; color: white; font-size: 14px; outline: none; font-weight: 600; }
-#class-form select option, #exam-form select option { background: #0b1325; color: white; }
 .modal-flex-fields { display: flex; gap: 10px; }
+.modal-flex-fields > div { flex: 1; }
+.inner-label { font-size: 11px; font-weight: 700; color: #64748b; display: block; margin-bottom: 5px; text-transform: uppercase; }
