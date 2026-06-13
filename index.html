@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Academic Command Center - Amar Routine</title>
+    <title>Academic Command Center - Classic Wall Clock Edition</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Plus+Jakarta+Sans:wght@400;600;800&family=Fira+Code:wght@500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head>
@@ -14,8 +14,8 @@
 
     <div id="setup-screen" class="wizard-panel">
         <div class="wizard-header">
-            <h2>Academic Engine Wizard ⚙️</h2>
-            <p>Synchronize your institution, program, and core section parameters</p>
+            <h2>Routine System Wizard ⚙️</h2>
+            <p>Set up your institution, department/course, and section details</p>
         </div>
         <div class="wizard-form">
             <div class="form-field">
@@ -24,39 +24,13 @@
             </div>
 
             <div class="form-field">
-                <label>Select Department / Course / Group</label>
-                <select id="setup-program">
-                    <option value="" disabled selected>-- Select Option --</option>
-                    <optgroup label="🔬 University - Tech & Engineering">
-                        <option value="CSE">CSE (Computer Science & Engineering)</option>
-                        <option value="SWE">SWE (Software Engineering)</option>
-                        <option value="EEE">EEE (Electrical & Electronic Engineering)</option>
-                        <option value="Civil">Civil Engineering</option>
-                        <option value="Mechanical">Mechanical Engineering</option>
-                    </optgroup>
-                    <optgroup label="💼 University - Business & Commerce">
-                        <option value="BBA">BBA (Bachelor of Business Administration)</option>
-                        <option value="Accounting">Accounting & Information Systems</option>
-                        <option value="Finance">Finance & Banking</option>
-                        <option value="Marketing">Marketing Management</option>
-                    </optgroup>
-                    <optgroup label="🎨 University - Arts & Humanities">
-                        <option value="English">BA in English Literature</option>
-                        <option value="LLB">LL.B (Bachelor of Laws)</option>
-                        <option value="Bangla">BA in Bangla Literature</option>
-                        <option value="Economics">BSS in Economics</option>
-                    </optgroup>
-                    <optgroup label="🏫 School & College Levels">
-                        <option value="Science">Science (বিজ্ঞান বিভাগ)</option>
-                        <option value="Commerce">Commerce / Business Studies (ব্যবসায় শিক্ষা বিভাগ)</option>
-                        <option value="Arts">Arts / Humanities (মানবিক বিভাগ)</option>
-                    </optgroup>
-                </select>
+                <label>Department / Course / Group Name</label>
+                <input type="text" id="setup-program" placeholder="e.g., B.Sc. in Computer Science & Engineering">
             </div>
 
             <div class="form-field">
-                <label>Section Name</label>
-                <input type="text" id="setup-section" placeholder="e.g., Section - A / 3rd Year">
+                <label>Section / Semester Name</label>
+                <input type="text" id="setup-section" placeholder="e.g., 3rd Year 1st Semester (Sec - B)">
             </div>
 
             <button class="btn-core" onclick="buildSystemCore()">Activate Dashboard</button>
@@ -66,16 +40,22 @@
     <div id="dashboard-screen" class="dashboard-shell hidden">
         
         <div class="analytics-control-grid">
-            <div class="giant-chronograph-dial">
-                <div class="outer-spinning-rim">
-                    <div class="radar-pulse-dot"></div>
-                    <div id="big-clock-numeric">00:00:00 AM</div>
+            <div class="clock-station">
+                <div class="analog-wall-clock">
+                    <div class="clock-face-center"></div>
+                    <div class="clock-hand hand-hour" id="wall-hour"></div>
+                    <div class="clock-hand hand-minute" id="wall-minute"></div>
+                    <div class="clock-hand hand-second" id="wall-second"></div>
+                    <div class="clock-number num-12">12</div>
+                    <div class="clock-number num-3">3</div>
+                    <div class="clock-number num-6">6</div>
+                    <div class="clock-number num-9">9</div>
                 </div>
-                <div id="big-calendar-date">Syncing with atomic timeline...</div>
+                <div id="live-calendar-date">Syncing with atomic timeline...</div>
             </div>
 
             <div id="live-weather-station" class="weather-station-card">
-                <p>🛰️ Intercepting localized coordinates...</p>
+                <p>🛰️ Synchronizing coordinates...</p>
             </div>
         </div>
 
@@ -87,20 +67,18 @@
             <button class="btn-reset-system" onclick="purgeSystemKernel()">Flush System Data</button>
         </div>
 
-        <div class="operational-dock">
-            <button class="btn-ops btn-green" onclick="toggleModal('class-modal', true)">➕ Add Class Slot</button>
-            <button class="btn-ops btn-amber" onclick="toggleModal('exam-modal', true)">📝 Add Exam Slot</button>
-        </div>
+        <div class="routine-management-wrapper">
+            <div class="section-admin-bar">
+                <h3>📚 Class Routine Modules</h3>
+                <button class="btn-ops btn-green" onclick="toggleModal('class-modal', true)">➕ Add Class Slot</button>
+            </div>
 
-        <div id="master-routine-capture-frame" class="clean-canvas-print-block">
-            
-            <div class="routine-print-segment" style="margin-bottom: 40px;">
+            <div id="class-routine-capture-frame" class="clean-canvas-print-block">
                 <div class="canvas-header-identity">
                     <h1 class="target-inst-name">INSTITUTION TITLE</h1>
-                    <p class="target-program-manifest">CLASS ROUTINE MANIFEST</p>
+                    <p class="target-program-manifest">CLASS ROUTINE SCHEDULE</p>
                     <div class="target-section-pill">SECTION: <span class="target-sec-val">N/A</span></div>
                 </div>
-                
                 <div class="table-responsive-containment">
                     <table class="grid-fidelity-table">
                         <thead>
@@ -120,14 +98,21 @@
                     </table>
                 </div>
             </div>
+            <button class="btn-build-engine btn-download-class" onclick="processFidelitySnapshot('class-routine-capture-frame', 'Class_Routine')">📸 Download Class Routine Image Only</button>
+        </div>
 
-            <div class="routine-print-segment">
+        <div class="routine-management-wrapper" style="margin-top: 50px;">
+            <div class="section-admin-bar">
+                <h3 style="color: #d97706;">📝 Examination Schedule Tracks</h3>
+                <button class="btn-ops btn-amber" onclick="toggleModal('exam-modal', true)">📝 Add Exam Slot</button>
+            </div>
+
+            <div id="exam-routine-capture-frame" class="clean-canvas-print-block">
                 <div class="canvas-header-identity">
                     <h1 class="target-inst-name">INSTITUTION TITLE</h1>
                     <p class="target-program-manifest" style="color: #d97706 !important;">EXAMINATION SCHEDULE MATRIX</p>
                     <div class="target-section-pill" style="background: #d97706 !important;">SECTION: <span class="target-sec-val">N/A</span></div>
                 </div>
-
                 <div class="table-responsive-containment">
                     <table class="grid-fidelity-table exam-table-variant">
                         <thead>
@@ -147,12 +132,11 @@
                     </table>
                 </div>
             </div>
-
+            <button class="btn-build-engine btn-download-exam" onclick="processFidelitySnapshot('exam-routine-capture-frame', 'Exam_Routine')">📸 Download Exam Routine Image Only</button>
         </div>
-        <button class="btn-build-engine" onclick="processCanvasFidelitySnapshot()">📸 Export Combined High-Res Routine Image</button>
 
         <div id="live-preview-box" class="preview-monitor-card hidden">
-            <h4>🔥 LIVE HIGH-FIDELITY IMAGE RECONSTRUCTION PREVIEW</h4>
+            <h4>🔥 LIVE HIGH-FIDELITY IMAGE EXPORT PREVIEW</h4>
             <div id="preview-viewport-holder"></div>
         </div>
     </div>
@@ -160,13 +144,139 @@
     <div id="class-modal" class="modal-backdrop hidden">
         <div class="modal-surface-container">
             <div class="modal-surface-header">
-                <h3>Append Class Node</h3>
+                <h3>Append Class Entry</h3>
                 <span class="x-close" onclick="toggleModal('class-modal', false)">✕</span>
             </div>
             <form id="class-form" onsubmit="insertClassItem(event)">
-                <input type="text" id="c-code" placeholder="Course Code (e.g., CSE-211)" required>
-                <input type="text" id="c-title" placeholder="Subject / Course Title" required>
-                <input type="text" id="c-meta" placeholder="Instructor / Room No (e.g., MHR / Room 402)" required>
+                <select id="c-title" required>
+                    <option value="" disabled selected>-- Select Course / Subject Name --</option>
+                    
+                    <optgroup label="💻 University: CSE & IT">
+                        <option value="Structured Programming Language">Structured Programming Language (C)</option>
+                        <option value="Structured Programming Language Lab">Structured Programming Language Lab</option>
+                        <option value="Object Oriented Programming">Object Oriented Programming (Java/C++)</option>
+                        <option value="Object Oriented Programming Lab">Object Oriented Programming Lab</option>
+                        <option value="Data Structures">Data Structures</option>
+                        <option value="Data Structures Lab">Data Structures Lab</option>
+                        <option value="Algorithms">Algorithms</option>
+                        <option value="Algorithms Lab">Algorithms Lab</option>
+                        <option value="Database Management Systems">Database Management Systems (DBMS)</option>
+                        <option value="Database Management Systems Lab">Database Management Systems Lab</option>
+                        <option value="Digital Logic Design">Digital Logic Design (DLD)</option>
+                        <option value="Digital Logic Design Lab">Digital Logic Design Lab</option>
+                        <option value="Operating Systems">Operating Systems</option>
+                        <option value="Operating Systems Lab">Operating Systems Lab</option>
+                        <option value="Computer Networks">Computer Networks</option>
+                        <option value="Computer Networks Lab">Computer Networks Lab</option>
+                        <option value="Software Engineering">Software Engineering</option>
+                        <option value="Artificial Intelligence">Artificial Intelligence</option>
+                        <option value="Web Engineering & E-Commerce">Web Engineering & E-Commerce</option>
+                        <option value="Compiler Design">Compiler Design</option>
+                        <option value="Computer Architecture">Computer Architecture</option>
+                        <option value="Theory of Computation">Theory of Computation</option>
+                        <option value="Microprocessor & Interfacing">Microprocessor & Interfacing</option>
+                        <option value="Computer Graphics">Computer Graphics</option>
+                    </optgroup>
+
+                    <optgroup label="⚡ University: EEE">
+                        <option value="Electrical Circuits I">Electrical Circuits I</option>
+                        <option value="Electrical Circuits II">Electrical Circuits II</option>
+                        <option value="Electrical Circuits Lab">Electrical Circuits Lab</option>
+                        <option value="Electronics I">Electronics I</option>
+                        <option value="Electronics II">Electronics II</option>
+                        <option value="Electronics Lab">Electronics Lab</option>
+                        <option value="Signals and Systems">Signals and Systems</option>
+                        <option value="Electrical Machines I">Electrical Machines I</option>
+                        <option value="Electrical Machines II">Electrical Machines II</option>
+                        <option value="Power System Analysis">Power System Analysis</option>
+                        <option value="Digital Signal Processing (DSP)">Digital Signal Processing (DSP)</option>
+                        <option value="Telecommunication Engineering">Telecommunication Engineering</option>
+                    </optgroup>
+
+                    <optgroup label="🏢 University: Civil & Mechanical">
+                        <option value="Engineering Mechanics">Engineering Mechanics</option>
+                        <option value="Strength of Materials">Strength of Materials</option>
+                        <option value="Fluid Mechanics">Fluid Mechanics</option>
+                        <option value="Surveying">Surveying</option>
+                        <option value="Structural Analysis & Design">Structural Analysis & Design</option>
+                        <option value="Thermodynamics">Thermodynamics</option>
+                        <option value="Heat Transfer">Heat Transfer</option>
+                        <option value="Kinematics of Machinery">Kinematics of Machinery</option>
+                    </optgroup>
+
+                    <optgroup label="💼 University: Business & Commerce">
+                        <option value="Introduction to Business">Introduction to Business</option>
+                        <option value="Principles of Management">Principles of Management</option>
+                        <option value="Financial Accounting">Financial Accounting</option>
+                        <option value="Management Accounting">Management Accounting</option>
+                        <option value="Principles of Marketing">Principles of Marketing</option>
+                        <option value="Financial Management">Financial Management</option>
+                        <option value="Human Resource Management (HRM)">Human Resource Management (HRM)</option>
+                        <option value="Business Statistics">Business Statistics</option>
+                        <option value="Organizational Behavior">Organizational Behavior</option>
+                        <option value="Microeconomics">Microeconomics</option>
+                        <option value="Macroeconomics">Macroeconomics</option>
+                    </optgroup>
+
+                    <optgroup label="🎨 University: Arts, Law & Humanities">
+                        <option value="Technical English">Technical English</option>
+                        <option value="English Composition">English Composition</option>
+                        <option value="Introduction to English Literature">Introduction to English Literature</option>
+                        <option value="Jurisprudence">Jurisprudence</option>
+                        <option value="Constitutional Law">Constitutional Law</option>
+                        <option value="Law of Contract">Law of Contract</option>
+                        <option value="Bangladesh Studies">Bangladesh Studies</option>
+                        <option value="History of Bangla Literature">History of Bangla Literature</option>
+                        <option value="Sociology">Sociology</option>
+                    </optgroup>
+
+                    <optgroup label="🔬 School/College: Science (বিজ্ঞান বিভাগ)">
+                        <option value="Bangla 1st Paper">Bangla 1st Paper (বাংলা ১ম)</option>
+                        <option value="Bangla 2nd Paper">Bangla 2nd Paper (বাংলা ২য়)</option>
+                        <option value="English 1st Paper">English 1st Paper (English 1st)</option>
+                        <option value="English 2nd Paper">English 2nd Paper (English 2nd)</option>
+                        <option value="ICT">ICT (তথ্য ও যোগাযোগ প্রযুক্তি)</option>
+                        <option value="Physics 1st Paper">Physics 1st Paper (পদার্থবিজ্ঞান ১ম)</option>
+                        <option value="Physics 2nd Paper">Physics 2nd Paper (পদার্থবিজ্ঞান ২য়)</option>
+                        <option value="Chemistry 1st Paper">Chemistry 1st Paper (রসায়ন ১ম)</option>
+                        <option value="Chemistry 2nd Paper">Chemistry 2nd Paper (রসায়ন ২য়)</option>
+                        <option value="Higher Mathematics 1st Paper">Higher Mathematics 1st Paper (উচ্চতর গণিত ১ম)</option>
+                        <option value="Higher Mathematics 2nd Paper">Higher Mathematics 2nd Paper (উচ্চতর গণিত ২য়)</option>
+                        <option value="Biology 1st Paper">Biology 1st Paper (উদ্ভিদবিজ্ঞান)</option>
+                        <option value="Biology 2nd Paper">Biology 2nd Paper (প্রাণীবিজ্ঞান)</option>
+                    </optgroup>
+
+                    <optgroup label="📊 School/College: Commerce (ব্যবসায় শিক্ষা)">
+                        <option value="Accounting 1st Paper">Accounting 1st Paper (হিসাববিজ্ঞান ১ম)</option>
+                        <option value="Accounting 2nd Paper">Accounting 2nd Paper (হিসাববিজ্ঞান ২য়)</option>
+                        <option value="Business Organization & Management 1st">Business Org & Management 1st (ব্যবসায় সংগঠন ১ম)</option>
+                        <option value="Business Organization & Management 2nd">Business Org & Management 2nd (ব্যবসায় সংগঠন ২য়)</option>
+                        <option value="Finance, Banking & Insurance 1st">Finance, Banking & Insurance 1st (ফিন্যান্স ১ম)</option>
+                        <option value="Finance, Banking & Insurance 2nd">Finance, Banking & Insurance 2nd (ফিন্যান্স ২য়)</option>
+                        <option value="Production Management & Marketing 1st">Production Mgmt & Marketing 1st (উৎপাদন ব্যবস্থাপনা ১ম)</option>
+                        <option value="Production Management & Marketing 2nd">Production Mgmt & Marketing 2nd (উৎপাদন ব্যবস্থাপনা ২য়)</option>
+                    </optgroup>
+
+                    <optgroup label="🎨 School/College: Arts / Humanities (মানবিক)">
+                        <option value="Civics & Good Governance 1st Paper">Civics & Good Governance 1st (পৌরনীতি ১ম)</option>
+                        <option value="Civics & Good Governance 2nd Paper">Civics & Good Governance 2nd (পৌরনীতি ২য়)</option>
+                        <option value="History 1st Paper">History 1st Paper (ইতিহাস ১ম)</option>
+                        <option value="History 2nd Paper">History 2nd Paper (ইতিহাস ২য়)</option>
+                        <option value="Islamic History & Culture 1st">Islamic History & Culture 1st (ইসলামের ইতিহাস ১ম)</option>
+                        <option value="Islamic History & Culture 2nd">Islamic History & Culture 2nd (ইসলামের ইতিহাস ২য়)</option>
+                        <option value="Geography & Environment 1st Paper">Geography & Environment 1st (ভূগোল ১ম)</option>
+                        <option value="Geography & Environment 2nd Paper">Geography & Environment 2nd (ভূগোল ২য়)</option>
+                        <option value="Economics 1st Paper">Economics 1st Paper (অর্থনীতি ১ম)</option>
+                        <option value="Economics 2nd Paper">Economics 2nd Paper (অর্থনীতি ২য়)</option>
+                        <option value="Logic 1st Paper">Logic 1st Paper (যুক্তিবিদ্যা ১ম)</option>
+                        <option value="Logic 2nd Paper">Logic 2nd Paper (যুক্তিবিদ্যা ২য়)</option>
+                        <option value="Social Work 1st Paper">Social Work 1st Paper (সমাজকর্ম ১ম)</option>
+                        <option value="Social Work 2nd Paper">Social Work 2nd Paper (সমাজকর্ম ২য়)</option>
+                    </optgroup>
+                </select>
+
+                <input type="text" id="c-code" placeholder="Course Code (e.g., CSE-211 / HSC-101)" required>
+                <input type="text" id="c-meta" placeholder="Course Teacher Name / Room" required>
                 <div class="modal-flex-fields">
                     <input type="time" id="c-start" required>
                     <input type="time" id="c-end" required>
@@ -188,13 +298,72 @@
     <div id="exam-modal" class="modal-backdrop hidden">
         <div class="modal-surface-container" style="border-top: 4px solid #d97706;">
             <div class="modal-surface-header">
-                <h3>Append Examination Node</h3>
+                <h3>Append Examination Entry</h3>
                 <span class="x-close" onclick="toggleModal('exam-modal', false)">✕</span>
             </div>
             <form id="exam-form" onsubmit="insertExamItem(event)">
+                <select id="e-title" required>
+                    <option value="" disabled selected>-- Select Course / Subject Name --</option>
+                    <optgroup label="💻 University: CSE & IT">
+                        <option value="Structured Programming Language">Structured Programming Language (C)</option>
+                        <option value="Object Oriented Programming">Object Oriented Programming (Java/C++)</option>
+                        <option value="Data Structures">Data Structures</option>
+                        <option value="Algorithms">Algorithms</option>
+                        <option value="Database Management Systems">Database Management Systems (DBMS)</option>
+                        <option value="Digital Logic Design">Digital Logic Design (DLD)</option>
+                        <option value="Operating Systems">Operating Systems</option>
+                        <option value="Computer Networks">Computer Networks</option>
+                        <option value="Software Engineering">Software Engineering</option>
+                        <option value="Artificial Intelligence">Artificial Intelligence</option>
+                    </optgroup>
+                    <optgroup label="⚡ University: EEE & Other Engineering">
+                        <option value="Electrical Circuits I">Electrical Circuits I</option>
+                        <option value="Electronics I">Electronics I</option>
+                        <option value="Signals and Systems">Signals and Systems</option>
+                        <option value="Engineering Mechanics">Engineering Mechanics</option>
+                    </optgroup>
+                    <optgroup label="💼 University: Business & Arts">
+                        <option value="Principles of Management">Principles of Management</option>
+                        <option value="Financial Accounting">Financial Accounting</option>
+                        <option value="Principles of Marketing">Principles of Marketing</option>
+                        <option value="Technical English">Technical English</option>
+                        <option value="Bangladesh Studies">Bangladesh Studies</option>
+                    </optgroup>
+                    <optgroup label="🔬 School/College: Science (বিজ্ঞান)">
+                        <option value="Bangla 1st Paper">Bangla 1st Paper</option>
+                        <option value="Bangla 2nd Paper">Bangla 2nd Paper</option>
+                        <option value="English 1st Paper">English 1st Paper</option>
+                        <option value="English 2nd Paper">English 2nd Paper</option>
+                        <option value="ICT">ICT</option>
+                        <option value="Physics 1st Paper">Physics 1st Paper</option>
+                        <option value="Physics 2nd Paper">Physics 2nd Paper</option>
+                        <option value="Chemistry 1st Paper">Chemistry 1st Paper</option>
+                        <option value="Chemistry 2nd Paper">Chemistry 2nd Paper</option>
+                        <option value="Higher Mathematics 1st Paper">Higher Mathematics 1st Paper</option>
+                        <option value="Higher Mathematics 2nd Paper">Higher Mathematics 2nd Paper</option>
+                        <option value="Biology 1st Paper">Biology 1st Paper</option>
+                        <option value="Biology 2nd Paper">Biology 2nd Paper</option>
+                    </optgroup>
+                    <optgroup label="📊 School/College: Commerce (ব্যবসায় শিক্ষা)">
+                        <option value="Accounting 1st Paper">Accounting 1st Paper</option>
+                        <option value="Accounting 2nd Paper">Accounting 2nd Paper</option>
+                        <option value="Business Organization & Management 1st">Business Org & Management 1st</option>
+                        <option value="Finance, Banking & Insurance 1st">Finance, Banking & Insurance 1st</option>
+                        <option value="Production Management & Marketing 1st">Production Mgmt & Marketing 1st</option>
+                    </optgroup>
+                    <optgroup label="🎨 School/College: Arts / Humanities (মানবিক)">
+                        <option value="Civics & Good Governance 1st Paper">Civics & Good Governance 1st</option>
+                        <option value="Civics & Good Governance 2nd Paper">Civics & Good Governance 2nd</option>
+                        <option value="History 1st Paper">History 1st Paper</option>
+                        <option value="Islamic History & Culture 1st">Islamic History & Culture 1st</option>
+                        <option value="Geography & Environment 1st Paper">Geography & Environment 1st</option>
+                        <option value="Economics 1st Paper">Economics 1st Paper</option>
+                        <option value="Logic 1st Paper">Logic 1st Paper</option>
+                    </optgroup>
+                </select>
+
                 <input type="text" id="e-code" placeholder="Course Code (e.g., MAT-105)" required>
-                <input type="text" id="e-title" placeholder="Subject Title (e.g., Integral Calculus)" required>
-                <input type="text" id="e-room" placeholder="Exam Hall / Room Configuration" required>
+                <input type="text" id="e-room" placeholder="Exam Hall / Invigilator Room" required>
                 <div class="modal-flex-fields">
                     <input type="time" id="e-start" required>
                     <input type="time" id="e-end" required>
