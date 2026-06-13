@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Academic Command Center - Customized Dynamic Edition</title>
+    <title>Academic Command Center - Onboarding Selection Edition</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
@@ -34,6 +34,12 @@
                     <option value="School/College (Commerce Group)">School/College (Commerce Group)</option>
                     <option value="School/College (Arts Group)">School/College (Arts Group)</option>
                 </select>
+            </div>
+
+            <div id="wizard-subject-select-field" class="form-field hidden">
+                <label>Select Your Courses / Subjects (Press to Select)</label>
+                <p class="field-instruction-note">Choose the subjects you want to include in your routine matrix:</p>
+                <div id="wizard-subject-checkbox-pool" class="wizard-checkbox-grid"></div>
             </div>
 
             <div class="form-field">
@@ -109,6 +115,7 @@
             <button class="btn-build-engine btn-download-class" onclick="processFidelitySnapshot('class-routine-capture-frame', 'Class_Routine')">📸 Download Class Routine Image Only</button>
         </div>
 
+
         <div class="routine-management-wrapper" style="margin-top: 50px;">
             <div class="section-admin-bar">
                 <h3 style="color: #d97706;">📝 Examination Schedule Tracks</h3>
@@ -156,7 +163,14 @@
                 <span class="x-close" onclick="toggleModal('class-modal', false)">✕</span>
             </div>
             <form id="class-form" onsubmit="insertClassItem(event)">
-                <input type="text" id="c-title" placeholder="Course / Subject Name" required>
+                <label class="inner-label">Course / Subject Name</label>
+                <input type="text" id="c-title" placeholder="Select from tabs or type here..." required>
+                
+                <div class="quick-suggest-wrapper">
+                    <div class="suggest-label">⚡ Selected Track Tabs:</div>
+                    <div id="class-tabs-container" class="tabs-flex-pool"></div>
+                </div>
+
                 <input type="text" id="c-code" placeholder="Course Code" required>
                 <input type="text" id="c-meta" placeholder="Teacher Name" required>
                 
@@ -200,8 +214,14 @@
                 <span class="x-close" onclick="toggleModal('exam-modal', false)">✕</span>
             </div>
             <form id="exam-form" onsubmit="insertExamItem(event)">
-                <input type="text" id="e-title" placeholder="Course / Subject Name" required>
+                <label class="inner-label">Course / Subject Name</label>
+                <input type="text" id="e-title" placeholder="Select from tabs or type here..." required>
                 
+                <div class="quick-suggest-wrapper">
+                    <div class="suggest-label" style="color: #f59e0b;">⚡ Selected Track Tabs:</div>
+                    <div id="exam-tabs-container" class="tabs-flex-pool"></div>
+                </div>
+
                 <select id="e-day" required>
                     <option value="" disabled selected>-- Day week name --</option>
                     <option value="Saturday">Saturday</option>
