@@ -24,22 +24,49 @@ body {
 }
 
 /* ==========================================================================
-   🗃️ Onboarding Wizard Styles
+   🗃️ Onboarding Wizard Styles & Dynmic Multi-Select UI
    ========================================================================== */
-.wizard-panel { background: #ffffff; color: #0f172a; width: 100%; max-width: 500px; padding: 45px 35px; border-radius: 28px; align-self: center; box-shadow: 0 35px 75px rgba(0,0,0,0.8); }
+.wizard-panel { background: #ffffff; color: #0f172a; width: 100%; max-width: 520px; padding: 40px 30px; border-radius: 28px; align-self: center; box-shadow: 0 35px 75px rgba(0,0,0,0.8); }
 .wizard-header h2 { font-size: 24px; font-weight: 800; margin-bottom: 6px; letter-spacing: -0.5px; }
-.wizard-header p { color: #64748b; font-size: 13px; margin-bottom: 30px; }
-.form-field { margin-bottom: 22px; }
+.wizard-header p { color: #64748b; font-size: 13px; margin-bottom: 25px; }
+.form-field { margin-bottom: 20px; }
 .form-field label { display: block; font-size: 11px; font-weight: 800; color: #475569; text-transform: uppercase; margin-bottom: 8px; }
-.form-field input, .form-field select { width: 100%; padding: 15px; border-radius: 14px; border: 2px solid #e2e8f0; font-size: 14px; outline: none; font-weight: 600; color: #0f172a; background: #f8fafc; }
+.field-instruction-note { font-size: 11px; color: #64748b; margin-top: -4px; margin-bottom: 10px; font-weight: 500; }
+.form-field input, .form-field select { width: 100%; padding: 14px; border-radius: 14px; border: 2px solid #e2e8f0; font-size: 14px; outline: none; font-weight: 600; color: #0f172a; background: #f8fafc; }
 .form-field input:focus, .form-field select:focus { border-color: var(--neon-blue); }
 .btn-core { width: 100%; padding: 16px; background: #0284c7; border: none; color: white; border-radius: 14px; font-weight: 700; font-size: 15px; cursor: pointer; transition: 0.2s; }
 .btn-core:hover { background: #0369a1; transform: translateY(-1px); }
 
-/* Custom Scrollbar for Course Viewer */
-#wizard-course-viewer::-webkit-scrollbar { width: 6px; }
-#wizard-course-viewer::-webkit-scrollbar-track { background: #f1f5f9; }
-#wizard-course-viewer::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+/* 🎯 উইজার্ড সাবজেক্ট চেক-গ্রিড ডিজাইন */
+.wizard-checkbox-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; max-height: 200px; overflow-y: auto; padding: 10px; background: #f1f5f9; border-radius: 14px; border: 1px solid #e2e8f0; }
+.wizard-checkbox-grid::-webkit-scrollbar { width: 5px; }
+.wizard-checkbox-grid::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+
+.wizard-checkbox-card { display: flex; align-items: center; gap: 10px; background: #ffffff; padding: 10px 12px; border-radius: 10px; border: 1px solid #cbd5e1; cursor: pointer; transition: all 0.2s; position: relative; user-select: none; }
+.wizard-checkbox-card:hover { border-color: #0284c7; background: #f0fdf4; }
+
+/* রিয়েল কাস্টম চেক-ডিজাইন মেকানিজম */
+.wizard-checkbox-card input[type="checkbox"] { position: absolute; opacity: 0; cursor: pointer; height: 0; width: 0; }
+.custom-indicator { height: 16px; width: 16px; background-color: #f1f5f9; border: 2px solid #cbd5e1; border-radius: 4px; display: inline-block; position: relative; transition: 0.2s; }
+.wizard-checkbox-card input:checked ~ .custom-indicator { background-color: #16a34a; border-color: #16a34a; }
+.custom-indicator:after { content: ""; position: absolute; display: none; left: 4px; top: 1px; width: 4px; height: 8px; border: solid white; border-width: 0 2px 2px 0; transform: rotate(45deg); }
+.wizard-checkbox-card input:checked ~ .custom-indicator:after { display: block; }
+.subject-title-text { font-size: 12px; font-weight: 700; color: #334155; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.wizard-checkbox-card input:checked ~ .subject-title-text { color: #16a34a; }
+
+/* ==========================================================================
+   🎯 Click-to-Select Suggestion Tabs Engine Design
+   ========================================================================== */
+.quick-suggest-wrapper { background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border-contour); padding: 12px; border-radius: 12px; margin-bottom: 6px; }
+.suggest-label { font-size: 11px; font-weight: 800; color: var(--neon-blue); text-transform: uppercase; margin-bottom: 8px; }
+.tabs-flex-pool { display: flex; flex-wrap: wrap; gap: 8px; max-height: 110px; overflow-y: auto; padding-right: 4px; }
+.tabs-flex-pool::-webkit-scrollbar { width: 4px; }
+.tabs-flex-pool::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+
+.click-pick-tab { background: #1e293b; color: #cbd5e1; border: 1px solid #334155; padding: 6px 12px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+.click-pick-tab:hover { background: var(--neon-blue); color: white; border-color: var(--neon-blue); transform: translateY(-1px); }
+.click-pick-tab:active { transform: scale(0.95); }
+.exam-tab-style:hover { background: var(--neon-amber) !important; border-color: var(--neon-amber) !important; color: #0f172a !important; }
 
 /* ==========================================================================
    🎛️ Workspace Layout
@@ -96,7 +123,6 @@ body {
 .grid-fidelity-table th { background: #0f172a; color: #ffffff !important; padding: 15px 8px; font-size: 11px; font-weight: 800; border: 1px solid #1e293b; text-transform: uppercase; }
 .grid-fidelity-table td { border: 1px solid #cbd5e1; padding: 12px 8px; vertical-align: middle; height: 130px; width: 12.5%; }
 
-/* 📝 এক্সাম রুটিন ভ্যারিয়েন্ট */
 .exam-table-variant th { background: #d97706 !important; border-color: #b45309 !important; }
 .exam-time-head { background: #fffbeb !important; color: #b45309 !important; }
 
@@ -105,7 +131,7 @@ body {
 .barren-cell-space { color: #e2e8f0; font-size: 14px; }
 .exam-barren { background: #fafafa !important; }
 
-/* 📦 রুটিন ডাটা সেল বক্স */
+/* 📦 রুটিনের ভেতরের ডেটা ও বক্স ডিজাইন */
 .occupied-fidelity-cell { background: #ffffff; position: relative; padding: 6px !important; }
 .cell-matrix-wrapper { display: flex; flex-direction: column; justify-content: center; height: 100%; gap: 3px; position: relative; }
 .cell-primary-title { font-size: 12px; font-weight: 800; color: #0f172a; line-height: 1.2; }
@@ -117,7 +143,7 @@ body {
 .pill-theory { background: #eff6ff; color: #2563eb !important; border: 1px solid #bfdbfe; }
 .pill-lab { background: #fff7ed; color: #ea580c !important; border: 1px solid #ffedd5; }
 
-/* 📝 এক্সাম ডেডিকেটেড বক্স */
+/* 📝 এক্সাম ডেডিকেটেড ঘর ডিজাইন */
 .exam-box-cell { background: #fffbeb !important; border: 2px dashed #f59e0b !important; border-radius: 6px; }
 .exam-cell-subject { font-size: 12px; font-weight: 800; color: #92400e; }
 .exam-cell-time { font-size: 11px; font-weight: 700; color: #b45309; }
@@ -129,7 +155,7 @@ body {
 .export-engine-lock-active { border: none !important; box-shadow: none !important; border-radius: 0 !important; width: 1150px !important; }
 
 /* ==========================================================================
-   🖼️ Snapshot Preview Monitor
+   🖼 {Output Preview Display}
    ========================================================================== */
 .btn-build-engine { width: 100%; margin-top: 20px; padding: 15px; border: none; border-radius: 12px; font-weight: 800; font-size: 14px; cursor: pointer; }
 .btn-download-class { background: rgba(16, 185, 129, 0.1); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.2); }
@@ -140,15 +166,15 @@ body {
 .rendered-frame-monitor { width: 100%; border-radius: 12px; box-shadow: 0 15px 40px rgba(0,0,0,0.6); }
 
 /* ==========================================================================
-   🪟 Modals Context Frame
+   🪟 Modal Windows Setup
    ========================================================================== */
 .modal-backdrop { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(4, 7, 15, 0.85); backdrop-filter: blur(5px); display: flex; align-items: center; justify-content: center; z-index: 7000; }
-.modal-surface-container { background: #0b1325; border: 1px solid var(--border-contour); border-top: 4px solid var(--neon-blue); width: 92%; max-width: 440px; padding: 30px; border-radius: 20px; box-shadow: 0 30px 60px rgba(0,0,0,0.7); }
-.modal-surface-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 22px; }
+.modal-surface-container { background: #0b1325; border: 1px solid var(--border-contour); border-top: 4px solid var(--neon-blue); width: 92%; max-width: 460px; padding: 25px; border-radius: 20px; box-shadow: 0 30px 60px rgba(0,0,0,0.7); }
+.modal-surface-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
 .modal-surface-header h3 { font-size: 16px; font-weight: 800; }
 .x-close { cursor: pointer; color: var(--text-muted); }
-#class-form, #exam-form { display: flex; flex-direction: column; gap: 14px; text-align: left; }
-#class-form input, #class-form select, #exam-form input, #exam-form select { width: 100%; padding: 13px; background: #030712; border: 1px solid var(--border-contour); border-radius: 10px; color: white; font-size: 14px; outline: none; font-weight: 600; }
+#class-form, #exam-form { display: flex; flex-direction: column; gap: 12px; text-align: left; }
+#class-form input, #class-form select, #exam-form input, #exam-form select { width: 100%; padding: 12px; background: #030712; border: 1px solid var(--border-contour); border-radius: 10px; color: white; font-size: 14px; outline: none; font-weight: 600; }
 .modal-flex-fields { display: flex; gap: 10px; }
 .modal-flex-fields > div { flex: 1; }
 .inner-label { font-size: 11px; font-weight: 700; color: #64748b; display: block; margin-bottom: 5px; text-transform: uppercase; }
