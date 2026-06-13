@@ -24,7 +24,7 @@ body {
 }
 
 /* ==========================================================================
-   🗃️ Onboarding Wizard Styles & Dynmic Multi-Select UI
+   🗃️ Onboarding Wizard Styles & Dynamic Multi-Select UI
    ========================================================================== */
 .wizard-panel { background: #ffffff; color: #0f172a; width: 100%; max-width: 520px; padding: 40px 30px; border-radius: 28px; align-self: center; box-shadow: 0 35px 75px rgba(0,0,0,0.8); }
 .wizard-header h2 { font-size: 24px; font-weight: 800; margin-bottom: 6px; letter-spacing: -0.5px; }
@@ -32,8 +32,13 @@ body {
 .form-field { margin-bottom: 20px; }
 .form-field label { display: block; font-size: 11px; font-weight: 800; color: #475569; text-transform: uppercase; margin-bottom: 8px; }
 .field-instruction-note { font-size: 11px; color: #64748b; margin-top: -4px; margin-bottom: 10px; font-weight: 500; }
-.form-field input, .form-field select { width: 100%; padding: 14px; border-radius: 14px; border: 2px solid #e2e8f0; font-size: 14px; outline: none; font-weight: 600; color: #0f172a; background: #f8fafc; }
-.form-field input:focus, .form-field select:focus { border-color: var(--neon-blue); }
+.form-field input, .form-field select { width: 100%; padding: 14px; border-radius: 14px; border: 2px solid #e2e8f0; font-size: 14px; outline: none; font-weight: 600; color: #0f172a; background: #f8fafc; transition: all 0.2s; }
+.form-field input:focus, .form-field select:focus { border-color: var(--neon-blue); background: #ffffff; }
+
+/* 🧬 HTML Select Native Option Styling */
+optgroup { font-weight: 800; color: #0284c7; background: #f8fafc; }
+option { font-weight: 600; color: #0f172a; }
+
 .btn-core { width: 100%; padding: 16px; background: #0284c7; border: none; color: white; border-radius: 14px; font-weight: 700; font-size: 15px; cursor: pointer; transition: 0.2s; }
 .btn-core:hover { background: #0369a1; transform: translateY(-1px); }
 
@@ -45,7 +50,6 @@ body {
 .wizard-checkbox-card { display: flex; align-items: center; gap: 10px; background: #ffffff; padding: 10px 12px; border-radius: 10px; border: 1px solid #cbd5e1; cursor: pointer; transition: all 0.2s; position: relative; user-select: none; }
 .wizard-checkbox-card:hover { border-color: #0284c7; background: #f0fdf4; }
 
-/* রিয়েল কাস্টম চেক-ডিজাইন মেকানিজম */
 .wizard-checkbox-card input[type="checkbox"] { position: absolute; opacity: 0; cursor: pointer; height: 0; width: 0; }
 .custom-indicator { height: 16px; width: 16px; background-color: #f1f5f9; border: 2px solid #cbd5e1; border-radius: 4px; display: inline-block; position: relative; transition: 0.2s; }
 .wizard-checkbox-card input:checked ~ .custom-indicator { background-color: #16a34a; border-color: #16a34a; }
@@ -55,7 +59,7 @@ body {
 .wizard-checkbox-card input:checked ~ .subject-title-text { color: #16a34a; }
 
 /* ==========================================================================
-   🎯 Click-to-Select Suggestion Tabs Engine Design
+   🎯 Click-to-Select Suggestion Tabs
    ========================================================================== */
 .quick-suggest-wrapper { background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border-contour); padding: 12px; border-radius: 12px; margin-bottom: 6px; }
 .suggest-label { font-size: 11px; font-weight: 800; color: var(--neon-blue); text-transform: uppercase; margin-bottom: 8px; }
@@ -74,7 +78,7 @@ body {
 .dashboard-shell { width: 100%; max-width: 1245px; background: var(--glass-facade); border: 1px solid var(--border-contour); padding: 35px; border-radius: 32px; backdrop-filter: blur(25px); box-shadow: 0 40px 95px rgba(0,0,0,0.6); }
 .analytics-control-grid { display: grid; grid-template-columns: 1.3fr 0.7fr; gap: 24px; margin-bottom: 35px; }
 
-/* 🕒 Analog Circle Clock */
+/* Clock Station */
 .clock-station { background: rgba(0,0,0,0.4); border: 1px solid var(--border-contour); padding: 25px; border-radius: 24px; display: flex; align-items: center; justify-content: space-around; gap: 20px; }
 .analog-wall-clock { width: 130px; height: 130px; border: 5px solid var(--text-core); border-radius: 50%; position: relative; background: #070d19; }
 .clock-face-center { width: 10px; height: 10px; background: var(--neon-blue); border-radius: 50%; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 10; }
@@ -96,8 +100,8 @@ body {
 .weather-station-wrapper p { font-size: 11px; color: var(--text-muted); }
 
 .dashboard-meta-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; border-bottom: 1px dashed var(--border-contour); padding-bottom: 20px; }
-.identity-badge h2 { font-size: 18px; font-weight: 800; }
-.identity-badge p { font-size: 12px; color: var(--neon-blue); font-weight: 700; margin-top: 3px; }
+.identity-badge h2 { font-size: 18px; font-weight: 800; color: #ffffff; letter-spacing: 0.5px; }
+.identity-badge p { font-size: 12px; color: var(--neon-blue); font-weight: 700; margin-top: 5px; text-transform: uppercase; }
 .btn-reset-system { background: rgba(239, 68, 68, 0.1); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.2); padding: 10px 20px; border-radius: 30px; font-size: 11px; font-weight: 700; cursor: pointer; }
 .btn-reset-system:hover { background: #ef4444; color: white; }
 
@@ -131,7 +135,7 @@ body {
 .barren-cell-space { color: #e2e8f0; font-size: 14px; }
 .exam-barren { background: #fafafa !important; }
 
-/* 📦 রুটিনের ভেতরের ডেটা ও বক্স ডিজাইন */
+/* Cell Content Design */
 .occupied-fidelity-cell { background: #ffffff; position: relative; padding: 6px !important; }
 .cell-matrix-wrapper { display: flex; flex-direction: column; justify-content: center; height: 100%; gap: 3px; position: relative; }
 .cell-primary-title { font-size: 12px; font-weight: 800; color: #0f172a; line-height: 1.2; }
@@ -143,7 +147,6 @@ body {
 .pill-theory { background: #eff6ff; color: #2563eb !important; border: 1px solid #bfdbfe; }
 .pill-lab { background: #fff7ed; color: #ea580c !important; border: 1px solid #ffedd5; }
 
-/* 📝 এক্সাম ডেডিকেটেড ঘর ডিজাইন */
 .exam-box-cell { background: #fffbeb !important; border: 2px dashed #f59e0b !important; border-radius: 6px; }
 .exam-cell-subject { font-size: 12px; font-weight: 800; color: #92400e; }
 .exam-cell-time { font-size: 11px; font-weight: 700; color: #b45309; }
@@ -155,7 +158,7 @@ body {
 .export-engine-lock-active { border: none !important; box-shadow: none !important; border-radius: 0 !important; width: 1150px !important; }
 
 /* ==========================================================================
-   🖼 {Output Preview Display}
+   🖼 Output Preview Display
    ========================================================================== */
 .btn-build-engine { width: 100%; margin-top: 20px; padding: 15px; border: none; border-radius: 12px; font-weight: 800; font-size: 14px; cursor: pointer; }
 .btn-download-class { background: rgba(16, 185, 129, 0.1); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.2); }
@@ -166,7 +169,7 @@ body {
 .rendered-frame-monitor { width: 100%; border-radius: 12px; box-shadow: 0 15px 40px rgba(0,0,0,0.6); }
 
 /* ==========================================================================
-   🪟 Modal Windows Setup
+   🪟 Modals Window Setup
    ========================================================================== */
 .modal-backdrop { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(4, 7, 15, 0.85); backdrop-filter: blur(5px); display: flex; align-items: center; justify-content: center; z-index: 7000; }
 .modal-surface-container { background: #0b1325; border: 1px solid var(--border-contour); border-top: 4px solid var(--neon-blue); width: 92%; max-width: 460px; padding: 25px; border-radius: 20px; box-shadow: 0 30px 60px rgba(0,0,0,0.7); }
